@@ -49,7 +49,11 @@
                     while (_result.indexOf("  ") > -1) {
                         _result = _result.replace(/  /g, ' ');
                     }
+                    _result = _result.replace(/ \n /g, "\n");
+                    _result = _result.replace(/ \t /g, "\t");
                     _result = _result.replace(/ \' /g, "'");
+                    _result = _result.replace(/\' /g, "'");
+                    _result = _result.trim();
                     $("#output").val(_result);
                     _submit.removeAttr("disabled");
                     _submit.html("開始斷詞");
