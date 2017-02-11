@@ -14,7 +14,12 @@
             <tr>
                 <td>
                     <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-                    <textarea id="input">jieba 中文斷詞所使用的演算法是基於 Trie Tree 結構去生成句子中中文字所有可能成詞的情況，然後使用動態規劃（Dynamic programming）算法來找出最大機率的路徑，這個路徑就是基於詞頻的最大斷詞結果。對於辨識新詞（字典詞庫中不存在的詞）則使用了 HMM 模型（Hidden Markov Model）及 Viterbi 算法來辨識出來。基本上這樣就可以完成具有斷詞功能的程式了，或許我之後可以找個時間寫幾篇部落格來介紹這幾個演算法。</textarea>
+<textarea id="input">'奧運會籃球比賽和世界籃球錦標賽的比賽場地長度是 28 公尺寬 15 公尺', yes
+'罰球區是限制區加上以罰球線中點為圓心以, 80 公尺為半徑向限制區外所葷的半圓區域', yes
+'地球是太陽系從內到外的第三顆行星', no
+'從衛星上鳥服地球感受前所未有的視覺衝擊', no
+'籃球運動於 1日91 年起源於美國', yes
+'遊覽遙遠的地方漫步 3D 森林穿梭時空回到過去', no</textarea>
                 </td>
                 <td>
                     <textarea id="output"></textarea>
@@ -34,13 +39,20 @@
         $(function () {
             $("form").submit(function () {
                 var _text = $("#input").val();
+                $("#output").val("");
                 console.log(_text);
+                var _submit = $(this).find("button");
+                _submit.attr("disabled", "disabled");
+                _submit.html("處理中...");
                 call_jieba_cut(_text, function (_result) {
                     _result = _result.join(" ");
                     while (_result.indexOf("  ") > -1) {
                         _result = _result.replace(/  /g, ' ');
                     }
+                    _result = _result.replace(/ \' /g, "'");
                     $("#output").val(_result);
+                    _submit.removeAttr("disabled");
+                    _submit.html("開始斷詞");
                 });
                 return false;
             }).submit();
