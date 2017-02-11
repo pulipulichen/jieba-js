@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jieba-js demo</title>
+</head>
+<body>
+    
+    <script src="require-jieba-js.js"></script>
+    <script src="jquery.js"></script>
+    
+    <form onsubmit="return false;">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
+                    <textarea id="input">jieba 中文斷詞所使用的演算法是基於 Trie Tree 結構去生成句子中中文字所有可能成詞的情況，然後使用動態規劃（Dynamic programming）算法來找出最大機率的路徑，這個路徑就是基於詞頻的最大斷詞結果。對於辨識新詞（字典詞庫中不存在的詞）則使用了 HMM 模型（Hidden Markov Model）及 Viterbi 算法來辨識出來。基本上這樣就可以完成具有斷詞功能的程式了，或許我之後可以找個時間寫幾篇部落格來介紹這幾個演算法。</textarea>
+                </td>
+                <td>
+                    <textarea id="output"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">開始斷詞</button>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    </form>
+    
+    <script>
+        $(function () {
+            $("form").submit(function () {
+                var _text = $("#input").val();
+                console.log(_text);
+                call_jieba_cut(_text, function (_result) {
+                    _result = _result.join(" ");
+                    while (_result.indexOf("  ") > -1) {
+                        _result = _result.replace(/  /g, ' ');
+                    }
+                    $("#output").val(_result);
+                });
+                return false;
+            }).submit();
+        });
+    </script>
+    
+    <style>
+        table {
+            width: 100%;
+            height: calc(100vh - 30px);
+        }
+        textarea {
+            width: calc(100% - 10px);
+            height: calc(100vh - 80px);
+        }
+        button {
+            height: 45px;
+            width: calc(100% - 10%);
+        }
+    </style>
+    
+</body>
+</html>

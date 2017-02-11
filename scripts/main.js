@@ -40,7 +40,7 @@ require(["data/dictionary"], function(dictionary) {
         if (trie) {
             trie = {};
         }
-        console.log("Building Trie...");
+        //console.log("Building Trie...");
 
         var gar = gen_trie();
         trie = gar[0];
@@ -112,7 +112,7 @@ require(["data/dictionary"], function(dictionary) {
                 candidates_x.push(x);
             }
             var m = max_of_array(candidates);
-            console.log('max is', m);
+            //console.log('max is', m);
             route[idx] = [m, candidates_x[candidates.indexOf(m)]];
         }
     }
@@ -135,12 +135,12 @@ require(["data/dictionary"], function(dictionary) {
         while(x < N) {
             var y = route[x][1]+1,
                 l_word = sentence.substring(x, y);
-            if (y - x == 1) {
+            if (y - x === 1) {
                 buf += l_word;
             }
             else {
                 if (buf.length > 0) {
-                    if (buf.length == 1) {
+                    if (buf.length === 1) {
                         yieldValues.push(buf);
                     }
                     else {
@@ -165,7 +165,7 @@ require(["data/dictionary"], function(dictionary) {
 
 
         if (buf.length > 0) {
-            if (buf.length == 1) {
+            if (buf.length === 1) {
                 yieldValues.push(buf);
             }
             else {
@@ -191,10 +191,10 @@ require(["data/dictionary"], function(dictionary) {
             yieldValues = [];
 
         var DAG = get_DAG(sentence);
-        console.log("DAG", DAG);
+        //console.log("DAG", DAG);
         calc(sentence, DAG, 0, route);
 
-        console.log(route);
+        //console.log(route);
 
         var x = 0,
             buf = '',
@@ -203,8 +203,8 @@ require(["data/dictionary"], function(dictionary) {
         while (x < N) {
             y = route[x][1] + 1;
             l_word = sentence.substring(x, y);
-            console.log(l_word, l_word.match(re_eng))
-            if (l_word.match(re_eng) && l_word.length == 1) {
+            //console.log(l_word, l_word.match(re_eng))
+            if (l_word.match(re_eng) && l_word.length === 1) {
                 buf += l_word;
                 x = y;
             }
@@ -237,14 +237,14 @@ require(["data/dictionary"], function(dictionary) {
 
         for (b in blocks) {
             var blk = blocks[b];
-            console.log(b, blk);
-            if (blk.length == 0) {
+            //console.log(b, blk);
+            if (blk.length === 0) {
                 continue;
             }
 
             if (blk.match(re_han)) {
                 var cutted = cut_block(blk);
-                console.log("matches", cutted);
+                //console.log("matches", cutted);
                 for (w in cutted) {
                     var word = cutted[w];
                     yieldValues.push(word);
@@ -269,10 +269,15 @@ require(["data/dictionary"], function(dictionary) {
             }
         }
         return yieldValues;
-    }
+    };
+    
+    jieba_cut = cut;
 
     // initialize when the file loads (no lazy-loading yet):
     initialize();
 
-    console.log(cut("我爸新学会了一项解决日常烦闷的活动，就是把以前的照片抱回办公室扫描保存，弄成电子版的。更无法接受的是，还居然放到网上来，时不时给我两张。这些积尘的化石居然突然重现，简直是招架不住。这个怀旧的阀门一旦打开，那就直到意识模糊都没停下来。"));
+    //console.log(cut("我爸新学会了一项解决日常烦闷的活动，就是把以前的照片抱回办公室扫描保存，弄成电子版的。更无法接受的是，还居然放到网上来，时不时给我两张。这些积尘的化石居然突然重现，简直是招架不住。这个怀旧的阀门一旦打开，那就直到意识模糊都没停下来。"));
+    
+    //console.log(cut("我的中文東西。"));
+    resume_jieba_cut();
 });
