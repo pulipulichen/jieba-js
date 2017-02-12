@@ -2,6 +2,7 @@ var _process_file = function(_input, _callback) {
     _loading_enable();
    
    var _pro_dis = [];
+   var _pro_dis_attr = [];
    
    var _buffer = $("#input_mode_textarea_buffer").val().trim();
    var _head_needle = "\n=== Predictions on test split ===\n";
@@ -45,18 +46,33 @@ var _process_file = function(_input, _callback) {
     for (var _l = 0; _l < _lines.length; _l++) {
         var _temp_line = [];
         var _fields = _lines[_l].split(",");
+        var _predict;
         for (var _f = 0; _f < _fields.length; _f++) {
             var _value = _fields[_f];
             if (_value.substr(0, 1) === "'" && _value.substr(_value.length-1, 1) === "'") {
                 _value = _value.substring(1, _value.length-1);
             }
             _temp_line.push(_value);
+            
+            if (_f === _fields.length -2) {
+                _predict = _value;
+            }
         }
         if (typeof(_pro_dis[_l]) !== "undefined") {
             var _pd = _pro_dis[_l];
+            var _max = undefined;
+            var _max_index = 0;
             for (var _p = 0; _p < _pd.length; _p++) {
-                _temp_line.push(_pd[_p]);
+                var _value = _pd[_p];
+                _temp_line.push(_value);
+                
+                if (_max === undefined || parseFloat(_value, 10) > _max) {
+                    _max = parseFloat(_value, 10);
+                    _max_index = _p;
+                }
             }
+            _pro_dis_attr[_max_index] = _predict;
+            console.log([_max_index, _predict]);
         }
         
         _temp_result.push(_temp_line.join(","));
@@ -78,7 +94,12 @@ var _process_file = function(_input, _callback) {
   }
   if (_pro_dis.length > 0) {
       for (var _i = 0; _i < _pro_dis[0].length; _i++) {
-          _attr_list.push("probability distribution " + (_i+1));
+          var _attr = "probability distribution " + (_i+1);
+          if (typeof(_pro_dis_attr[_i]) === "string") {
+              _attr = "probability distribution: " + _pro_dis_attr[_i];
+          }
+          
+          _attr_list.push(_attr);
       }
   }
   _result = _attr_list.join(",") + "\n" + _result;
