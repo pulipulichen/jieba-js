@@ -95,11 +95,11 @@ body {
 
 .display-result {
   overflow-y: auto;
-  max-height: calc(100vh - 30px);
+  max-height: calc(100vh - 50px);
   
 }
 .input-mode.textarea {
-  height: calc(100vh - 207px) !important;
+  height: calc(100vh - 237px) !important;
   max-height: 100vh !important;
   min-height: 0 !important;
 }
@@ -118,4 +118,13 @@ label {
 
 .stat-result-abstract tbody tr.bad th {
   background-color: #F7CFCE;
+}
+
+#preloader { 
+    opacity: 0.5;
+    position: fixed;
+    left: 0; top: 0; z-index: 999; width: 100%; height: 100%; overflow: visible; 
+    background: #333 url('http://files.mimoymima.com/images/loading.gif') no-repeat center center;
+    cursor: wait;
+    display: none;
 }

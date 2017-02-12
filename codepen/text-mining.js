@@ -131,11 +131,11 @@ var _process_file = function(_input, _callback) {
 // ---------------------
 
 var _loading_enable = function () {
-    $("#preloader").fadeIn();
+    $("#preloader").show().fadeIn();
 };
 
 var _loading_disable = function () {
-    $("#preloader").fadeOut();
+    $("#preloader").fadeOut().hide();
 };
 
 // ---------------------
@@ -436,5 +436,5 @@ $(function () {
   $("#show_std").change(_change_show_std);
   
   // 20170108 測試用
-  $("#input_mode_textarea").keyup();
+  //_load_textarea();
 });

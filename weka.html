@@ -27,13 +27,13 @@
 </h1>
 
     <div class="ui top attached tabular menu">
-      <div class="active item" data-tab="textarea">Textarea</div>
-      <div class=" item" data-tab="file">File</div>
+      <div class="item" data-tab="textarea">Textarea</div>
+      <div class="active item" data-tab="file">File</div>
     </div>
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached active tab segment" data-tab="textarea">
+<div class="ui bottom attached tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste CSV file here: </label>
     <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">document,class
@@ -48,19 +48,16 @@
 籃球運動是 1896 年前後由天津中華基督教青年會傳入中國的,?
 您可以探家自 Google 地球和支援合作夥伴建立的套件合大量景點視訊和影像的資源函數庫,?</textarea>
   </div>
-  <!--
-  <div class="field">
-      <button type="button" class="ui primary button process-textarea">Submit</button>
-  </div>
-  -->
+  
     
 </div>
+ 
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached  tab segment" data-tab="file">
+<div class="ui bottom attached active tab segment" data-tab="file">
   <div class="field">
-      <label for="files">Please select a TXT file in UTF8 encoding: </label>
+      <label for="files">Please select a CSV file in UTF8 encoding: </label>
     </div>
     <div class="field">
       <input class="myfile" name="files[]" id="files" multiple="" type="file" />
@@ -70,7 +67,7 @@
     </div>
 
   
-  <div class="inline field">
+    <div class="inline field" style="display: none;">
     <input type="checkbox" name="autodownload" id="autodownload" />
     <label for="autodownload">Download Processed File Automatically</label>
   </div>
@@ -79,11 +76,11 @@
 </div> <!-- <div class="ui bottom attached tab segment" data-tab="file"> -->
 
     <!-- -------------------------------------- -->
-    
-  <div class="field">
-    <div class="loading hide"><img src="//dl.dropboxusercontent.com/u/717137/2016/loading.gif" /></div>
-  </div> <!-- <div class="field"> -->
-  
+<div class="inline field">
+      <input type="checkbox" id="enable_toker" checked="checked" />
+      <label for="enable_toker">使用jieba斷詞</label>
+</div>
+
         </div> <!-- <div class="ui segment"> -->
     </div> <!-- <div class="column"> -->
   <!-- -------------------------------------- -->
@@ -101,13 +98,13 @@
 		<div class="eight wide column">
                     <button type="button" class="fluid ui large right labeled icon green button download-file">
                         <i class="right download icon"></i>
-                        DOWNLOAD Train Document ARFF
+                        DOWNLOAD Train Doc
                     </button>
 		</div>
 		<div class="eight wide column">
                     <button type="button" class="fluid ui large right labeled icon green button download-file-test">
                             <i class="right download icon"></i>
-                            DOWNLOAD Test Document ARFF
+                            DOWNLOAD Test Doc
                     </button>
 		</div>
 	</div>
@@ -115,7 +112,7 @@
     <!-- -------------------------------- -->
 	
     <div class="field">
-      <label for="filename">Train Data File Name: </label>
+      <label for="filename">Train Document File Name: </label>
       <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
     </div>
     
@@ -137,7 +134,7 @@
     <!-- -------------------------------- -->
     
     <div class="field">
-      <label for="test_filename">Test Data File Name: </label>
+      <label for="test_filename">Test Document File Name: </label>
       <input type="text" onfocus="this.select()" id="test_filename" class="test_filename" style="width: calc(100% - 15em)" />
     </div>
     
@@ -161,7 +158,7 @@
 </form>
 
 
-
+<div id="preloader"></div>
 <link rel="stylesheet" href="codepen/text-mining.css" />
 <script src="codepen/text-mining.js"></script>
    </body>
