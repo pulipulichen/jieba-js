@@ -57,7 +57,7 @@ var _process_file = function(_input, _buffer, _callback) {
   var _needle = "\n@data\n";
   var _pos =  _input.indexOf(_needle);
   if (_pos === -1) {
-	  _pos =  _input.indexOf("@data")-1;
+        _pos =  _input.indexOf("@data")-1;
   }
   
   // -----------------
@@ -95,7 +95,7 @@ var _process_file = function(_input, _buffer, _callback) {
   // --------------------------------------
   
   //console.log(_pos);
-  var _result = _input.substring(_pos + _needle.length, _input.length).trim();
+    var _result = _input.substring(_pos + _needle.length - 2, _input.length).trim();
 
     // -------------------
     var _lines = _result.split("\n");
@@ -105,9 +105,11 @@ var _process_file = function(_input, _buffer, _callback) {
         var _fields = _lines[_l].split(",");
         var _predict;
         for (var _f = 0; _f < _fields.length; _f++) {
-            var _value = _fields[_f];
+            var _value = _fields[_f].trim();
+            console.log(_value);
             if (_value.substr(0, 1) === "'" && _value.substr(_value.length-1, 1) === "'") {
                 _value = _value.substring(1, _value.length-1);
+                //console.log(_value);
             }
             _temp_line.push(_value);
             

@@ -36,7 +36,8 @@ var _process_file = function(_input, _callback) {
       }
       
       if (_line_fields.length > 0) {
-          if (_fields[_class_index] !== "?") {
+          //console.log(_fields[_class_index].trim());
+          if (_fields[_class_index].trim() !== "?") {
               _train_data.push(_line_fields);
           }
           else {
