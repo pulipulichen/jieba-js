@@ -51,8 +51,8 @@ var _process_file = function(_input, _callback) {
           if (_col_index < _data[_row_index].length && _col_index !== _class_index) {
               var _text = _data[_row_index][_col_index];
               _text = _text.substring(1, _text.length-1);
-                call_jieba_cut(_text, function (_result) {
-                    _data[_row_index][_col_index] = "'" + _result.join(" ") + "'";
+                call_jieba_cut_join(_text, ' ', function (_result) {
+                    _data[_row_index][_col_index] = "'" + _result + "'";
                     
                     _col_index++;
                     _loop(_data, _row_index, _col_index, _callback);
