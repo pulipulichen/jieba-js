@@ -1,131 +1,93 @@
 var _process_file = function(_input, _callback) {
     _loading_enable();
-    var _panel = $(".file-process-framework");
+   
+   var _pro_dis = [];
+   
+   var _buffer = $("#input_mode_textarea_buffer").val().trim();
+   var _head_needle = "\n=== Predictions on test split ===\n";
+   var _head_pos = _buffer.indexOf(_head_needle);
+   var _footer_needle = "\n=== Evaluation on test set ===\n";
+   var _footer_pos = _buffer.indexOf(_footer_needle, _head_pos + _head_needle.length);
+   if (_head_pos !== -1 && _footer_pos !== -1) {
+       _buffer = _buffer.substring(_head_pos + _head_needle.length, _footer_pos).trim();
+       var _lines = _buffer.split("\n");
+       for (var _l = 1; _l < _lines.length; _l++)  {
+           var _line = _lines[_l];
+           var _pos = _line.lastIndexOf("+");
+           if (_pos === -1) {
+               _pos = _line.lastIndexOf("-");
+           }
+           
+           var _pd = _line.substring(_pos + 1, _line.length).trim();
+           while (_pd.indexOf("  ") > -1) {
+                _pd = _pd.replace(/  /g, ' ');
+           }
+           _pd = _pd.replace(/\*/g, '');
+           var _fields = _pd.split(" ");
+           _pro_dis.push(_fields);
+       }
+   }
+   
+
   //------------------
-  
-  var _lines = _input.split("\n");
-  //console.log(_input);
-    
+
+  var _needle = "\n@data\n";
+  var _pos =  _input.indexOf(_needle);
+  if (_pos === -1) {
+	  _pos =  _input.indexOf("@data")-1;
+  }
+  //console.log(_pos);
+  var _result = _input.substring(_pos + _needle.length, _input.length).trim();
+
+    // -------------------
+    var _lines = _result.split("\n");
+    var _temp_result = [];
+    for (var _l = 0; _l < _lines.length; _l++) {
+        var _temp_line = [];
+        var _fields = _lines[_l].split(",");
+        for (var _f = 0; _f < _fields.length; _f++) {
+            var _value = _fields[_f];
+            if (_value.substr(0, 1) === "'" && _value.substr(_value.length-1, 1) === "'") {
+                _value = _value.substring(1, _value.length-1);
+            }
+            _temp_line.push(_value);
+        }
+        if (typeof(_pro_dis[_l]) !== "undefined") {
+            var _pd = _pro_dis[_l];
+            for (var _p = 0; _p < _pd.length; _p++) {
+                _temp_line.push(_pd[_p]);
+            }
+        }
+        
+        _temp_result.push(_temp_line.join(","));
+    }
+    _result = _temp_result.join("\n");
+
+  // -----------------
   var _attr_list = [];
-  var _class_index;
-  var _class_list = [];
-  var _train_data = [];
-  var _test_data = [];
-  for (var _l = 0; _l < _lines.length; _l++) {
-      var _fields = _lines[_l].split(",");
-      var _line_fields = [];
-      for (var _f = 0; _f < _fields.length; _f++) {
-          var _value = _fields[_f].trim();
-          //console.log(_value);
-          
-          if (_l === 0) {
-              _attr_list.push(_value);
-              if (_value === "class") {
-                  _class_index = _f;
-              }
-          }
-          else {
-              if (_f !== _class_index) {
-                  _value = "'" + _value + "'";
-              }
-              _line_fields.push(_value);
-              if (_f === _class_index && _value !== "?" && $.inArray(_value, _class_list) === -1) {
-                  _class_list.push(_value);
-              }
-          }
-      }
-      
-      if (_line_fields.length > 0) {
-          if (_fields[_class_index] !== "?") {
-              _train_data.push(_line_fields);
-          }
-          else {
-              _test_data.push(_line_fields);
-          }
-          
+  var _attr_input = _input.substr(0, _pos);
+  var _lines = _attr_input.split("\n");
+  var _attr_needle = "@attribute ";
+  for (var _i = 0; _i < _lines.length; _i++) {
+    var _line = _lines[_i];
+    if (_line.indexOf(_attr_needle) === 0) {
+      var _fields = _line.split(" ");
+      var _attr = _fields[1];
+      _attr_list.push(_attr);
+    }
+  }
+  if (_pro_dis.length > 0) {
+      for (var _i = 0; _i < _pro_dis[0].length; _i++) {
+          _attr_list.push("probability distribution " + (_i+1));
       }
   }
+  _result = _attr_list.join(",") + "\n" + _result;
   
-  var _loop = function (_data, _row_index, _col_index, _callback) {
-      if (_row_index < _data.length) {
-          if (_col_index < _data[_row_index].length && _col_index !== _class_index) {
-              var _text = _data[_row_index][_col_index];
-              _text = _text.substring(1, _text.length-1);
-                call_jieba_cut_join(_text, ' ', function (_result) {
-                    _data[_row_index][_col_index] = "'" + _result + "'";
-                    
-                    _col_index++;
-                    _loop(_data, _row_index, _col_index, _callback);
-                });
-          }
-          else {
-              _col_index = 0;
-              _row_index++;
-              _loop(_data, _row_index, _col_index, _callback);
-          }
-      }
-      else {
-          _callback();
-      }
-  };
-  
-    
-  
-  var _build_result = function () {
-    var _train_title = _panel.find(".filename").val();
-    var _test_title = _panel.find(".test_filename").val();
-
-    var _result = "@relation '" + _train_title + "'\n\n";
-    var _test_result = "@relation '" + _test_title + "'\n\n";
-
-    for (var _a = 0; _a < _attr_list.length; _a++) {
-        var _attr = _attr_list[_a];
-        if (_attr !== "class") {
-            _result = _result + "@attribute " + _attr + " string\n";
-            _test_result = _test_result + "@attribute " + _attr + " string\n";
-        }
-        else {
-            _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
-            _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
-        }
-    }
-
-    _result = _result + "\n@data\n";
-    _test_result = _test_result + "\n@data\n";
-
-    for (var _d = 0; _d < _train_data.length; _d++) {
-        _result = _result + _train_data[_d].join(",") + "\n";
-    }
-    for (var _d = 0; _d < _test_data.length; _d++) {
-        _test_result = _test_result + _test_data[_d].join(",") + "\n";
-    }
-
-    _result = _result.trim();
-    _test_result = _test_result.trim();
-
-    _panel.find(".test_preview").val(_test_result);
-
     _loading_disable();
-    if (typeof(_callback) === "function") {
-        _callback(_result);
-    }
-  
-  };    //var _build_result = function () {
-  
-  // --------------------
-  
-  if ($("#enable_toker:checked").length === 1) {
-    _loop(_train_data, 0, 0, function () {
-          _loop(_test_data, 0, 0, function () {
-              _build_result();
-          });
-    });  
+  if (typeof(_callback) === "function") {
+      _callback(_result);
   }
-  else {
-      _build_result();
-  }
-  
-  // --------------------
+
 };
 
 // ---------------------
@@ -198,9 +160,9 @@ var _change_to_fixed = function () {
 
 // -------------------------------------
 
-var _output_filename_surffix="_train_document";
+var _output_filename_surffix="_test_result";
 var _output_filename_test_surffix="_test_document";
-var _output_filename_ext=".arff";
+var _output_filename_ext=".csv";
 
 
 // -------------------------------------
@@ -285,7 +247,7 @@ var _load_textarea = function(evt) {
   
     var local = new Date(utc);
     var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
-    var _file_name = "train_document_" + _file_date + _output_filename_ext;
+    var _file_name = "test_result_" + _file_date + _output_filename_ext;
     var _test_file_name = "test_document_" + _file_date + _output_filename_ext;
 
     _panel.find(".filename").val(_file_name);

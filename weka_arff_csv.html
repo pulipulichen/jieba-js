@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/clipboard.min.js"></script>
-<script src="require-jieba-js.js"></script>
 
 <!-- ------------------------------------ -->
 
@@ -27,35 +26,68 @@
 </h1>
 
     <div class="ui top attached tabular menu">
-      <div class="item" data-tab="textarea">Textarea</div>
-      <div class="active item" data-tab="file">File</div>
+      <div class="item active" data-tab="textarea">Textarea</div>
+      <div class=" item" data-tab="file">File</div>
     </div>
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached tab segment" data-tab="textarea">
+<div class="ui bottom attached active tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste CSV file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">document,class
-奧運會籃球比賽和世界籃球錦標賽的比賽場地長度是 28 公尺寬 15 公尺,yes
-罰球區是限制區加上以罰球線中點為圓心以 80 公尺為半徑向限制區外所葷的半圓區域,yes
-地球是太陽系從內到外的第三顆行星,no
-從衛星上鳥瞰地球感受前所未有的視覺衝擊,no
-籃球運動於 1891 年起源於美國,yes
-遊覽遙遠的地方漫步 3D 森林穿梭時空回到過去,no
-籃球運動是以投籃上籃和扣籃為中心的對抗性室內體育運動之一,?
-瀏覽這些令人驚歎的圖片或在太空中飛往圖片所對應的位置,?
-籃球運動是 1896 年前後由天津中華基督教青年會傳入中國的,?
-您可以探家自 Google 地球和支援合作夥伴建立的套件合大量景點視訊和影像的資源函數庫,?</textarea>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation train_document_2017-02-12T16-07-36.arff_predicted
+
+@attribute document string
+@attribute predictedclass {yes,no}
+@attribute class {yes,no}
+
+@data
+'奧運會 籃球比賽 和 世界 籃球 錦標賽 的 比賽場地 長度 是 28 公尺 寬 15 公尺',yes,?
+'罰球區 是 限制 區 加上 以 罰球線 中點 為 圓心 以 80 公尺 為 半徑 向 限制 區外 所 葷 的 半圓 區域',yes,?
+'地球 是 太陽系 從 內 到 外 的 第三顆 行星',yes,?
+'從 衛星 上 鳥瞰 地球 感受 前所未有 的 視覺 衝擊',no,?</textarea>
   </div>
-  
-    
+    <div class="field">
+    <label for="input_mode_textarea_buffer">Paste buffer file here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+遙遠
+  mean               0 0.3333
+  std. dev.     0.1667 0.4714
+  weight sum         3      3
+  precision          1      1
+
+鳥瞰
+  mean               0 0.3333
+  std. dev.     0.1667 0.4714
+  weight sum         3      3
+  precision          1      1
+
+
+
+Time taken to build model: 0.01 seconds
+
+=== Predictions on test split ===
+
+inst#,    actual, predicted, error, probability distribution
+     1          ?      1:yes      +  *1      0    
+     2          ?      1:yes      +  *0.619  0.381
+     3          ?      1:yes      +  *1      0    
+     4          ?       2:no      +   0.001 *0.999
+=== Evaluation on test set ===
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 0 0 | a = yes
+ 0 0 | b = no
+
+</textarea>
+  </div>
 </div>
  
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached active tab segment" data-tab="file">
+<div class="ui bottom attached  tab segment" data-tab="file">
   <div class="field">
       <label for="files">Please select a CSV file in UTF8 encoding: </label>
     </div>
@@ -75,12 +107,6 @@
 
 </div> <!-- <div class="ui bottom attached tab segment" data-tab="file"> -->
 
-    <!-- -------------------------------------- -->
-<div class="inline field">
-      <input type="checkbox" id="enable_toker" checked="checked" />
-      <label for="enable_toker">使用jieba斷詞</label>
-</div>
-
         </div> <!-- <div class="ui segment"> -->
     </div> <!-- <div class="column"> -->
   <!-- -------------------------------------- -->
@@ -95,16 +121,10 @@
     </h2>
 	
 	<div class="ui doubling grid">
-		<div class="eight wide column">
+		<div class="eight sixteen column">
                     <button type="button" class="fluid ui large right labeled icon green button download-file">
                         <i class="right download icon"></i>
-                        DOWNLOAD Train Doc
-                    </button>
-		</div>
-		<div class="eight wide column">
-                    <button type="button" class="fluid ui large right labeled icon green button download-file-test">
-                            <i class="right download icon"></i>
-                            DOWNLOAD Test Doc
+                        DOWNLOAD
                     </button>
 		</div>
 	</div>
@@ -112,7 +132,7 @@
     <!-- -------------------------------- -->
 	
     <div class="field">
-      <label for="filename">Train Document File Name: </label>
+      <label for="filename">Result File Name: </label>
       <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
     </div>
     
@@ -123,7 +143,7 @@
           Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
         </div>
             <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
-                COPY ARFF File
+                COPY File
                 <i class="copy icon"></i>
 	    </button>
       </label>
@@ -131,35 +151,13 @@
       <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
     </div>
     
-    <!-- -------------------------------- -->
-    
-    <div class="field">
-      <label for="test_filename">Test Document File Name: </label>
-      <input type="text" onfocus="this.select()" id="test_filename" class="test_filename" style="width: calc(100% - 15em)" />
-    </div>
-    
-    <div class="field">
-      <label for="preview">
-        Result Preview: 
-        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
-          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
-        </div>
-            <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
-                COPY ARFF File
-                <i class="copy icon"></i>
-	    </button>
-      </label>
-        
-      <textarea id="test_preview" class="test_preview" onfocus="this.select();"></textarea>
-    </div>
-  
     </div> <!-- <div class="column"> -->
   </div> <!-- <div class="ui two column doubling grid"> -->
 </form>
 
 
 <div id="preloader"></div>
-<link rel="stylesheet" href="codepen/text-mining.css" />
-<script src="codepen/text-mining.js"></script>
+<link rel="stylesheet" href="codepen/text-mining-arff2csv.css" />
+<script src="codepen/text-mining-arff2csv.js"></script>
    </body>
 </html>

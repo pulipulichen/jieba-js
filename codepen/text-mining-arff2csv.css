@@ -1,0 +1,130 @@
+body {
+  padding: 1em !important; 
+}
+.file-process-framework .loading.hide {
+  display:none;
+}
+
+.file-process-framework label,
+.file-process-framework .download-file {
+  display: block;
+}
+
+.file-process-framework .input-mode label {
+  display: inline;
+}
+
+/*
+.file-process-framework .download-file {
+  font-size: 2em;
+  width: 90%;
+}
+*/
+
+.file-process-framework textarea.preview {
+  display: block;
+  width: 90%;
+  height: calc(100vh - 400px) !important;
+  min-height: 0 !important;
+}
+
+.stat-result-container {
+  overflow: auto;
+  padding: 5px;
+}
+
+.stat-result td.large {
+  background-color:#007F08;
+  color: white;
+}
+.stat-result td.x-large {
+  background-color:#00FF10;
+  color: white;
+  font-weight: bold;
+}
+.stat-result td.xx-large {
+  background-color:#4CFF58;
+  color: white;
+  font-weight: bold;
+}
+
+.stat-result td.small {
+  background-color:#7F130A;
+  color: white;
+}
+.stat-result td.x-small {
+  background-color:#FF2614;
+  color: white;
+  font-weight: bold;
+}
+.stat-result td.xx-small {
+  background-color:#FF6D60;
+  color: white;
+  font-weight: bold;
+}
+
+.stat-result td.smallest {
+  border: 3px solid #FF6D60;
+  color: yellow;
+  font-weight: bold;
+}
+
+.stat-result td.largest {
+  border: 3px solid #4CFF58;
+  color: yellow;
+  font-weight: bold;
+}
+
+.stat-result td {
+  text-align:right;
+}
+.stat-result tbody th {
+  text-align: right;
+}
+
+.stat-result-abstract th,
+.stat-result-abstract td,
+.stat-result th,
+.stat-result td {
+  padding: 5px;
+}
+
+.stat-result td.fulldata {
+  color: gray;
+}
+
+.display-result {
+  overflow-y: auto;
+  max-height: calc(100vh - 50px);
+  
+}
+.input-mode.textarea {
+  height: calc(50vh - 150px) !important;
+  max-height: 100vh !important;
+  min-height: 0 !important;
+}
+
+label {
+  font-weight: bold;
+}
+
+.stat-result-abstract tbody td {
+  vertical-align: top;
+}
+
+.stat-result-abstract tbody tr.good th {
+  background-color: #DEEBD6;
+}
+
+.stat-result-abstract tbody tr.bad th {
+  background-color: #F7CFCE;
+}
+
+#preloader { 
+    opacity: 0.5;
+    position: fixed;
+    left: 0; top: 0; z-index: 999; width: 100%; height: 100%; overflow: visible; 
+    background: #333 url('http://files.mimoymima.com/images/loading.gif') no-repeat center center;
+    cursor: wait;
+    display: none;
+}
