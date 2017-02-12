@@ -1,13 +1,19 @@
 var _process_file = function(_input, _callback) {
+    var _panel = $(".file-process-framework");
   //------------------
   
   var _lines = _input.split("\n");
   //console.log(_input);
   
+  call_jieba_cut("測試看看", function (_result) {
+      alert(_result);
+  });
+  
   var _attr_list = [];
   var _class_index;
   var _class_list = [];
-  var _data = [];
+  var _train_data = [];
+  var _test_data = [];
   for (var _l = 0; _l < _lines.length; _l++) {
       var _fields = _lines[_l].split(",");
       var _line_fields = [];
@@ -33,30 +39,48 @@ var _process_file = function(_input, _callback) {
       }
       
       if (_line_fields.length > 0) {
-          _data.push(_line_fields);
+          if (_fields[_class_index] !== "?") {
+              _train_data.push(_line_fields);
+          }
+          else {
+              _test_data.push(_line_fields);
+          }
+          
       }
   }
   
-  var _train_title = "train title";
+  var _train_title = _panel.find(".filename").val();
+  var _test_title = _panel.find(".test_filename").val();
 
   var _result = "@relation '" + _train_title + "'\n\n";
+  var _test_result = "@relation '" + _test_title + "'\n\n";
+  
   for (var _a = 0; _a < _attr_list.length; _a++) {
       var _attr = _attr_list[_a];
       if (_attr !== "class") {
           _result = _result + "@attribute " + _attr + " string\n";
+          _test_result = _test_result + "@attribute " + _attr + " string\n";
       }
       else {
           _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
+          _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
       }
   }
   
   _result = _result + "\n@data\n";
+  _test_result = _test_result + "\n@data\n";
   
-  for (var _d = 0; _d < _data.length; _d++) {
-      _result = _result + _data[_d].join(",") + "\n";
+  for (var _d = 0; _d < _train_data.length; _d++) {
+      _result = _result + _train_data[_d].join(",") + "\n";
+  }
+  for (var _d = 0; _d < _test_data.length; _d++) {
+      _test_result = _test_result + _test_data[_d].join(",") + "\n";
   }
   
   _result = _result.trim();
+  _test_result = _test_result.trim();
+  
+  _panel.find(".test_preview").val(_test_result);
     
   if (typeof(_callback) === "function") {
       _callback(_result);
@@ -124,8 +148,9 @@ var _change_to_fixed = function () {
 
 // -------------------------------------
 
-var _output_filename_surffix="_output";
-var _output_filename_ext=".csv";
+var _output_filename_surffix="_train_document";
+var _output_filename_test_surffix="_test_document";
+var _output_filename_ext=".arff";
 
 
 // -------------------------------------
@@ -141,15 +166,22 @@ var _load_file = function(evt) {
     var reader = new FileReader();
     var _result;
 
-    var _file_name = evt.target.files[0].name;
-    var _pos = _file_name.lastIndexOf(".");
-    _file_name = _file_name.substr(0, _pos)
+    var _original_file_name = evt.target.files[0].name;
+    var _pos = _original_file_name.lastIndexOf(".");
+    var _file_name = _original_file_name.substr(0, _pos)
         + _output_filename_surffix
-        + _file_name.substring(_pos, _file_name.length);
+        + _original_file_name.substring(_pos, _original_file_name.length);
     _file_name = _file_name + _output_filename_ext;
+    var _test_file_name = _original_file_name.substr(0, _pos)
+        + _output_filename_test_surffix
+        + _original_file_name.substring(_pos, _original_file_name.length);
+    _test_file_name = _test_file_name + _output_filename_ext;
+    
+    _panel.find(".filename").val(_file_name);
+    _panel.find(".test_filename").val(_test_file_name);
     
     reader.onload = function(evt) {
-        if(evt.target.readyState != 2) return;
+        if(evt.target.readyState !== 2) return;
         if(evt.target.error) {
             alert('Error while reading file');
             return;
@@ -162,7 +194,6 @@ var _load_file = function(evt) {
 
         _process_file(_result, function (_result) {
             _panel.find(".preview").val(_result);
-            _panel.find(".filename").val(_file_name);
                         
             $(".file-process-framework .myfile").val("");
             $(".file-process-framework .loading").addClass("hide");
@@ -175,7 +206,7 @@ var _load_file = function(evt) {
             }
             
             //_download_file(_result, _file_name, "txt");
-        })
+        });
     };
 
 
@@ -203,14 +234,17 @@ var _load_textarea = function(evt) {
     var utc = d.getTime() - (d.getTimezoneOffset() * 60000);
   
     var local = new Date(utc);
-    var _file_name = local.toJSON().slice(0,19).replace(/:/g, "-");
-    _file_name = "output_" + _file_name + ".csv";
+    var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
+    var _file_name = "train_document_" + _file_date + ".csv";
+    var _test_file_name = "test_document_" + _file_date + ".csv";
 
+    _panel.find(".filename").val(_file_name);
+    _panel.find(".test_filename").val(_test_file_name);
+    
     // ---------------------------
 
     _process_file(_result, function (_result) {
         _panel.find(".preview").val(_result);
-        _panel.find(".filename").val(_file_name);
 
         _panel.find(".loading").addClass("hide");
         _panel.find(".display-result").show();
