@@ -26,13 +26,13 @@
 </h1>
 
     <div class="ui top attached tabular menu">
-      <div class="item active" data-tab="textarea">Textarea</div>
-      <div class=" item" data-tab="file">File</div>
+      <div class="item " data-tab="textarea">Textarea</div>
+      <div class="active item" data-tab="file">File</div>
     </div>
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached active tab segment" data-tab="textarea">
+<div class="ui bottom attached  tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste CSV file here: </label>
     <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation train_document_2017-02-12T16-07-36.arff_predicted
@@ -87,15 +87,16 @@ inst#,    actual, predicted, error, probability distribution
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached  tab segment" data-tab="file">
+<div class="ui bottom attached active tab segment" data-tab="file">
   <div class="field">
-      <label for="files">Please select a CSV file in UTF8 encoding: </label>
+      <label for="files">ARFF file: </label>
     </div>
     <div class="field">
       <input class="myfile" name="files[]" id="files" multiple="" type="file" />
-      <div class="ui pointing inverted blue large basic label">
-        <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" style="display: block">How to Convert TXT file to UTF8 encoding?</a>
-      </div>
+    </div>
+    <div class="field">
+      <label for="files_buffer">Buffer file: </label>
+      <input class="myfile_buffer" name="files_buffer[]" id="files_buffer" multiple="" type="file" />
     </div>
 
   

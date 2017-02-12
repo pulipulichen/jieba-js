@@ -1,33 +1,36 @@
-var _process_file = function(_input, _callback) {
+var _process_file = function(_input, _buffer, _callback) {
     _loading_enable();
    
    var _pro_dis = [];
    var _pro_dis_attr = [];
    
-   var _buffer = $("#input_mode_textarea_buffer").val().trim();
-   var _head_needle = "\n=== Predictions on test split ===\n";
-   var _head_pos = _buffer.indexOf(_head_needle);
-   var _footer_needle = "\n=== Evaluation on test set ===\n";
-   var _footer_pos = _buffer.indexOf(_footer_needle, _head_pos + _head_needle.length);
-   if (_head_pos !== -1 && _footer_pos !== -1) {
-       _buffer = _buffer.substring(_head_pos + _head_needle.length, _footer_pos).trim();
-       var _lines = _buffer.split("\n");
-       for (var _l = 1; _l < _lines.length; _l++)  {
-           var _line = _lines[_l];
-           var _pos = _line.lastIndexOf("+");
-           if (_pos === -1) {
-               _pos = _line.lastIndexOf("-");
-           }
-           
-           var _pd = _line.substring(_pos + 1, _line.length).trim();
-           while (_pd.indexOf("  ") > -1) {
-                _pd = _pd.replace(/  /g, ' ');
-           }
-           _pd = _pd.replace(/\*/g, '');
-           var _fields = _pd.split(" ");
-           _pro_dis.push(_fields);
-       }
+   //var _buffer = $("#input_mode_textarea_buffer").val().trim();
+   if (_buffer !== undefined) {
+        var _head_needle = "\n=== Predictions on test split ===\n";
+        var _head_pos = _buffer.indexOf(_head_needle);
+        var _footer_needle = "\n=== Evaluation on test set ===\n";
+        var _footer_pos = _buffer.indexOf(_footer_needle, _head_pos + _head_needle.length);
+        if (_head_pos !== -1 && _footer_pos !== -1) {
+            _buffer = _buffer.substring(_head_pos + _head_needle.length, _footer_pos).trim();
+            var _lines = _buffer.split("\n");
+            for (var _l = 1; _l < _lines.length; _l++)  {
+                var _line = _lines[_l];
+                var _pos = _line.lastIndexOf("+");
+                if (_pos === -1) {
+                    _pos = _line.lastIndexOf("-");
+                }
+
+                var _pd = _line.substring(_pos + 1, _line.length).trim();
+                while (_pd.indexOf("  ") > -1) {
+                     _pd = _pd.replace(/  /g, ' ');
+                }
+                _pd = _pd.replace(/\*/g, '');
+                var _fields = _pd.split(" ");
+                _pro_dis.push(_fields);
+            }
+        }
    }
+    
    
 
   //------------------
@@ -72,7 +75,7 @@ var _process_file = function(_input, _callback) {
                 }
             }
             _pro_dis_attr[_max_index] = _predict;
-            console.log([_max_index, _predict]);
+            //console.log([_max_index, _predict]);
         }
         
         _temp_result.push(_temp_line.join(","));
@@ -188,6 +191,8 @@ var _output_filename_ext=".csv";
 
 // -------------------------------------
 
+var _file_temp;
+
 var _load_file = function(evt) {
     //console.log(1);
     if(!window.FileReader) return; // Browser is not compatible
@@ -205,13 +210,8 @@ var _load_file = function(evt) {
         + _output_filename_surffix
         + _original_file_name.substring(_pos, _original_file_name.length);
     _file_name = _file_name + _output_filename_ext;
-    var _test_file_name = _original_file_name.substr(0, _pos)
-        + _output_filename_test_surffix
-        + _original_file_name.substring(_pos, _original_file_name.length);
-    _test_file_name = _test_file_name + _output_filename_ext;
     
     _panel.find(".filename").val(_file_name);
-    _panel.find(".test_filename").val(_test_file_name);
     
     reader.onload = function(evt) {
         if(evt.target.readyState !== 2) return;
@@ -224,8 +224,13 @@ var _load_file = function(evt) {
 
         //document.forms['myform'].elements['text'].value = evt.target.result;
         _result =  evt.target.result;
-
-        _process_file(_result, function (_result) {
+        _file_temp = _result;
+        _start_process_file();
+    };
+    
+    
+    var _start_process_file = function () {
+        _process_file(_result, undefined, function (_result) {
             _panel.find(".preview").val(_result);
                         
             $(".file-process-framework .myfile").val("");
@@ -242,18 +247,69 @@ var _load_file = function(evt) {
         });
     };
 
+    //console.log(_file_name);
+
+    reader.readAsText(evt.target.files[0]);
+};
+
+var _load_file_buffer = function(evt) {
+    //console.log(1);
+    if(!window.FileReader) return; // Browser is not compatible
+
+    var _panel = $(".file-process-framework");
+    
+    _panel.find(".loading").removeClass("hide");
+
+    var reader = new FileReader();
+    var _result_buffer;
+
+    reader.onload = function(evt) {
+        if(evt.target.readyState !== 2) return;
+        if(evt.target.error) {
+            alert('Error while reading file');
+            return;
+        }
+
+        //filecontent = evt.target.result;
+
+        //document.forms['myform'].elements['text'].value = evt.target.result;
+        _result_buffer =  evt.target.result;
+        _result =  _file_temp;
+        _start_process_file();
+    };
+    
+    
+    var _start_process_file = function () {
+        _process_file(_result, _result_buffer, function (_result) {
+            _panel.find(".preview").val(_result);
+                        
+            $(".file-process-framework .myfile_buffer").val("");
+            $(".file-process-framework .loading").addClass("hide");
+            _panel.find(".display-result").show();
+            _panel.find(".display-result .encoding").show();
+
+            var _auto_download = (_panel.find('[name="autodownload"]:checked').length === 1);
+            if (_auto_download === true) {
+                _panel.find(".download-file").click();
+            }
+            
+            //_download_file(_result, _file_name, "txt");
+        });
+    };
 
     //console.log(_file_name);
 
     reader.readAsText(evt.target.files[0]);
 };
 
+
 var _load_textarea = function(evt) {
     var _panel = $(".file-process-framework");
     
     // --------------------------
 
-    var _result = _panel.find(".input-mode.textarea").val();
+    var _result = _panel.find(".input-mode#input_mode_textarea").val();
+    var _buffer = _panel.find(".input-mode#input_mode_textarea_buffer").val();
     if (_result.trim() === "") {
         return;
     }
@@ -276,7 +332,7 @@ var _load_textarea = function(evt) {
     
     // ---------------------------
 
-    _process_file(_result, function (_result) {
+    _process_file(_result, _buffer, function (_result) {
         _panel.find(".preview").val(_result);
 
         _panel.find(".loading").addClass("hide");
@@ -417,6 +473,8 @@ $(function () {
   var _panel = $(".file-process-framework");
   _panel.find(".input-mode.textarea").change(_load_textarea);
   _panel.find(".myfile").change(_load_file);
+  _panel.find(".myfile_buffer").change(_load_file_buffer);
+  //_panel.find("#input_file_submit").click(_load_file);
   _panel.find(".download-file").click(_download_file_button);
   _panel.find(".download-test-file").click(_download_test_file_button);
   
