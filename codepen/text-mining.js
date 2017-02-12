@@ -1,14 +1,11 @@
 var _process_file = function(_input, _callback) {
+    _loading_enable();
     var _panel = $(".file-process-framework");
   //------------------
   
   var _lines = _input.split("\n");
   //console.log(_input);
-  
-  call_jieba_cut("測試看看", function (_result) {
-      alert(_result);
-  });
-  
+    
   var _attr_list = [];
   var _class_index;
   var _class_list = [];
@@ -49,43 +46,96 @@ var _process_file = function(_input, _callback) {
       }
   }
   
-  var _train_title = _panel.find(".filename").val();
-  var _test_title = _panel.find(".test_filename").val();
-
-  var _result = "@relation '" + _train_title + "'\n\n";
-  var _test_result = "@relation '" + _test_title + "'\n\n";
-  
-  for (var _a = 0; _a < _attr_list.length; _a++) {
-      var _attr = _attr_list[_a];
-      if (_attr !== "class") {
-          _result = _result + "@attribute " + _attr + " string\n";
-          _test_result = _test_result + "@attribute " + _attr + " string\n";
+  var _loop = function (_data, _row_index, _col_index, _callback) {
+      if (_row_index < _data.length) {
+          if (_col_index < _data[_row_index].length && _col_index !== _class_index) {
+              var _text = _data[_row_index][_col_index];
+              _text = _text.substr(1, _text.length-1);
+                call_jieba_cut(_text, function (_result) {
+                    _data[_row_index][_col_index] = "'" + _result.join(" ") + "'";
+                    
+                    _col_index++;
+                    _loop(_data, _row_index, _col_index, _callback);
+                });
+          }
+          else {
+              _col_index = 0;
+              _row_index++;
+              _loop(_data, _row_index, _col_index, _callback);
+          }
       }
       else {
-          _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
-          _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
+          _callback();
       }
-  }
+  };
   
-  _result = _result + "\n@data\n";
-  _test_result = _test_result + "\n@data\n";
-  
-  for (var _d = 0; _d < _train_data.length; _d++) {
-      _result = _result + _train_data[_d].join(",") + "\n";
-  }
-  for (var _d = 0; _d < _test_data.length; _d++) {
-      _test_result = _test_result + _test_data[_d].join(",") + "\n";
-  }
-  
-  _result = _result.trim();
-  _test_result = _test_result.trim();
-  
-  _panel.find(".test_preview").val(_test_result);
     
-  if (typeof(_callback) === "function") {
-      _callback(_result);
+  
+  var _build_result = function () {
+    var _train_title = _panel.find(".filename").val();
+    var _test_title = _panel.find(".test_filename").val();
+
+    var _result = "@relation '" + _train_title + "'\n\n";
+    var _test_result = "@relation '" + _test_title + "'\n\n";
+
+    for (var _a = 0; _a < _attr_list.length; _a++) {
+        var _attr = _attr_list[_a];
+        if (_attr !== "class") {
+            _result = _result + "@attribute " + _attr + " string\n";
+            _test_result = _test_result + "@attribute " + _attr + " string\n";
+        }
+        else {
+            _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
+            _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
+        }
+    }
+
+    _result = _result + "\n@data\n";
+    _test_result = _test_result + "\n@data\n";
+
+    for (var _d = 0; _d < _train_data.length; _d++) {
+        _result = _result + _train_data[_d].join(",") + "\n";
+    }
+    for (var _d = 0; _d < _test_data.length; _d++) {
+        _test_result = _test_result + _test_data[_d].join(",") + "\n";
+    }
+
+    _result = _result.trim();
+    _test_result = _test_result.trim();
+
+    _panel.find(".test_preview").val(_test_result);
+
+    _loading_disable();
+    if (typeof(_callback) === "function") {
+        _callback(_result);
+    }
+  
+  };    //var _build_result = function () {
+  
+  // --------------------
+  
+  if ($("#enable_toker:checked").length === 1) {
+    _loop(_train_data, 0, 0, function () {
+          _loop(_test_data, 0, 0, function () {
+              _build_result();
+          });
+    });  
   }
-        
+  else {
+      _build_result();
+  }
+  
+  // --------------------
+};
+
+// ---------------------
+
+var _loading_enable = function () {
+    $("#preloader").fadeIn();
+};
+
+var _loading_disable = function () {
+    $("#preloader").fadeOut();
 };
 
 // ---------------------
@@ -235,8 +285,8 @@ var _load_textarea = function(evt) {
   
     var local = new Date(utc);
     var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
-    var _file_name = "train_document_" + _file_date + ".csv";
-    var _test_file_name = "test_document_" + _file_date + ".csv";
+    var _file_name = "train_document_" + _file_date + _output_filename_ext;
+    var _test_file_name = "test_document_" + _file_date + _output_filename_ext;
 
     _panel.find(".filename").val(_file_name);
     _panel.find(".test_filename").val(_test_file_name);
@@ -373,7 +423,7 @@ var _change_show_std = function () {
 
 $(function () {
   var _panel = $(".file-process-framework");
-  _panel.find(".input-mode.textarea").click(_load_textarea).keyup(_load_textarea);
+  _panel.find(".input-mode.textarea").change(_load_textarea);
   _panel.find(".myfile").change(_load_file);
   _panel.find(".download-file").click(_download_file_button);
   
