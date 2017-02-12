@@ -3,6 +3,7 @@ var _process_file = function(_input, _buffer, _callback) {
    
    var _pro_dis = [];
    var _pro_dis_attr = [];
+   var _predicted_data = [];
    
    //var _buffer = $("#input_mode_textarea_buffer").val().trim();
    if (_buffer !== undefined) {
@@ -27,6 +28,24 @@ var _process_file = function(_input, _buffer, _callback) {
                 _pd = _pd.replace(/\*/g, '');
                 var _fields = _pd.split(" ");
                 _pro_dis.push(_fields);
+                
+                // ---------------------
+                var _pos = _line.lastIndexOf(":");
+                var _pos2 = _line.indexOf(" ", _pos);
+                var _pre = _line.substring(_pos+1, _pos2);
+                _predicted_data.push(_pre);
+                
+                // ----------------------
+                
+                 var _pos = _line.lastIndexOf(":");
+                 var _len = 1;
+                 while (_line.substring(_pos-_len, _pos- _len + 1) !== " ") {
+                     _len++;
+                 }
+                 var _index = _line.substring(_pos-_len, _pos);
+                 console.log(_index);
+                 _index = parseInt(_index, 10) - 1;
+                 _pro_dis_attr[_index] = _pre;
             }
         }
    }
@@ -40,6 +59,41 @@ var _process_file = function(_input, _buffer, _callback) {
   if (_pos === -1) {
 	  _pos =  _input.indexOf("@data")-1;
   }
+  
+  // -----------------
+  var _has_predicted = false;
+  var _needle = "predicted";
+  var _attr_list = [];
+  var _attr_input = _input.substr(0, _pos);
+  var _lines = _attr_input.split("\n");
+  var _attr_needle = "@attribute ";
+  for (var _i = 0; _i < _lines.length; _i++) {
+    var _line = _lines[_i];
+    if (_line.indexOf(_attr_needle) === 0) {
+      var _fields = _line.split(" ");
+      var _attr = _fields[1];
+      _attr_list.push(_attr);
+      if (_has_predicted === false && _attr.substr(0, _needle.length) === _needle) {
+          _has_predicted = true;
+      }
+    }
+  }
+  if (_pro_dis.length > 0) {
+      if (_has_predicted === false) {
+          _attr_list.push("predictedclass");
+      }
+      
+      for (var _i = 0; _i < _pro_dis[0].length; _i++) {
+          var _attr = "probability distribution " + (_i+1);
+          if (typeof(_pro_dis_attr[_i]) === "string") {
+              _attr = "probability distribution: " + _pro_dis_attr[_i];
+          }
+          
+          _attr_list.push(_attr);
+      }
+  }
+  // --------------------------------------
+  
   //console.log(_pos);
   var _result = _input.substring(_pos + _needle.length, _input.length).trim();
 
@@ -57,11 +111,17 @@ var _process_file = function(_input, _buffer, _callback) {
             }
             _temp_line.push(_value);
             
-            if (_f === _fields.length -2) {
-                _predict = _value;
-            }
+            //if (_f === _fields.length -2) {
+            //    _predict = _value;
+            //}
         }
         if (typeof(_pro_dis[_l]) !== "undefined") {
+            if (_has_predicted === false) {
+                _temp_line.push(_predicted_data[_l]);
+            }
+            
+            // ---------------------------
+            
             var _pd = _pro_dis[_l];
             var _max = undefined;
             var _max_index = 0;
@@ -74,7 +134,7 @@ var _process_file = function(_input, _buffer, _callback) {
                     _max_index = _p;
                 }
             }
-            _pro_dis_attr[_max_index] = _predict;
+            //_pro_dis_attr[_max_index] = _predict;
             //console.log([_max_index, _predict]);
         }
         
@@ -82,29 +142,9 @@ var _process_file = function(_input, _buffer, _callback) {
     }
     _result = _temp_result.join("\n");
 
-  // -----------------
-  var _attr_list = [];
-  var _attr_input = _input.substr(0, _pos);
-  var _lines = _attr_input.split("\n");
-  var _attr_needle = "@attribute ";
-  for (var _i = 0; _i < _lines.length; _i++) {
-    var _line = _lines[_i];
-    if (_line.indexOf(_attr_needle) === 0) {
-      var _fields = _line.split(" ");
-      var _attr = _fields[1];
-      _attr_list.push(_attr);
-    }
-  }
-  if (_pro_dis.length > 0) {
-      for (var _i = 0; _i < _pro_dis[0].length; _i++) {
-          var _attr = "probability distribution " + (_i+1);
-          if (typeof(_pro_dis_attr[_i]) === "string") {
-              _attr = "probability distribution: " + _pro_dis_attr[_i];
-          }
-          
-          _attr_list.push(_attr);
-      }
-  }
+  
+  // -----------------------------
+  
   _result = _attr_list.join(",") + "\n" + _result;
   
     _loading_disable();
