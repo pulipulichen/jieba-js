@@ -3,7 +3,7 @@ var _process_file = function(_input, _callback) {
     var _panel = $(".file-process-framework");
   //------------------
   
-  var _lines = _input.split("\n");
+  var _lines = _input.trim().split("\n");
   //console.log(_input);
     
   var _attr_list = [];
@@ -16,6 +16,11 @@ var _process_file = function(_input, _callback) {
       var _line_fields = [];
       for (var _f = 0; _f < _fields.length; _f++) {
           var _value = _fields[_f].trim();
+          if ( (_value.substr(0, 1) === '"' || _value.substr(0, 1) === "'")
+                  && (_value.substr(_value.length-1,1) === '"' || _value.substr(_value.length-1,1) === "'") ) {
+              _value = _value.substr(1, _value.length-1);
+          }
+          
           //console.log(_value);
           
           if (_l === 0) {
@@ -37,6 +42,7 @@ var _process_file = function(_input, _callback) {
       
       if (_line_fields.length > 0) {
           //console.log(_fields[_class_index].trim());
+          //console.log([_class_index], _fields);
           if (_fields[_class_index].trim() !== "?") {
               _train_data.push(_line_fields);
           }
