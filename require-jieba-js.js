@@ -80,6 +80,11 @@ _get_host = function () {
 			break;
 		}
 	}
+	
+	if (_host === "") {
+		_host = "//pulipulichen.github.io/jieba-js/";
+	}
+	
 	return _host;
 };
 
