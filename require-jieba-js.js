@@ -55,9 +55,8 @@ resume_jieba_cut = function () {
 
 _get_host = function () {
 	
-	if (!String.prototype.endsWith) {
-	  String.prototype.endsWith = function(searchString, position) {
-		  var subjectString = this.toString();
+	var _endsWith = function(_str, searchString, position) {
+		  var subjectString = _str.toString();
 		  if (typeof position !== 'number' 
 			|| !isFinite(position) 
 			|| Math.floor(position) !== position 
@@ -74,7 +73,7 @@ _get_host = function () {
 	var _scripts = $("script");
 	for (var _i = 0; _i < _scripts.length; _i++) {
 		var _src = _scripts.eq(_i).attr("src");
-		if (_src.endsWith("/require-jieba-js.js")) {
+		if (_endsWith(_src, "/require-jieba-js.js")) {
 			_host = _src.substr(0, _src.lastIndexOf("require-jieba-js.js"));
 			break;
 		}
