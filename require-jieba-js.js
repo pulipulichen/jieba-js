@@ -67,7 +67,6 @@ _get_host = function () {
 		  var lastIndex = subjectString.lastIndexOf(searchString, position);
 		  return lastIndex !== -1 && lastIndex === position;
 	  };
-	}
 	
 	var _host = "";
 	var _scripts = $("script");
