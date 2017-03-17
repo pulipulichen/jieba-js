@@ -1,10 +1,21 @@
 // <script data-main="scripts/main" src="scripts/require.js"></script>
 
 var _JIEBA_CUT_QUEUE = [];
+JIEBA_CUSTOM_DICTIONARY = undefined;
 
-call_jieba_cut = function (_text, _callback) {
+call_jieba_cut = function (_text, _dict, _callback) {
+	
+	if (typeof(_dict) === "function") {
+		_callback = _dict;
+		_dict = undefined;
+	}
+	
     if (typeof(_callback) !== "function") {
         return;
+    }
+
+    if (typeof(_dict) === "string") {
+        JIEBA_CUSTOM_DICTIONARY = _dict;
     }
     
     if (typeof(jieba_cut) !== 'function') {
@@ -53,33 +64,41 @@ resume_jieba_cut = function () {
 
 // ------------------------------------------------------
 
-_get_host = function () {
-	
-	var _endsWith = function(_str, searchString, position) {
-		if (_str === undefined) {
-			return false;
-		}
-		  var subjectString = _str.toString();
-		  if (typeof position !== 'number' 
-			|| !isFinite(position) 
-			|| Math.floor(position) !== position 
-			|| position > subjectString.length) {
-			position = subjectString.length;
-		  }
-		  position -= searchString.length;
-		  var lastIndex = subjectString.lastIndexOf(searchString, position);
-		  return lastIndex !== -1 && lastIndex === position;
-	  };
+var _endsWith = function(_str, searchString, position) {
+    if (_str === undefined) {
+        return false;
+    }
+    var subjectString = _str.toString();
+    if (typeof position !== 'number' 
+            || !isFinite(position) 
+            || Math.floor(position) !== position 
+            || position > subjectString.length) {
+        position = subjectString.length;
+    }
+    position -= searchString.length;
+    var lastIndex = subjectString.lastIndexOf(searchString, position);
+    return lastIndex !== -1 && lastIndex === position;
+};
+
+get_host = function () {
 	
 	var _host = "";
-	var _scripts = $("script");
-	for (var _i = 0; _i < _scripts.length; _i++) {
-		var _src = _scripts.eq(_i).attr("src");
-		if (_endsWith(_src, "/require-jieba-js.js")) {
-			_host = _src.substr(0, _src.lastIndexOf("require-jieba-js.js"));
-			break;
-		}
-	}
+    if (typeof(document.currentScript) === "object" 
+        && typeof(document.currentScript.src) === "string") {
+        _host = document.currentScript.src;
+    }
+    else {
+        var scripts = document.getElementsByTagName("script")
+        for (var i = 0; i < scripts.length; ++i) {
+            var _src = _scripts[i].src;
+            if (_endsWith(_src, "/require-jieba-js.js")) {
+                _host = _src;
+                break;
+            }
+        }
+    }
+
+    _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
 	
 	if (_host === "") {
 		_host = "//pulipulichen.github.io/jieba-js/";
@@ -88,7 +107,7 @@ _get_host = function () {
 	return _host;
 };
 
-var _host = _get_host();
+var _host = get_host();
 
 var s = document.createElement("script");
 s.type = "text/javascript";

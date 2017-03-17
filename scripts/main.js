@@ -1,6 +1,6 @@
-var _host = _get_host();
+var _host = get_host();
 
-require([ _host + "/scripts/data/dictionary.js"], function(dictionary) {
+var _jieba_parsing = function(dictionary) {
     var trie = {}, // to be initialized
         FREQ = {},
         total = 0.0,
@@ -60,7 +60,7 @@ require([ _host + "/scripts/data/dictionary.js"], function(dictionary) {
         }
         initialized = true;
 
-        console.log("Trie built!", trie);
+        //console.log("Trie built!", trie);
     }
 
     var get_DAG = function(sentence) {
@@ -282,4 +282,19 @@ require([ _host + "/scripts/data/dictionary.js"], function(dictionary) {
     
     //console.log(cut("我的中文東西。"));
     resume_jieba_cut();
+};
+
+require([ _host + "/scripts/data/dictionary.js"], function (_dictionary) {
+	if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
+		require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
+			for (var _i = 0; _i < _custom_dictionary.length; _i++) {
+				_dictionary.push(_custom_dictionary[_i]);
+			}
+			_jieba_parsing(_dictionary);
+		});
+	}
+	else {
+		_jieba_parsing(_dictionary);
+	}
+	
 });
