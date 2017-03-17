@@ -1,4 +1,6 @@
-require(["data/dictionary"], function(dictionary) {
+var _host = _get_host();
+
+require([ _host + "/scripts/data/dictionary.js"], function(dictionary) {
     var trie = {}, // to be initialized
         FREQ = {},
         total = 0.0,

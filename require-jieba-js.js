@@ -46,10 +46,43 @@ resume_jieba_cut = function () {
     }
 };
 
+// ------------------------------------------------------
 
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function(searchString, position) {
+      var subjectString = this.toString();
+      if (typeof position !== 'number' 
+		|| !isFinite(position) 
+		|| Math.floor(position) !== position 
+		|| position > subjectString.length) {
+        position = subjectString.length;
+      }
+      position -= searchString.length;
+      var lastIndex = subjectString.lastIndexOf(searchString, position);
+      return lastIndex !== -1 && lastIndex === position;
+  };
+}
+
+
+// ------------------------------------------------------
+
+_get_host = function () {
+	var _host = "";
+	var _scripts = $("script");
+	for (var _i = 0; _i < _scripts.length; _i++) {
+		var _src = _scripts.eq(_i).attr("src");
+		if (_src.endsWith("/require-jieba-js.js")) {
+			_host = _src.substr(0, _src.lastIndexOf("require-jieba-js.js"));
+			break;
+		}
+	}
+	return _host;
+};
+
+var _host = _get_host();
 
 var s = document.createElement("script");
 s.type = "text/javascript";
-s.setAttribute("data-main", "scripts/main");
-s.src = "scripts/require.js";
+s.setAttribute("data-main", _host + "scripts/main");
+s.src = _host + "scripts/require.js";
 document.body.appendChild(s);
