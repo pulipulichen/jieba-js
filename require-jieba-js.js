@@ -81,31 +81,24 @@ var _endsWith = function(_str, searchString, position) {
 };
 
 get_host = function () {
-	
-	var _host = "";
-    if (typeof(document) === "object" 
-            && typeof(document.currentScript) === "object" 
-            && typeof(document.currentScript.src) === "string") {
-        _host = document.currentScript.src;
-    }
-    else {
-        var scripts = document.getElementsByTagName("script")
-        for (var i = 0; i < scripts.length; ++i) {
-            var _src = scripts[i].src;
-            if (_endsWith(_src, "/require-jieba-js.js")) {
-                _host = _src;
-                break;
-            }
+    var _host = undefined;
+    var scripts = document.getElementsByTagName("script");
+    for (var i = 0; i < scripts.length; ++i) {
+        var _src = scripts[i].src;
+        //console.log(_src);
+        if (_endsWith(_src, "/require-jieba-js.js")) {
+            _host = _src;
+            break;
         }
     }
 
-    _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
-	
-	if (_host === "") {
-		_host = "//pulipulichen.github.io/jieba-js/";
-	}
-	
-	return _host;
+    if (_host === undefined) {
+        _host = "//pulipulichen.github.io/jieba-js/";
+    }
+    else {
+        _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
+    }
+    return _host;
 };
 
 if (typeof (document) === "object") {

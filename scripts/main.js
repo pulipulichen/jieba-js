@@ -1,8 +1,3 @@
-var _host = undefined;
-if (typeof(get_host) === "function") {
-    _host = get_host();
-}
-
 
 jieba_parsing = function(dictionary, _callback) {
     var trie = {}, // to be initialized
@@ -324,8 +319,14 @@ node_jieba_parsing = function (_dicts, _text, _callback) {
     });
 };
 
+var _host = undefined;
+if (typeof(get_host) === "function") {
+    _host = get_host();
+    //console.log([1, _host, _host + "scripts/data/dictionary.js"]);
+}
+
 if (_host !== undefined) {
-    require([ _host + "/scripts/data/dictionary.js"], function (_dictionary) {
+    require([ _host + "scripts/data/dictionary.js"], function (_dictionary) {
         if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
             require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
                 for (var _i = 0; _i < _custom_dictionary.length; _i++) {
