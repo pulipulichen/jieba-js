@@ -56,6 +56,9 @@ resume_jieba_cut = function () {
 _get_host = function () {
 	
 	var _endsWith = function(_str, searchString, position) {
+		if (_str === undefined) {
+			return false;
+		}
 		  var subjectString = _str.toString();
 		  if (typeof position !== 'number' 
 			|| !isFinite(position) 
