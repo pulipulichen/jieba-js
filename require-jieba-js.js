@@ -83,14 +83,15 @@ var _endsWith = function(_str, searchString, position) {
 get_host = function () {
 	
 	var _host = "";
-    if (typeof(document.currentScript) === "object" 
-        && typeof(document.currentScript.src) === "string") {
+    if (typeof(document) === "object" 
+            && typeof(document.currentScript) === "object" 
+            && typeof(document.currentScript.src) === "string") {
         _host = document.currentScript.src;
     }
     else {
         var scripts = document.getElementsByTagName("script")
         for (var i = 0; i < scripts.length; ++i) {
-            var _src = _scripts[i].src;
+            var _src = scripts[i].src;
             if (_endsWith(_src, "/require-jieba-js.js")) {
                 _host = _src;
                 break;
@@ -107,10 +108,12 @@ get_host = function () {
 	return _host;
 };
 
-var _host = get_host();
+if (typeof (document) === "object") {
+    var _host = get_host();
 
-var s = document.createElement("script");
-s.type = "text/javascript";
-s.setAttribute("data-main", _host + "scripts/main");
-s.src = _host + "scripts/require.js";
-document.body.appendChild(s);
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.setAttribute("data-main", _host + "scripts/main");
+    s.src = _host + "scripts/require.js";
+    document.body.appendChild(s);
+}

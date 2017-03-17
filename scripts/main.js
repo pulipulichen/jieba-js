@@ -1,6 +1,10 @@
-var _host = get_host();
+var _host = undefined;
+if (typeof(get_host) === "function") {
+    _host = get_host();
+}
 
-var _jieba_parsing = function(dictionary) {
+
+jieba_parsing = function(dictionary, _callback) {
     var trie = {}, // to be initialized
         FREQ = {},
         total = 0.0,
@@ -281,20 +285,57 @@ var _jieba_parsing = function(dictionary) {
     //console.log(cut("我爸新学会了一项解决日常烦闷的活动，就是把以前的照片抱回办公室扫描保存，弄成电子版的。更无法接受的是，还居然放到网上来，时不时给我两张。这些积尘的化石居然突然重现，简直是招架不住。这个怀旧的阀门一旦打开，那就直到意识模糊都没停下来。"));
     
     //console.log(cut("我的中文東西。"));
-    resume_jieba_cut();
+    if (typeof(resume_jieba_cut) === "function") {
+        resume_jieba_cut();
+    }
+    
+    if (typeof(_callback) === "function") {
+        _callback();
+    }
 };
 
-require([ _host + "/scripts/data/dictionary.js"], function (_dictionary) {
-	if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
-		require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
-			for (var _i = 0; _i < _custom_dictionary.length; _i++) {
-				_dictionary.push(_custom_dictionary[_i]);
-			}
-			_jieba_parsing(_dictionary);
-		});
-	}
-	else {
-		_jieba_parsing(_dictionary);
-	}
-	
-});
+node_jieba_parsing = function (_dicts, _text, _callback) {
+    if (typeof(_callback) !== "function") {
+        return;
+    }
+    
+    if (typeof(jieba_cut) === "function") {
+        var _result = jieba_cut(_text);
+        //console.log(_result.join(" "));
+        _callback(_result);
+        return _result;
+    }
+    
+    var _dict;
+    if (_dicts.length > 0) {
+        _dict = _dicts[0];
+    }
+    
+    for (var _i = 1; _i < _dicts.length; _i++) {
+        for (var _j = 0; _j < _dicts[_i].length; _j++) {
+            _dict.push(_dicts[_i][_j]);
+        }
+    }
+    
+    jieba_parsing(_dict, function () {  
+        var _result = jieba_cut(_text);
+        //console.log(_result.join(" "));
+        _callback(_result);
+    });
+};
+
+if (_host !== undefined) {
+    require([ _host + "/scripts/data/dictionary.js"], function (_dictionary) {
+        if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
+            require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
+                for (var _i = 0; _i < _custom_dictionary.length; _i++) {
+                    _dictionary.push(_custom_dictionary[_i]);
+                }
+                jieba_parsing(_dictionary);
+            });
+        }
+        else {
+            jieba_parsing(_dictionary);
+        }
+    });
+}
