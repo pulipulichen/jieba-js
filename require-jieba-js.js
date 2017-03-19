@@ -19,7 +19,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
     }
     
     if (typeof(jieba_cut) !== 'function') {
-        console.log("set queue");
+        console.log("set queue:" + _text);
         _JIEBA_CUT_QUEUE.push({
             text: _text,
             callback: _callback

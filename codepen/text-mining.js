@@ -3,6 +3,8 @@ var _process_file = function(_input, _callback) {
     var _panel = $(".file-process-framework");
   //------------------
   
+  var _is_numeric = true;
+  
   var _lines = _input.trim().split("\n");
   //console.log(_input);
     
@@ -36,6 +38,11 @@ var _process_file = function(_input, _callback) {
               _line_fields.push(_value);
               if (_f === _class_index && _value !== "?" && $.inArray(_value, _class_list) === -1) {
                   _class_list.push(_value);
+                  
+                  console.log([_value, isNaN(_value)]);
+                  if (isNaN(_value)) {
+                      _is_numeric = false;
+                  }
               }
           }
       }
@@ -92,8 +99,14 @@ var _process_file = function(_input, _callback) {
             _test_result = _test_result + "@attribute " + _attr + " string\n";
         }
         else {
-            _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
-            _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
+            if (_is_numeric === false) {
+                _result = _result + "@attribute class {" + _class_list.join(", ") + "}\n";
+                _test_result = _test_result + "@attribute class {" + _class_list.join(", ") + "}\n";
+            }
+            else {
+                _result = _result + "@attribute class numeric\n";
+                _test_result = _test_result + "@attribute class numeric\n";
+            }
         }
     }
 
