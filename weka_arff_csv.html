@@ -35,21 +35,21 @@
 <div class="ui bottom attached  tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste CSV file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation train_document_2017-02-12T16-07-36.arff_predicted
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation '文本分類：籃球還是地球？ - data_test_document.csv.arff'
 
 @attribute document string
-@attribute predictedclass {yes,no}
-@attribute class {yes,no}
+@attribute class {籃球, 地圖, 撞球}
 
 @data
-'奧運會 籃球比賽 和 世界 籃球 錦標賽 的 比賽場地 長度 是 28 公尺 寬 15 公尺',yes,?
-'罰球區 是 限制 區 加上 以 罰球線 中點 為 圓心 以 80 公尺 為 半徑 向 限制 區外 所 葷 的 半圓 區域',yes,?
-'地球 是 太陽系 從 內 到 外 的 第三顆 行星',yes,?
-'從 衛星 上 鳥瞰 地球 感受 前所未有 的 視覺 衝擊',no,?</textarea>
+'籃球運動 是 以 投籃 上籃 和 扣籃 為 中心 的 對抗性 室內 體育運動 之一',?
+'瀏覽 這些 令人驚歎 的 圖片 或 在 太空 中 飛往 圖片 所 對應 的 位置',?
+'籃球運動 是 1896 年 前後 由 天津 中華 基督教 青年會 傳入 中國 的',?
+'您 可以 探家 自 Google 地球 和 支援 合作 夥伴 建立 的 套件 合 大量 景點 視訊 和 影像 的 資源 函數庫',?</textarea>
   </div>
     <div class="field">
     <label for="input_mode_textarea_buffer">Paste buffer file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+<!--
+<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
 遙遠
   mean               0 0.3333
   std. dev.     0.1667 0.4714
@@ -79,6 +79,38 @@ inst#,    actual, predicted, error, probability distribution
  a b   <-- classified as
  0 0 | a = yes
  0 0 | b = no
+
+</textarea>
+-->
+<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+
+美國
+  mean               0      0      1
+  std. dev.     0.1667 0.1667 0.1667
+  weight sum         2      3      1
+  precision          1      1      1
+
+起源於
+  mean               0      0      1
+  std. dev.     0.1667 0.1667 0.1667
+  weight sum         2      3      1
+  precision          1      1      1
+
+
+
+Time taken to build model: 0 seconds
+
+=== Predictions on test set ===
+
+inst#,actual,predicted,error,distribution,,
+1,1:?,1:籃球,,*0.999,0.001,0
+2,1:?,2:地圖,,0,*1,0
+3,1:?,2:地圖,,0,*1,0
+4,1:?,2:地圖,,0,*1,0
+
+=== Evaluation on test set ===
+
+Time taken to test model on supplied test set: 0.01 seconds
 
 </textarea>
   </div>
