@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Weka K-means result analyser (file process framework 20161224)</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="style.css" />
+        
+<link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css" />
+<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
+    </head>
+    <body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/clipboard.min.js"></script>
+
+<script src="script.js"></script>
+
+<!-- ------------------------------------ -->
+
+<form class="file-process-framework ui form">
+
+  <div class="ui two column doubling grid">
+    <div class="column">
+    <div class="ui segment">
+    
+    
+<h1 class="ui horizontal divider header">
+  Input
+</h1>
+
+    <div class="ui top attached tabular menu">
+      <div class=" item" data-tab="textarea">Textarea</div>
+      <div class="active item" data-tab="file">File</div>
+    </div>
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached  tab segment" data-tab="textarea">
+  <div class="field">
+    <label for="input_mode_textarea">Paste text here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()"></textarea>
+  </div>
+  <!--
+  <div class="field">
+      <button type="button" class="ui primary button process-textarea">Submit</button>
+  </div>
+  -->
+    
+</div>
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached active tab segment" data-tab="file">
+  <div class="field">
+      <label for="files">Please select a ARFF file in UTF8 encoding: </label>
+    </div>
+    <div class="field">
+      <input class="myfile" name="files[]" id="files" multiple="" type="file" />
+      <div class="ui pointing inverted blue large basic label">
+        <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" style="display: block">How to Convert ARFF file to UTF8 encoding?</a>
+      </div>
+    </div>
+
+  
+  <div class="inline field">
+    <input type="checkbox" name="autodownload" id="autodownload" />
+    <label for="autodownload">Download Processed File Automatically</label>
+  </div>
+
+
+</div> <!-- <div class="ui bottom attached tab segment" data-tab="file"> -->
+
+    <!-- -------------------------------------- -->
+    
+        </div> <!-- <div class="ui segment"> -->
+    </div> <!-- <div class="column"> -->
+  <!-- -------------------------------------- -->
+  
+    <div class="column">
+  <div class="ui segment display-result" style="">
+  <!-- <div class="display-result"> -->
+  
+	
+    <h2 class="ui horizontal divider header">
+      Result
+    </h2>
+	
+	<div class="ui doubling grid">
+		<div class="six wide column">
+			<button type="button" class="fluid ui large right labeled icon green button download-file">
+				<i class="right download icon"></i>
+				DOWNLOAD
+			  </button>
+		</div>
+		<div class="ten wide column">
+			<a href="https://docs.google.com/spreadsheet/ccc?new" target="_blank">
+				<button type="button" class="fluid ui large right labeled icon button">
+					<i class="right table icon"></i>
+					NEW SPREEDSHEET
+				</button>
+			</a>
+		</div>
+	</div>
+	
+    <div class="field">
+      <label for="filename">File Name: </label>
+      <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
+    </div>
+    
+    <div class="field">
+      <label for="preview">
+        Result Preview: 
+        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+		<button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
+		  COPY CSV TABLE
+		  <i class="copy icon"></i>
+	    </button>
+      </label>
+        
+      <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
+    </div>
+	<div class="field">
+	
+	
+	<div class="ui grid">
+		<div class="sixteen wide column">
+			<label for="preview">
+			Statistic Result: 
+			
+			<button 
+			type="button" 
+			class="ui mini compact teal right labeled icon button copy-table" 
+			data-copy-table=".stat-result"
+			style="margin-left: 1em">
+			  COPY TABLE
+			  <i class="copy icon"></i>
+			</button>
+			</label>
+		</div>
+		<!--
+		<div class="four wide column">
+			<div class="inline fields">
+			<input type="checkbox" id="marks" checked="checked" />
+			<label for="marks">
+				Marks
+			</label>
+			</div>
+		</div>
+		-->
+	</div> <!-- <div class="ui grid"> -->
+		
+	  <div class="stat-result-container">
+	  <table class="stat-result" border="1" cellspacing="2">
+		<thead>
+			<tr></tr>
+		</thead>
+		<tbody>
+		</tbody>
+	  </table>
+	  </div>
+	
+	<div class="ui doubling grid">
+		<div class="six wide column">
+			<div class="fields">
+			<label for="decimal_places">
+				Decimal places
+			</label>
+			<input type="number" id="decimal_places" value="4" />
+			</div>
+		</div>
+		<div class="five wide column">
+			<div class="fields">
+			<input type="checkbox" id="show_fulldata" checked="checked" />
+			<label for="show_fulldata">
+				Show Full Data
+			</label>
+			</div>
+		</div>  
+		<div class="five wide column">
+			<div class="fields">
+			<input type="checkbox" id="show_std" checked="checked" />
+			<label for="show_std">
+				Show Std.
+			</label>
+			</div>
+		</div>  
+	</div>
+	  
+    </div> <!-- <div class="field"> -->
+	
+	<div class="field">
+		<label for="preview">
+		Statistic Abstract: 
+		
+		<button type="button" class="ui mini compact teal right labeled icon button copy-table" 
+			data-copy-table=".stat-result-abstract"
+			style="margin-left: 1em">
+		  COPY TABLE
+		  <i class="copy icon"></i>
+		</button>
+		</label>
+		<table class="stat-result-abstract" border="1" cellspacing="2">
+			<thead><tr></tr></thead>
+			<tbody>
+				<tr class="good"></tr>
+				<tr class="bad"></tr>
+			</tbody>
+	    </table>
+	</div>
+  
+  </div>
+    </div> <!-- <div class="column"> -->
+  </div> <!-- <div class="ui two column doubling grid"> -->
+</form>
+    </body>
+</html>
