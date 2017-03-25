@@ -172,7 +172,8 @@ and open the template in the editor.
 		<div class="six wide column">
 			<div class="fields">
 			<label for="decimal_places">
-				Decimal places
+				<!-- Decimal places -->
+                                小數點位數
 			</label>
 			<input type="number" id="decimal_places" value="4" />
 			</div>
@@ -181,7 +182,8 @@ and open the template in the editor.
 			<div class="fields">
 			<input type="checkbox" id="show_fulldata" checked="checked" />
 			<label for="show_fulldata">
-				Show Full Data
+				<!-- Show Full Data -->
+                                顯示所有資料欄
 			</label>
 			</div>
 		</div>  
@@ -189,7 +191,8 @@ and open the template in the editor.
 			<div class="fields">
 			<input type="checkbox" id="show_std" checked="checked" />
 			<label for="show_std">
-				Show Std.
+				<!-- Show Std. -->
+                                顯示標準差
 			</label>
 			</div>
 		</div>  
@@ -199,8 +202,8 @@ and open the template in the editor.
 	
 	<div class="field">
 		<label for="preview">
-		Statistic Abstract: 
-		
+		<!-- Statistic Abstract: -->
+		統計摘要表：
 		<button type="button" class="ui mini compact teal right labeled icon button copy-table" 
 			data-copy-table=".stat-result-abstract"
 			style="margin-left: 1em">
@@ -215,6 +218,10 @@ and open the template in the editor.
 				<tr class="bad"></tr>
 			</tbody>
 	    </table>
+            <div>
+                <!-- * is the largest/smallest.-->
+                有*的變項表示均值是最大或最小的一群。
+            </div>
 	</div>
   
   </div>

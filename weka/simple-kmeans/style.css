@@ -52,6 +52,12 @@ body {
   background-color:#7F130A;
   color: white;
 }
+.stat-result td.small.freq {
+    background-color:initial;
+    color: initial;
+    text-align: left;
+}
+
 .stat-result td.x-small {
   background-color:#FF2614;
   color: white;
