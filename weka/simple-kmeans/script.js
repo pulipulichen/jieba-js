@@ -229,7 +229,7 @@ var _draw_stat_table = function (_result) {
             //console.log(_full_data_attr);
             //console.log(_calc_mode(_full_data_attr));
             var _freq_data = _calc_mode(_full_data_attr);
-            _avg_tr.append('<td class="fulldata freq" title="' + _title_prefix + ' Freq." data-ori-value="' + _freq_data.full  + '">' 
+            _avg_tr.append('<td class="fulldata freq" title="' + _freq_data.full  + '" data-ori-value="' + _freq_data.full  + '">' 
                 + _freq_data.top + '</td>');
         }
         
@@ -281,7 +281,7 @@ var _draw_stat_table = function (_result) {
                 //console.log("cluster data不是陣列: " + _i + " - " + _attr);
                 //console.log(_attr_data);
                 var _freq_data = _calc_mode(_attr_data);
-                _avg_tr.append('<td class="mark freq ' + _classname + '" title="' + _title_prefix + ' Freq." data-ori-value="' + _freq_data.full  + '">' 
+                _avg_tr.append('<td class="mark freq ' + _classname + '" title="' + _freq_data.full  + '" data-ori-value="' + _freq_data.full  + '">' 
                     + _freq_data.top
                     + '</td>');
             }
