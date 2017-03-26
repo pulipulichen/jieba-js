@@ -24,7 +24,8 @@ body {
 .file-process-framework textarea.preview {
   display: block;
   width: 90%;
-  height: calc(100vh - 400px) !important;
+  /*height: calc(100vh - 400px) !important;*/
+  height: 20vh;
   min-height: 0 !important;
 }
 
@@ -75,6 +76,10 @@ body {
   font-weight: bold;
 }
 
+.stat-result td.checkbox {
+    text-align: center;
+}
+
 .stat-result td.largest {
   border: 3px solid #4CFF58;
   color: yellow;
@@ -100,8 +105,8 @@ body {
 }
 
 .display-result {
-  overflow-y: auto;
-  max-height: calc(100vh - 30px);
+  /*overflow-y: auto;
+  max-height: calc(100vh - 30px);*/
   
 }
 .input-mode.textarea {
@@ -124,4 +129,8 @@ label {
 
 .stat-result-abstract tbody tr.bad th {
   background-color: #F7CFCE;
+}
+
+#decimal_places {
+    width: 5em;
 }

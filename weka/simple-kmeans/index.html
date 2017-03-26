@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>Weka K-means result analyser (file process framework 20161224)</title>
@@ -22,11 +17,15 @@ and open the template in the editor.
 
 <script src="script.js"></script>
 
+<!--
+https://semantic-ui.com/collections/form.html
+-->
+
 <!-- ------------------------------------ -->
 
 <form class="file-process-framework ui form">
 
-  <div class="ui two column doubling grid">
+  <div class="ui one column doubling grid">
     <div class="column">
     <div class="ui segment">
     
@@ -80,10 +79,7 @@ and open the template in the editor.
     <!-- -------------------------------------- -->
     
         </div> <!-- <div class="ui segment"> -->
-    </div> <!-- <div class="column"> -->
-  <!-- -------------------------------------- -->
-  
-    <div class="column">
+        
   <div class="ui segment display-result" style="">
   <!-- <div class="display-result"> -->
   
@@ -169,8 +165,18 @@ and open the template in the editor.
 	  </div>
 	
 	<div class="ui doubling grid">
-		<div class="six wide column">
+                <!--
+                <div class="four wide column">
 			<div class="fields">
+			<label for="cluster_score">
+                                分群品質: 
+			</label>
+                        <div id="cluster_score"></div>
+			</div>
+		</div>
+                -->
+		<div class="six wide column">
+			<div class="inline fields">
 			<label for="decimal_places">
 				<!-- Decimal places -->
                                 小數點位數
@@ -183,7 +189,7 @@ and open the template in the editor.
 			<input type="checkbox" id="show_fulldata" checked="checked" />
 			<label for="show_fulldata">
 				<!-- Show Full Data -->
-                                顯示所有資料欄
+                                顯示全部資料欄
 			</label>
 			</div>
 		</div>  

@@ -1,12 +1,13 @@
 var DICT = {
     'Attributes': '變項',
-    'Full Data and Avg.': '全部資料與均值',
+    'Full Data and Avg.': '全部資料',
     'Cluster 1': '第',
     'Cluster 2': '群',
-    'Larger than Avg.': '大於所有資料均值',
-    'Smaller than Avg.': '小於所有資料均值',
+    'Larger than Avg.': '大於全部資料均值',
+    'Smaller than Avg.': '小於全部資料均值',
     'Cluster': '分群',
-    'Count': '筆數'
+    'Count': '筆數',
+    'SSE_TH': '計算分群品質'
 };
 
 var _process_file = function(_input, _callback) {
@@ -74,7 +75,6 @@ var _draw_stat_table = function (_result) {
     var _cluster_data = [];
     var _cluster_count = [];
     var _full_data = {};
-    var _cate_data = {};
     var _full_count = _lines.length - 1;
     
     var _to_fixed = $("#decimal_places").val();
@@ -162,6 +162,7 @@ var _draw_stat_table = function (_result) {
     for (var _i = 0; _i < _cluster_data.length; _i++) {
         _thead.append('<th>' + DICT['Cluster 1'] + _i + DICT['Cluster 2'] + '</th>');
     }
+    //_thead.append('<th>' +  DICT['SSE_TH'] + '</th>');
     
     // -------------------------
     // 再畫數量
@@ -184,10 +185,11 @@ var _draw_stat_table = function (_result) {
         _count_tr.append('<td class="marks count ' + _classname + '" title="Cluster ' + _i + ', count" data-ori-value="' + _cluster_count[_i] + '">' 
             + _cluster_count[_i] + '</td>');
     }
+    //_count_tr.append('<td></td>');
     
-        // 標示數量
-        _count_tr.find('td[data-ori-value="' + arrayMin(_row_data) + '"]').addClass("smallest");
-        _count_tr.find('td[data-ori-value="' + arrayMax(_row_data) + '"]').addClass("largest");
+    // 標示數量
+    _count_tr.find('td[data-ori-value="' + arrayMin(_row_data) + '"]').addClass("smallest");
+    _count_tr.find('td[data-ori-value="' + arrayMax(_row_data) + '"]').addClass("largest");
         
     
     // ------------------------
@@ -285,6 +287,13 @@ var _draw_stat_table = function (_result) {
             }
         }
         
+        // 分群品質算法
+        //_avg_tr.append('<td class="checkbox sse">'
+        //        + '<input type="checkbox" class="sse" name="sse" value="' + _attr + '" checked="checked" />'
+        //        + '</td>');
+        //_stddev_tr.append('<td class="sse"></td>');
+        //_avg_tr.find("input.sse").change(_calc_cluster_score);
+        
         if (_row_data.length > 0) {
             _avg_tr.find('td[data-ori-value="' + arrayMin(_row_data) + '"]').addClass("smallest");
             _avg_tr.find('td[data-ori-value="' + arrayMax(_row_data) + '"]').addClass("largest");
@@ -302,7 +311,16 @@ var _draw_stat_table = function (_result) {
     // ---------------------
     
     _draw_stat_abs_table();
+    
+    FULL_DATA = _full_data;
+    CLUSTER_DATA = _cluster_data;
+    TO_FIXED = _to_fixed;
+    //_calc_cluster_score();
 };
+
+var FULL_DATA;
+var CLUSTER_DATA;
+var TO_FIXED;
 
 // ---------------------
 
@@ -313,6 +331,7 @@ var _draw_stat_abs_table = function () {
     var _thead_tr = _stat_table.find("thead tr").clone();
     _thead_tr.find("th:first").html(DICT["Cluster"]);
     _thead_tr.find("th:eq(1)").remove();
+    //_thead_tr.find("th:last").remove();
     _abs_table.find("thead").empty().append(_thead_tr);
     
     
@@ -325,7 +344,7 @@ var _draw_stat_abs_table = function () {
     for (var _r = 0; _r < _avg_tr_list.length; _r++) {
         var _attr = _avg_tr_list.eq(_r).find("th:first").text();
         _attr = _attr.substr(0, _attr.length-7).trim();
-        var _td_list = _avg_tr_list.eq(_r).find("td");
+        var _td_list = _avg_tr_list.eq(_r).find("td:not(.sse)");
         for (var _d = 1; _d < _td_list.length; _d++) {
             var _cluster = _d-1;
             
@@ -338,6 +357,10 @@ var _draw_stat_abs_table = function () {
             
             var _set_attr = _attr;
             var _td = _td_list.eq(_d);
+            if (_td.hasClass("freq")) {
+                continue;
+            }
+            
             if (_td.hasClass("smallest") || _td.hasClass("largest")) {
                 _set_attr = _set_attr + "*";
             }
@@ -367,6 +390,101 @@ var _draw_stat_abs_table = function () {
         _bad_tr.append('<td>' + _value + '</td>');
     }
 };
+
+// ---------------------
+
+var _calc_cluster_score = function () {
+    // https://www.quora.com/How-can-we-choose-a-good-K-for-K-means-clustering
+    var _full_data = FULL_DATA;
+    var _cluster_data = CLUSTER_DATA;
+    var _to_fixed = TO_FIXED;
+    
+    var _attr_sse = 0;
+    for (var _attr in _full_data) {
+        if ($('[name="sse"][value="' + _attr + '"]:checked').length === 0) {
+            continue;
+        }
+        
+        var _full_data_attr = _full_data[_attr];
+        
+        //console.log(_full_data_attr);
+        var _cluster_data_attr = [];
+        for (var _i = 0; _i < _cluster_data.length; _i++) {
+            _cluster_data_attr[_i] = _cluster_data[_i][_attr];
+        }
+        
+        if (_is_array(_full_data_attr) === true) {
+            // 如果是數字
+            //console.log(_cluster_data_attr);
+            _attr_sse = _attr_sse + _calc_cluster_score_numeric(_full_data_attr, _cluster_data_attr);
+        }
+        else {
+            // 如果是類別
+            //console.log(_attr);
+            _attr_sse = _attr_sse + _calc_cluster_score_nominal(_full_data_attr, _cluster_data_attr);
+            // 2.322701673495139
+        }
+    }
+    
+    var _result = _attr_sse;
+    $("#cluster_score")
+            .attr("data-ori-value", _result)
+            .html(_result);
+};
+
+var _calc_cluster_score_numeric = function (_full_data_attr, _cluster_data_attr) {
+    var _max = arrayMax(_full_data_attr);
+    var _min = arrayMin(_full_data_attr);
+    
+    var _sse = 0;
+    for (var _i = 0; _i < _cluster_data_attr.length; _i++) {
+        var _center = _stat_avg(_cluster_data_attr[_i]);
+        _center = _normalize_numeric_data(_center, _max, _min);
+        //console.log(_center);
+        for (var _j = 0; _j < _cluster_data_attr[_i].length; _j++) {
+            var _data = _cluster_data_attr[_i][_j];
+            _data = _normalize_numeric_data(_data, _max, _min);
+            _sse = _sse + (_center - _data)*(_center - _data);
+        }
+    }
+    
+    return _sse;
+};
+
+var _calc_cluster_score_nominal = function (_full_data_attr, _cluster_data) {
+    var _total_sse = 0;
+    
+    // A: 5
+    // B: 2
+    // C: 1
+    // Total: 8
+    // A: 1 1 1 1 1 0 0 0  avg: 5/8
+    // B: 0 0 0 0 0 1 1 0  avg; 2/8
+    // C: 0 0 0 0 0 0 0 1  avg; 1/8
+    for (var _i = 0; _i < _cluster_data.length; _i++) {
+        var _cluster_data_attr = _cluster_data[_i];
+        
+        var _total_count = 0;
+        for (var _cate in _cluster_data_attr) {
+            var _count = _cluster_data_attr[_cate];
+            _total_count = _total_count + _count;
+        }
+        //console.log(_total_count);
+        for (var _cate in _cluster_data_attr) {
+            var _count = _cluster_data_attr[_cate];
+            var _avg = _count / _total_count;
+            var _sse = (1-_avg)*(1-_avg)*_count 
+                    + _avg*_avg*(_total_count-_count);
+            //_sse = _sse / _total_count;
+            //console.log([_i, _cate, _total_count, _count]);
+            //console.log([_avg, _sse]);
+            _total_sse = _total_sse + _sse;
+        }
+    }
+    return _total_sse;
+};
+
+
 
 // ---------------------
 
@@ -410,13 +528,17 @@ var _stat_stddev = function (_ary) {
           })/_ary.length));
 };
 
+var _normalize_numeric_data = function (_number, _max, _min) {
+    return (_number - _min)/(_max - _min);
+};
+
 // -------------------------------------
 
 var _change_to_fixed = function () {
     var _to_fixed = $("#decimal_places").val();
     _to_fixed = parseInt(_to_fixed, 10);
     
-    var _tds = $(".stat-result td[data-ori-value]");
+    var _tds = $("*[data-ori-value]");
     for (var _i = 0; _i < _tds.length; _i++) {
         var _td = _tds.eq(_i);
         var _value = _td.data("ori-value");
@@ -424,6 +546,10 @@ var _change_to_fixed = function () {
         _value = _float_to_fixed(_value, _to_fixed);
         _td.text(_value);
     }
+};
+
+var _change_sse = function () {
+    _calc_cluster_score();
 };
 
 // -------------------------------------
@@ -453,7 +579,7 @@ var _load_file = function(evt) {
     _file_name = _file_name + _output_filename_ext;
     
     reader.onload = function(evt) {
-        if(evt.target.readyState != 2) return;
+        if(evt.target.readyState !== 2) return;
         if(evt.target.error) {
             alert('Error while reading file');
             return;
