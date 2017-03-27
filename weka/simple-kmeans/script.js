@@ -397,14 +397,20 @@ var _draw_stat_abs_table = function () {
                         }
                         
                         if (_td.hasClass("smallest") || _td.hasClass("largest")) {
-                                _set_attr = _set_attr + "*";
+                            _set_attr = _set_attr + "*";
+                        }
+                        if (_td.hasClass("smallest")) {
+                            _set_attr = '<span class="smallest">' + _set_attr + '</span>';
+                        }
+                        if (_td.hasClass("largest")) {
+                            _set_attr = '<span class="largest">' + _set_attr + '</span>';
                         }
                         
                         if (_td.hasClass("small") || _td.hasClass("x-small") || _td.hasClass("xx-small")) {
-                                _bad[_cluster].push(_set_attr);
+                            _bad[_cluster].push(_set_attr);
                         }
                         if (_td.hasClass("large") || _td.hasClass("x-large") || _td.hasClass("xx-large")) {
-                                _good[_cluster].push(_set_attr);
+                            _good[_cluster].push(_set_attr);
                         }
                 }
         }

@@ -91,6 +91,14 @@ body {
   font-weight: bold;
 }
 
+.stat-result-abstract span.largest {
+    color: green;
+}
+
+.stat-result-abstract span.smallest {
+    color: red;
+}
+
 .stat-result td {
   text-align:right;
 }
