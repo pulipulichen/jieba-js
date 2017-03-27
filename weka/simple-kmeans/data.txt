@@ -1,18 +1,4 @@
-@relation 'RFM (200) - 工作表1-weka.filters.unsupervised.attribute.Discretize-F-B5-M-1.0-R3-weka.filters.unsupervised.attribute.Discretize-F-B5-M-1.0-R6-weka.filters.unsupervised.attribute.Discretize-F-B5-M-1.0-R9-weka.filters.unsupervised.attribute.Discretize-Y-F-B5-M-1.0-R4,7,10-weka.filters.unsupervised.attribute.Discretize-Y-F-B5-M-1.0-R4,7,10-weka.filters.unsupervised.attribute.AddCluster-Wweka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 5 -A \"weka.core.EuclideanDistance -R first-last\" -I 500 -num-slots 1 -S 10-I1,3,4,6,7,9,10'
-
-@attribute ID numeric
-@attribute 最近一次消費天數 numeric
-@attribute 最近一次消費天數_級距 {'\'(-inf-97.5]\'','\'(97.5-215.5]\'','\'(215.5-313.5]\'','\'(313.5-418.5]\'','\'(418.5-inf)\''}
-@attribute 最近一次消費天數_組數 {'\'B1of5\'','\'B2of5\'','\'B3of5\'','\'B4of5\'','\'B5of5\''}
-@attribute 消費頻率 numeric
-@attribute 消費頻率_級距 {'\'(-inf-0.5]\'','\'(0.5-1.5]\'','\'(1.5-2.5]\'','\'(2.5-3.5]\'','\'(3.5-inf)\''}
-@attribute 消費頻率_組數 {'\'B1of5\'','\'B2of5\'','\'B3of5\'','\'B4of5\'','\'B5of5\''}
-@attribute 消費金額 numeric
-@attribute 消費金額_級距 {'\'(-inf-16.5]\'','\'(16.5-135.5]\'','\'(135.5-354.5]\'','\'(354.5-712.5]\'','\'(712.5-inf)\''}
-@attribute 消費金額_組數 {'\'B1of5\'','\'B2of5\'','\'B3of5\'','\'B4of5\'','\'B5of5\''}
-@attribute cluster {cluster1,cluster2,cluster3,cluster4,cluster5}
-
-@data
+ID,最近一次消費天數,最近一次消費天數_級距,最近一次消費天數_組數,消費頻率,消費頻率_級距,消費頻率_組數,消費金額,消費金額_級距,消費金額_組數,cluster
 1,387,'\'(313.5-418.5]\'','\'B4of5\'',0,'\'(-inf-0.5]\'','\'B1of5\'',0,'\'(-inf-16.5]\'','\'B1of5\'',cluster4
 2,470,'\'(418.5-inf)\'','\'B5of5\'',0,'\'(-inf-0.5]\'','\'B1of5\'',0,'\'(-inf-16.5]\'','\'B1of5\'',cluster4
 3,269,'\'(215.5-313.5]\'','\'B3of5\'',1,'\'(0.5-1.5]\'','\'B2of5\'',214,'\'(135.5-354.5]\'','\'B3of5\'',cluster2
