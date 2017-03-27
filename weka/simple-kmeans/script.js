@@ -126,9 +126,13 @@ var _draw_stat_table = function (_result) {
                         }
                         _cluster_count[_cluster]++;
                         
-                        for (var _f = 1; _f < _fields.length - 1; _f++) {
+                        for (var _f = 0; _f < _fields.length - 1; _f++) {
                                 var _value = _fields[_f].trim();
                                 var _attr = _attr_list[_f];
+                                
+                                if (_attr === "Instance_number") {
+                                    continue;
+                                }
                                 
                                 // 判斷是否是數值
                                 if (isNaN(_value) === false) {
@@ -197,7 +201,7 @@ var _draw_stat_table = function (_result) {
         var _count_tr = $('<tr class="compare-data"></tr>').appendTo(_tbody);
         _count_tr.append('<th>' + DICT['Count'] + '</th>');
         _count_tr.append('<td title="Full Data, count" class="fulldata count">' 
-                + _full_count + '<br />(Per Cluster: ' + _float_to_fixed((_full_count/_cluster_count.length), _to_fixed) + ')'
+                + _full_count + '<br />(平均: ' + _float_to_fixed((_full_count/_cluster_count.length), _to_fixed) + ')'
                 + '</td>');
                 
         var _row_data = _cluster_count;
@@ -225,11 +229,17 @@ var _draw_stat_table = function (_result) {
         // ------------------------
         // 再畫屬性
         
-        for (var _a = 1; _a < _attr_list.length - 1; _a++) {
+        var _start = 0;
+        //console.log(_attr_list[0]);
+        if (_attr_list[0] === "Instance_number") {
+            _start = 1;
+        }
+        
+        for (var _a = _start; _a < _attr_list.length - 1; _a++) {
                 var _attr = _attr_list[_a];
                 
                 if (typeof(_full_data[_attr]) === "undefined") {
-                        continue;
+                    continue;
                 }        
                 
                 var _avg_tr = $('<tr class="avg-tr compare-data"></tr>');
