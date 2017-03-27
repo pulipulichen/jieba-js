@@ -13,6 +13,12 @@ var DICT = {
 var _process_file = function(_input, _callback) {
 
   //------------------
+  
+  _input = _input.replace(/'\\'/g, "");
+  _input = _input.replace(/\\''/g, "");
+  //_input = _input.replace(new RegExp("\''", 'g'), "");
+  //console.log(_input);
+  //_input = _input.replace("\\''", "");
 
   var _needle = "\n@data\n";
   var _pos =  _input.indexOf(_needle);
@@ -30,11 +36,12 @@ var _process_file = function(_input, _callback) {
   for (var _i = 0; _i < _lines.length; _i++) {
     var _line = _lines[_i];
     if (_line.indexOf(_attr_needle) === 0) {
-      var _fields = _line.split(" ");
-      var _attr = _fields[1];
-      _attr_list.push(_attr);
+        var _fields = _line.split(" ");
+        var _attr = _fields[1];
+        _attr_list.push(_attr);
     }
   }
+  //console.log(_attr_list);
   _result = _attr_list.join(",") + "\n" + _result;
   _draw_stat_table(_result);
     
@@ -66,8 +73,9 @@ var _draw_stat_table = function (_result) {
     
     var _needle1 = "Instance_number";
     var _needle2 = "Cluster";
-    if (_lines[0].substr(0, _needle1.length) !== _needle1
-        && _lines[0].substring((_lines[0].length - _needle2.length), _lines[0].length) !== _needle2) {
+    if (_lines[0].substr(0, _needle1.length).toLowerCase() !== _needle1.toLowerCase()
+        && _lines[0].substring((_lines[0].length - _needle2.length), _lines[0].length).toLowerCase() !== _needle2.toLowerCase()) {
+        //console.log(["資料錯誤", _lines[0].substring((_lines[0].length - _needle2.length), _lines[0].length).toLowerCase() !== _needle2]);
         return;
     }
     
@@ -155,11 +163,15 @@ var _draw_stat_table = function (_result) {
     
     //console.log(_full_data);
     
+        
     // -------------------------
     // 先畫開頭
     _thead.append('<th>' +  DICT['Attributes'] + '</th>');
     _thead.append('<th class="fulldata">' + DICT['Full Data and Avg.'] + '</th>');
     for (var _i = 0; _i < _cluster_data.length; _i++) {
+        if (typeof(_cluster_count[_i]) === "undefined") {
+            continue;
+        }
         _thead.append('<th>' + DICT['Cluster 1'] + _i + DICT['Cluster 2'] + '</th>');
     }
     //_thead.append('<th>' +  DICT['SSE_TH'] + '</th>');
@@ -175,6 +187,9 @@ var _draw_stat_table = function (_result) {
         
     var _row_data = _cluster_count;
     for (var _i = 0; _i < _cluster_count.length; _i++) {
+        if (typeof(_cluster_count[_i]) === "undefined") {
+                continue;
+        }
         var _classname = "normal";
         if ( _cluster_count[_i] > (_full_count/_cluster_count.length) ) {
             _classname = "large";
@@ -229,14 +244,17 @@ var _draw_stat_table = function (_result) {
             //console.log(_full_data_attr);
             //console.log(_calc_mode(_full_data_attr));
             var _freq_data = _calc_mode(_full_data_attr);
-            _avg_tr.append('<td class="fulldata freq" title="' + _freq_data.full  + '" data-ori-value="' + _freq_data.full  + '">' 
-                + _freq_data.top + '</td>');
+            _avg_tr.append('<td class="fulldata freq" title="' + _title_prefix + ' Freq." data-ori-value="' + _freq_data.full  + '"><div>' 
+                + _freq_data.full + '</div></td>');
         }
         
         
         var _row_data = [];
         
         for (var _i = 0; _i < _cluster_count.length; _i++) {
+            if (typeof(_cluster_data[_i]) === "undefined") {
+                continue;
+            }
             var _attr_data = _cluster_data[_i][_attr];
             
             if (_is_array(_attr_data)) {
@@ -281,9 +299,9 @@ var _draw_stat_table = function (_result) {
                 //console.log("cluster data不是陣列: " + _i + " - " + _attr);
                 //console.log(_attr_data);
                 var _freq_data = _calc_mode(_attr_data);
-                _avg_tr.append('<td class="mark freq ' + _classname + '" title="' + _freq_data.full  + '" data-ori-value="' + _freq_data.full  + '">' 
-                    + _freq_data.top
-                    + '</td>');
+                _avg_tr.append('<td class="mark freq ' + _classname + '" title="' + _title_prefix + ' Freq." data-ori-value="' + _freq_data.full  + '"><div>' 
+                    + _freq_data.full
+                    + '</div></td>');
             }
         }
         
@@ -344,7 +362,7 @@ var _draw_stat_abs_table = function () {
     for (var _r = 0; _r < _avg_tr_list.length; _r++) {
         var _attr = _avg_tr_list.eq(_r).find("th:first").text();
         _attr = _attr.substr(0, _attr.length-7).trim();
-        var _td_list = _avg_tr_list.eq(_r).find("td:not(.sse)");
+        var _td_list = _avg_tr_list.eq(_r).find("td:not(.sse):not(.freq-list)");
         for (var _d = 1; _d < _td_list.length; _d++) {
             var _cluster = _d-1;
             
@@ -605,7 +623,7 @@ var _load_file = function(evt) {
             }
             
             //_download_file(_result, _file_name, "txt");
-        })
+        });
     };
 
 
@@ -758,7 +776,7 @@ var _calc_mode = function (_json) {
     var _full_result = [];
     for (var _i = 0; _i < _array_json.length; _i++) {
         var _value = parseInt(_array_json[_i].value / _sum * 100, 10) + "%";
-        var _data = _array_json[_i].key + "," + _value;
+        var _data = "<tr><td class='freq-list'>" + _array_json[_i].key + "</td><td class='freq-list'>" + _value + "</td></tr>";
         if (_i < 5) {
             _top_result.push(_data);
         }
@@ -768,9 +786,11 @@ var _calc_mode = function (_json) {
         _top_result.push("...");
     }
     
+    var _full = "<table><tbody>" + _full_result.join('') + "</tbody></table>";
+    
     var _result = {
         top: _top_result.join("<br />\n"),
-        full: _full_result.join('\n')
+        full: _full
     };
     
     return _result;

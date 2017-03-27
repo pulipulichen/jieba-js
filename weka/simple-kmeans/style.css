@@ -53,10 +53,15 @@ body {
   background-color:#7F130A;
   color: white;
 }
-.stat-result td.small.freq {
-    background-color:initial;
+.stat-result td.freq {
+    background-color:initial !important;
     color: initial;
+}
+
+.stat-result td.freq div {
     text-align: left;
+    overflow-y: auto;
+    max-height: 10em;
 }
 
 .stat-result td.x-small {
