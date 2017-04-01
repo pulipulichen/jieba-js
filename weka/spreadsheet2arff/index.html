@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Weka CSV to ARFF (file process framework 20170212)</title>
+        <title>Weka Spreadsheet to ARFF format (file process framework 20170401)</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/clipboard.min.js"></script>
-<script src="require-jieba-js.js"></script>
+<script src="../../require-jieba-js.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -45,11 +45,17 @@
 <div class="ui bottom attached tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste CSV file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">document,class
-奧運會籃球比賽和世界籃球錦標賽的比賽場地長度是 28 公尺寬 15 公尺,籃球
-地球是太陽系從內到外的第三顆行星,地球
-籃球運動是以投籃上籃和扣籃為中心的對抗性室內體育運動之一,?
-您可以探家自 Google 地球和支援合作夥伴建立的套件合大量景點視訊和影像的資源函數庫,?</textarea>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">id,type,document,classAAA
+1,A,奧運會籃球比賽和世界籃球錦標賽的比賽場地長度是 28 公尺寬 15 公尺,1.5
+2,B,罰球區是限制區加上以罰球線中點為圓心以 80 公尺為半徑向限制區外所葷的半圓區域,1
+3,A,地球是太陽系從內到外的第三顆行星,2
+4,?,從衛星上鳥瞰地球感受前所未有的視覺衝擊,2
+5,B,籃球運動於 1891 年起源於美國,1
+6,B,遊覽遙遠的地方漫步 3D 森林穿梭時空回到過去,2
+7,B,籃球運動是以投籃上籃和扣籃為中心的對抗性室內體育運動之一,?
+8,?,瀏覽這些令人驚歎的圖片或在太空中飛往圖片所對應的位置,?
+9,?,籃球運動是 1896 年前後由天津中華基督教青年會傳入中國的,?
+10,?,您可以探家自 Google 地球和支援合作夥伴建立的套件合大量景點視訊和影像的資源函數庫,?</textarea>
   </div>
     
 </div>
@@ -59,7 +65,7 @@
 
 <div class="ui bottom attached active tab segment" data-tab="file">
   <div class="field">
-      <label for="files">Please select a CSV file in UTF8 encoding: </label>
+      <label for="files">Please select a CSV, XLSX, or ODS file in UTF8 encoding: </label>
     </div>
     <div class="field">
       <input class="myfile" name="files[]" id="files" multiple="" type="file" />
@@ -79,8 +85,16 @@
 
     <!-- -------------------------------------- -->
 <div class="inline field">
+      <label for="class_field">Class分類目標欄位</label>
+      <input type="text" id="class_field" value="type" />
+</div>
+<div class="inline field">
+      <label for="string_fields">String欄位 (用逗號分隔多個欄位)</label>
+      <input type="text" id="string_fields" value="document" />
+</div>
+<div class="inline field">
       <input type="checkbox" id="enable_toker" checked="checked" />
-      <label for="enable_toker">使用jieba斷詞</label>
+      <label for="enable_toker">String欄位使用jieba斷詞</label>
 </div>
 
         </div> <!-- <div class="ui segment"> -->
@@ -161,7 +175,7 @@
 
 
 <div id="preloader"></div>
-<link rel="stylesheet" href="codepen/text-mining.css" />
-<script src="codepen/text-mining.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script src="script.js"></script>
    </body>
 </html>
