@@ -19,6 +19,15 @@ var _process_file = function (_input, _callback) {
     var _train_data = [];
     var _test_data = [];
     for (var _l = 0; _l < _lines.length; _l++) {
+        if (_l > 0 && _class_index === undefined) {
+            alert('Class field "' + _class_field + '" not found.');
+            _loading_disable();
+            if (typeof (_callback) === "function") {
+                _callback();
+            }
+            return;
+        } 
+        
         var _fields = _lines[_l].split(",");
         var _line_fields = [];
         for (var _f = 0; _f < _fields.length; _f++) {
