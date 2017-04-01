@@ -307,6 +307,9 @@ var _load_file = function (evt) {
             + _output_filename_test_surffix
             + _original_file_name.substring(_pos, _original_file_name.length);
     _test_file_name = _test_file_name + _output_filename_ext;
+    
+    var _file_type = _original_file_name.substring(_original_file_name.lastIndexOf(".")+1, _original_file_name.length).toLowerCase();
+    //console.log(_file_type);
 
     _panel.find(".filename").val(_file_name);
     _panel.find(".test_filename").val(_test_file_name);
@@ -323,7 +326,16 @@ var _load_file = function (evt) {
 
         //document.forms['myform'].elements['text'].value = evt.target.result;
         _result = evt.target.result;
-
+        
+        if (typeof(_file_type) !== "csv") {
+            var workbook = XLSX.read(_result, {type: 'binary'});
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+            var _csv = XLSX.utils.sheet_to_csv(worksheet);
+            console.log(_csv);
+            _result = _csv;
+        }
+        
         _process_file(_result, function (_result) {
             _panel.find(".preview").val(_result);
 
@@ -344,7 +356,12 @@ var _load_file = function (evt) {
 
     //console.log(_file_name);
 
-    reader.readAsText(evt.target.files[0]);
+    if (_file_type !== "csv") {
+        reader.readAsBinaryString(evt.target.files[0]);
+    }
+    else {
+        reader.readAsText(evt.target.files[0]);
+    }
 };
 
 var _load_textarea = function (evt) {

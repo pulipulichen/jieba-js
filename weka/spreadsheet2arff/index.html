@@ -86,7 +86,7 @@
     <!-- -------------------------------------- -->
 <div class="inline field">
       <label for="class_field">Class分類目標欄位</label>
-      <input type="text" id="class_field" value="class1" />
+      <input type="text" id="class_field" value="class" />
 </div>
 <div class="inline field">
       <label for="string_fields">String欄位 (用逗號分隔多個欄位)</label>
@@ -94,6 +94,7 @@
 </div>
 <div class="inline field">
       <input type="checkbox" id="enable_toker" checked="checked" />
+      <!-- <input type="checkbox" id="enable_toker" /> -->
       <label for="enable_toker">String欄位使用jieba斷詞</label>
 </div>
 
@@ -176,6 +177,8 @@
 
 <div id="preloader"></div>
 <link rel="stylesheet" href="style.css" />
+<script src="xlsx.core.min.js"></script>
 <script src="script.js"></script>
+
    </body>
 </html>
