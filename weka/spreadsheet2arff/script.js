@@ -48,6 +48,7 @@ var _process_file = function (_input, _callback) {
                 }
             }
             else {
+                //console.log([isNaN(_value), _value]);
                 if (_f !== _class_index && isNaN(_value) === true) {
                     
                     _value = "'" + _value + "'";
@@ -97,12 +98,12 @@ var _process_file = function (_input, _callback) {
         if (_row_index < _data.length) {
             if (_col_index < _data[_row_index].length && _col_index !== _class_index) {
                 var _text = _data[_row_index][_col_index];
-                _text = _text.substring(1, _text.length - 1);
                 
                 var _attr = _attr_list[_col_index];
                 //console.log([_attr, _string_fields]);
                 if ($.inArray(_attr, _string_fields) === -1) {
                     if (isNaN(_text) === true) {
+                        _text = _text.substring(1, _text.length - 1);
                         _text = "'" + _text + "'";
                     }
                     _data[_row_index][_col_index] = _text;
@@ -112,6 +113,7 @@ var _process_file = function (_input, _callback) {
                     return;
                 }
                 else {
+                    _text = _text.substring(1, _text.length - 1);
                     call_jieba_cut_join(_text, ' ', function (_result) {
                         _data[_row_index][_col_index] = "'" + _result + "'";
 
@@ -171,6 +173,7 @@ var _process_file = function (_input, _callback) {
         _result = _result + "\n@data\n";
         _test_result = _test_result + "\n@data\n";
 
+        //console.log(_train_data);
         for (var _d = 0; _d < _train_data.length; _d++) {
             _result = _result + _train_data[_d].join(",") + "\n";
         }

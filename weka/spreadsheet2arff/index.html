@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Weka Spreadsheet to ARFF format (file process framework 20170401)</title>
+        <title>Weka Spreadsheet to ARFF (file process framework 20170401)</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -23,6 +23,15 @@
 
 </script>
 <!-- ------------------------------------ -->
+
+<div class="header">
+<a href="../arff2csv">ARFF to CSV</a>
+<h1>
+    Weka Spreadsheet to ARFF
+</h1>
+</div>
+
+
 
 <form class="file-process-framework ui form">
 
@@ -127,7 +136,9 @@
 	</div>
   
     <!-- -------------------------------- -->
-	
+    
+    <div class="source-code">
+    
     <div class="field">
       <label for="filename">Train Document File Name: </label>
       <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
@@ -136,8 +147,9 @@
     <div class="field">
       <label for="preview">
         Result Preview: 
-        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
-          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        <div class="ui pointing below  medium blue basic label encoding" style="margin-left: 1em">
+          Get error encoding text? 
+          <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
         </div>
             <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
                 COPY ARFF File
@@ -169,6 +181,8 @@
         
       <textarea id="test_preview" class="test_preview" onfocus="this.select();"></textarea>
     </div>
+    
+    </div> <!-- <div class="source-code"> -->
   
     </div> <!-- <div class="column"> -->
   </div> <!-- <div class="ui two column doubling grid"> -->

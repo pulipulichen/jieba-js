@@ -22,6 +22,6 @@ call_jieba_cut(_text, function (_result) {
 # 其他檔案
 
 - 資料檔案 https://docs.google.com/spreadsheets/d/1mhUzD6xEpQG3wvfuF0ofoQhTajCPlpdJGMDNuCVzH2Y/edit?usp=sharing
-- CSV to ARFF線上轉換: https://pulipulichen.github.io/jieba-js/weka_csv_arff.html
+- CSV to ARFF線上轉換: https://pulipulichen.github.io/jieba-js/weka/spreadsheet2arff/index.html
 - ARFF result to CSV線上轉換: https://pulipulichen.github.io/jieba-js/weka_arff_csv.html
 - https://pulipulichen.github.io/jieba-js/weka/simple-kmeans

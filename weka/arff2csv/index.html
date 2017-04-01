@@ -1,0 +1,212 @@
+<html>
+    <head>
+        <title>Weka ARFF to CSV (file process framework 20170212)</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css" />
+<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/clipboard.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37178375-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- ------------------------------------ -->
+
+<div class="header">
+<a href="../spreadsheet2arff">Spreadsheet to ARFF</a>
+<h1>
+    Weka ARFF to CSV
+</h1>
+</div>
+
+<form class="file-process-framework ui form">
+
+  <div class="ui two column doubling grid">
+    <div class="column">
+    <div class="ui segment">
+    
+    
+<h1 class="ui horizontal divider header">
+  Input
+</h1>
+
+    <div class="ui top attached tabular menu">
+      <div class="item " data-tab="textarea">Textarea</div>
+      <div class="active item" data-tab="file">File</div>
+    </div>
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached  tab segment" data-tab="textarea">
+  <div class="field">
+    <label for="input_mode_textarea">Paste CSV file here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation '文本分類：籃球還是地球？ - data_test_document.csv.arff'
+
+@attribute document string
+@attribute class {籃球, 地圖, 撞球}
+
+@data
+'籃球運動 是 以 投籃 上籃 和 扣籃 為 中心 的 對抗性 室內 體育運動 之一',?
+'瀏覽 這些 令人驚歎 的 圖片 或 在 太空 中 飛往 圖片 所 對應 的 位置',?
+'籃球運動 是 1896 年 前後 由 天津 中華 基督教 青年會 傳入 中國 的',?
+'您 可以 探家 自 Google 地球 和 支援 合作 夥伴 建立 的 套件 合 大量 景點 視訊 和 影像 的 資源 函數庫',?</textarea>
+  </div>
+    <div class="field">
+    <label for="input_mode_textarea_buffer">Paste buffer file here: </label>
+<!--
+<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+遙遠
+  mean               0 0.3333
+  std. dev.     0.1667 0.4714
+  weight sum         3      3
+  precision          1      1
+
+鳥瞰
+  mean               0 0.3333
+  std. dev.     0.1667 0.4714
+  weight sum         3      3
+  precision          1      1
+
+
+
+Time taken to build model: 0.01 seconds
+
+=== Predictions on test split ===
+
+inst#,    actual, predicted, error, probability distribution
+     1          ?      1:yes      +  *1      0    
+     2          ?      1:yes      +  *0.619  0.381
+     3          ?      1:yes      +  *1      0    
+     4          ?       2:no      +   0.001 *0.999
+=== Evaluation on test set ===
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 0 0 | a = yes
+ 0 0 | b = no
+
+</textarea>
+-->
+<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+
+美國
+  mean               0      0      1
+  std. dev.     0.1667 0.1667 0.1667
+  weight sum         2      3      1
+  precision          1      1      1
+
+起源於
+  mean               0      0      1
+  std. dev.     0.1667 0.1667 0.1667
+  weight sum         2      3      1
+  precision          1      1      1
+
+
+
+Time taken to build model: 0 seconds
+
+=== Predictions on test set ===
+
+inst#,actual,predicted,error,distribution,,
+1,1:?,1:籃球,,*0.999,0.001,0
+2,1:?,2:地圖,,0,*1,0
+3,1:?,2:地圖,,0,*1,0
+4,1:?,2:地圖,,0,*1,0
+
+=== Evaluation on test set ===
+
+Time taken to test model on supplied test set: 0.01 seconds
+
+</textarea>
+  </div>
+</div>
+ 
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached active tab segment" data-tab="file">
+  <div class="field">
+      <label for="files">ARFF file: </label>
+    </div>
+    <div class="field">
+      <input class="myfile" name="files[]" id="files" multiple="" type="file" />
+    </div>
+    <div class="field">
+      <label for="files_buffer">Buffer file: </label>
+      <input class="myfile_buffer" name="files_buffer[]" id="files_buffer" multiple="" type="file" />
+    </div>
+
+  
+    <div class="inline field" style="display: none;">
+    <input type="checkbox" name="autodownload" id="autodownload" />
+    <label for="autodownload">Download Processed File Automatically</label>
+  </div>
+
+
+</div> <!-- <div class="ui bottom attached tab segment" data-tab="file"> -->
+
+        </div> <!-- <div class="ui segment"> -->
+    </div> <!-- <div class="column"> -->
+  <!-- -------------------------------------- -->
+  
+    <div class="column">
+  <div class="ui segment display-result" style="">
+  <!-- <div class="display-result"> -->
+  
+	
+    <h2 class="ui horizontal divider header">
+      Result
+    </h2>
+	
+	<div class="ui doubling grid">
+		<div class="eight sixteen column">
+                    <button type="button" class="fluid ui large right labeled icon green button download-file">
+                        <i class="right download icon"></i>
+                        DOWNLOAD
+                    </button>
+		</div>
+	</div>
+  
+    <!-- -------------------------------- -->
+	
+    <div class="field">
+      <label for="filename">Result File Name: </label>
+      <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
+    </div>
+    
+    <div class="field">
+      <label for="preview">
+        Result Preview: 
+        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+            <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
+                COPY File
+                <i class="copy icon"></i>
+	    </button>
+      </label>
+        
+      <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
+    </div>
+    
+    </div> <!-- <div class="column"> -->
+  </div> <!-- <div class="ui two column doubling grid"> -->
+</form>
+
+
+<div id="preloader"></div>
+<link rel="stylesheet" href="style.css" />
+<script src="script.js"></script>
+   </body>
+</html>

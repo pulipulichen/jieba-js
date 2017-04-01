@@ -93,12 +93,13 @@ body {
   color: gray;
 }
 
-.source-code {
+.display-result {
   overflow-y: auto;
-  max-height: calc(100vh - 190px);
+  max-height: calc(100vh - 50px);
+  
 }
 .input-mode.textarea {
-  height: calc(100vh - 237px) !important;
+  height: calc(50vh - 150px) !important;
   max-height: 100vh !important;
   min-height: 0 !important;
 }
