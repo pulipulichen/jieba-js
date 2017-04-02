@@ -334,8 +334,34 @@ var _load_file = function (evt) {
             var workbook = XLSX.read(_result, {type: 'binary'});
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
-            var _csv = XLSX.utils.sheet_to_csv(worksheet);
-            console.log(_csv);
+            var _worksheet_json = XLSX.utils.sheet_to_json(worksheet);
+            //console.log(_worksheet_json);
+            
+            var _csv = [];
+            
+            var _attr_list = [];
+            for (var _col in _worksheet_json) {
+                for (var _row in _worksheet_json[_col]) {
+                    _attr_list.push(_row);
+                }
+                break;
+            }
+            _csv.push(_attr_list.join(","));
+            
+            for (var _col in _worksheet_json) {
+                var _line = [];
+                for (var _row in _worksheet_json[_col]) {
+                    var _cell = _worksheet_json[_col][_row];
+                    _cell = _cell.replace("\n", " ");
+                    _line.push(_cell);
+                }
+                _csv.push(_line.join(","));
+            }
+            
+            
+            _csv = _csv.join("\n");
+            //var _csv = XLSX.utils.sheet_to_csv(worksheet);
+            //console.log(_csv);
             _result = _csv;
         }
         

@@ -50,17 +50,19 @@
 
 <div class="ui bottom attached  tab segment" data-tab="textarea">
   <div class="field">
-    <label for="input_mode_textarea">Paste CSV file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation '文本分類：籃球還是地球？ - data_test_document.csv.arff'
+    <label for="input_mode_textarea">Paste Test set ARFF file here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation 'iris_test_document.xlsx.arff'
 
-@attribute document string
-@attribute class {籃球, 地圖, 撞球}
+@attribute sepallength numeric
+@attribute sepalwidth numeric
+@attribute petallength numeric
+@attribute petalwidth numeric
+@attribute class {Iris-setosa, Iris-versicolor, Iris-virginica}
 
 @data
-'籃球運動 是 以 投籃 上籃 和 扣籃 為 中心 的 對抗性 室內 體育運動 之一',?
-'瀏覽 這些 令人驚歎 的 圖片 或 在 太空 中 飛往 圖片 所 對應 的 位置',?
-'籃球運動 是 1896 年 前後 由 天津 中華 基督教 青年會 傳入 中國 的',?
-'您 可以 探家 自 Google 地球 和 支援 合作 夥伴 建立 的 套件 合 大量 景點 視訊 和 影像 的 資源 函數庫',?</textarea>
+5,3.6,1.4,0.2,?
+5.7,2.8,4.5,1.3,?
+7.6,3,6.6,2.1,?</textarea>
   </div>
     <div class="field">
     <label for="input_mode_textarea_buffer">Paste buffer file here: </label>
@@ -98,35 +100,102 @@ inst#,    actual, predicted, error, probability distribution
 
 </textarea>
 -->
-<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">
+<textarea class="input-mode textarea" id="input_mode_textarea_buffer" onfocus="this.select()">=== Model information ===
 
-美國
-  mean               0      0      1
-  std. dev.     0.1667 0.1667 0.1667
-  weight sum         2      3      1
-  precision          1      1      1
+Filename:     m.model
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     iris_train_document.xlsx.arff
+Attributes:   5
+              sepallength
+              sepalwidth
+              petallength
+              petalwidth
+              class
 
-起源於
-  mean               0      0      1
-  std. dev.     0.1667 0.1667 0.1667
-  weight sum         2      3      1
-  precision          1      1      1
+=== Classifier model ===
+
+J48 pruned tree
+------------------
+
+petalwidth <= 1.5
+|   petalwidth <= 0.2: Iris-setosa (4.0)
+|   petalwidth > 0.2: Iris-versicolor (5.0)
+petalwidth > 1.5: Iris-virginica (5.0)
+
+Number of Leaves  : 	3
+
+Size of the tree : 	5
 
 
+=== Re-evaluation on test set ===
 
-Time taken to build model: 0 seconds
+User supplied test set
+Relation:     iris_test_document.xlsx.arff
+Instances:     unknown (yet). Reading incrementally
+Attributes:   5
 
-=== Predictions on test set ===
+=== Predictions on user test set ===
+
+inst#	actual	predicted	error	prediction
+1	1:?	1:Iris-setosa		1
+2	1:?	2:Iris-versicolor		1
+3	1:?	3:Iris-virginica		1
+
+=== Summary ===
+
+Total Number of Instances                0     
+Ignored Class Unknown Instances                  3     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-setosa
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-versicolor
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-virginica
+Weighted Avg.    NaN      NaN      NaN        NaN      NaN        NaN      NaN       NaN       
+
+=== Confusion Matrix ===
+
+ a b c   <-- classified as
+ 0 0 0 | a = Iris-setosa
+ 0 0 0 | b = Iris-versicolor
+ 0 0 0 | c = Iris-virginica
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     iris_test_document.xlsx.arff
+Instances:     unknown (yet). Reading incrementally
+Attributes:   5
+
+=== Predictions on user test set ===
 
 inst#,actual,predicted,error,distribution,,
-1,1:?,1:籃球,,*0.999,0.001,0
-2,1:?,2:地圖,,0,*1,0
-3,1:?,2:地圖,,0,*1,0
-4,1:?,2:地圖,,0,*1,0
+1,1:?,1:Iris-setosa,,*1,0,0
+2,1:?,2:Iris-versicolor,,0,*1,0
+3,1:?,3:Iris-virginica,,0,0,*1
 
-=== Evaluation on test set ===
+=== Summary ===
 
-Time taken to test model on supplied test set: 0.01 seconds
+Total Number of Instances                0     
+Ignored Class Unknown Instances                  3     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-setosa
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-versicolor
+                 0.000    0.000    0.000      0.000    0.000      0.000    ?         ?         Iris-virginica
+Weighted Avg.    NaN      NaN      NaN        NaN      NaN        NaN      NaN       NaN       
+
+=== Confusion Matrix ===
+
+ a b c   <-- classified as
+ 0 0 0 | a = Iris-setosa
+ 0 0 0 | b = Iris-versicolor
+ 0 0 0 | c = Iris-virginica
+
 
 </textarea>
   </div>
@@ -137,7 +206,7 @@ Time taken to test model on supplied test set: 0.01 seconds
 
 <div class="ui bottom attached active tab segment" data-tab="file">
   <div class="field">
-      <label for="files">ARFF file: </label>
+      <label for="files">Test set ARFF file: </label>
     </div>
     <div class="field">
       <input class="myfile" name="files[]" id="files" multiple="" type="file" />
