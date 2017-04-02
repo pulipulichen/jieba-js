@@ -231,24 +231,7 @@ var _add_chinese_space = function(_content) {
     }
     
     var _result = _content;
-    /*
-    var _result = preg_replace_callback(
-                "/([_]|[\W]|([\p{Han}]))/u",
-                function ($matches) {
-
-                if (preg_match_all("/[0-9\s]/", $matches[0])) {
-                return $matches[0];
-                }
-                else {
-                return " ".$matches[0]." ";
-                }
-
-                },
-                $content
-                );
-    $result = preg_replace('@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $result); // 避免Solr illegal characters
-    $result = preg_replace("/\s+/", ' ', $result);
-    */
+    
     _result = _result.replace(/([_]|[\W])/g,function (_matches, _contents, _offset, _s) {
         if (_matches[0].match(/[0-9\s]/)) {
             return _matches[0];
@@ -264,6 +247,10 @@ var _add_chinese_space = function(_content) {
 };
 
 //console.log(_add_chinese_space("您可以探家自 Google 地球和支援合作夥伴建立的套件合大量111景點視訊和影像的資111aaa源函數庫"));
+//console.log(_add_chinese_space("這份編號是tc_130的心靈錯位器真是太cool了"));
+//console.log(_add_chinese_space("這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。"));
+//console.log(_add_chinese_space("  測   試    看   看   "));
+//console.log(_add_chinese_space("2013-03-24_23230021"));
 
 // ---------------------
 
