@@ -18,6 +18,7 @@ var _process_file = function (_input, _callback) {
     var _class_list = [];
     var _train_data = [];
     var _test_data = [];
+    var _toker = $('[name="toker"]:checked').val();
     for (var _l = 0; _l < _lines.length; _l++) {
         if (_l > 0 && _class_index === undefined) {
             alert('Class field "' + _class_field + '" not found.');
@@ -114,12 +115,21 @@ var _process_file = function (_input, _callback) {
                 }
                 else {
                     _text = _text.substring(1, _text.length - 1);
-                    call_jieba_cut_join(_text, ' ', function (_result) {
+                    if (_toker === "radio_jieba") {
+                        call_jieba_cut_join(_text, ' ', function (_result) {
+                            _data[_row_index][_col_index] = "'" + _result + "'";
+
+                            _col_index++;
+                            _loop(_data, _row_index, _col_index, _callback);
+                        });
+                    }
+                    else {
+                        var _result = _add_chinese_space(_text)
                         _data[_row_index][_col_index] = "'" + _result + "'";
 
                         _col_index++;
                         _loop(_data, _row_index, _col_index, _callback);
-                    });
+                    }
                 }
             }
             else {
@@ -208,6 +218,52 @@ var _process_file = function (_input, _callback) {
 
     // --------------------
 };
+
+// -------------------
+
+var _add_chinese_space = function(_content) {
+    if( Object.prototype.toString.call( _content ) === '[object Array]' ) {
+        var _new_content = [];
+        for (var _i = 0; _i < _content.length; _i++) {
+            _new_content.push(_add_chinese_space(_content[_i]));
+        }
+        return _new_content;
+    }
+    
+    var _result = _content;
+    /*
+    var _result = preg_replace_callback(
+                "/([_]|[\W]|([\p{Han}]))/u",
+                function ($matches) {
+
+                if (preg_match_all("/[0-9\s]/", $matches[0])) {
+                return $matches[0];
+                }
+                else {
+                return " ".$matches[0]." ";
+                }
+
+                },
+                $content
+                );
+    $result = preg_replace('@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $result); // 避免Solr illegal characters
+    $result = preg_replace("/\s+/", ' ', $result);
+    */
+    _result = _result.replace(/([_]|[\W])/g,function (_matches, _contents, _offset, _s) {
+        if (_matches[0].match(/[0-9\s]/)) {
+            return _matches[0];
+        }
+        else {
+            return " " + _matches[0] + " ";
+        }
+    });
+    _result = _result.replace(/@[\x00-\x08\x0B\x0C\x0E-\x1F]@/g, ' '); // 避免Solr illegal characters
+    _result = _result.replace(/\s+/g, ' ');
+    _result = _result.trim();
+    return _result;
+};
+
+//console.log(_add_chinese_space("您可以探家自 Google 地球和支援合作夥伴建立的套件合大量111景點視訊和影像的資111aaa源函數庫"));
 
 // ---------------------
 

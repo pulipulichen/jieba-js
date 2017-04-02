@@ -46,17 +46,23 @@
 
     <!-- -------------------------------------- -->
 <div class="inline field">
-      <label for="class_field">Class分類目標欄位</label>
+      <label for="class_field">指定Class分類目標的欄位</label>
       <input type="text" id="class_field" value="class" />
 </div>
 <div class="inline field">
-      <label for="string_fields">String欄位 (用逗號分隔多個欄位)</label>
+      <label for="string_fields">指定String資料類型的欄位 (用逗號分隔多個欄位)</label>
       <input type="text" id="string_fields" value="document" />
 </div>
 <div class="inline field">
       <input type="checkbox" id="enable_toker" checked="checked" />
       <!-- <input type="checkbox" id="enable_toker" /> -->
-      <label for="enable_toker">String欄位使用jieba斷詞</label>
+      <label for="enable_toker">String類型欄位使用斷詞：</label>
+      
+      <input type="radio" name="toker" id="radio_jieba" value="radio_jieba" />
+      <label for="radio_jieba">jieba斷詞</label>
+      
+      <input type="radio" name="toker" id="radio_word" value="radio_word" checked="checked" />
+      <label for="radio_word">單字</label>
 </div>
     <div class="ui top attached tabular menu">
       <div class="item" data-tab="textarea">Textarea</div>
