@@ -8,6 +8,7 @@ var _process_file = function(_input, _buffer, _callback) {
     var _pro_dis = [];
     //var _pro_dis_attr = ["籃球", "地球", "撞球"];
     var _pro_dis_attr = [];
+    var _entropy_list = [];
 
     var _line_process_plain_text = function (_line) {
         var _pos = _line.lastIndexOf("+");
@@ -73,6 +74,9 @@ var _process_file = function(_input, _buffer, _callback) {
         if (_line.indexOf("*") > -1) {
             _line_number--;
             _pro_dis[_line_number] = [];
+            
+            var _entropy = 0;
+            
             for (var _i = 4; _i < _fields.length; _i++) {
                 var _index = _fields[_i];
                 
@@ -83,7 +87,15 @@ var _process_file = function(_input, _buffer, _callback) {
                     _index = _index.substring(1, _index.length);
                 } 
                 _pro_dis[_line_number].push(_index);
+                
+                //console.log(_index);
+                if (_index !== "0") {
+                    var _p = parseFloat(_index, 10);
+                    _entropy = _entropy + _p * Math.log(_p);
+                }
             }
+            
+            _entropy_list.push(-1*_entropy);
         }
         else {
             var _pos = _line.lastIndexOf(",", _line.length - 2);
@@ -176,6 +188,10 @@ var _process_file = function(_input, _buffer, _callback) {
             var _attr = "probability distribution";
             _attr_list.push(_attr);
         }
+        
+        _attr_list.push("entropy");
+        
+        //console.log(_attr_list);
     }
     // --------------------------------------
 
@@ -223,6 +239,8 @@ var _process_file = function(_input, _buffer, _callback) {
             }
             //_pro_dis_attr[_max_index] = _predict;
             //console.log([_max_index, _predict]);
+            
+            _temp_line.push(_entropy_list[_l]);
         }
         else {
             if (_has_predicted === false && typeof (_predicted_data[_l]) !== "undefined") {

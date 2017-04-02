@@ -50,7 +50,7 @@
 
 <div class="ui bottom attached  tab segment" data-tab="textarea">
   <div class="field">
-    <label for="input_mode_textarea">Paste Test set ARFF file here: </label>
+    <label for="input_mode_textarea">Paste Test data set ARFF file here: </label>
     <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">@relation 'iris_test_document.xlsx.arff'
 
 @attribute sepallength numeric
@@ -172,9 +172,9 @@ Attributes:   5
 === Predictions on user test set ===
 
 inst#,actual,predicted,error,distribution,,
-1,1:?,1:Iris-setosa,,*1,0,0
+1,1:?,1:Iris-setosa,,*0.7,0.3,0
 2,1:?,2:Iris-versicolor,,0,*1,0
-3,1:?,3:Iris-virginica,,0,0,*1
+3,1:?,3:Iris-virginica,,0.333,0.333,*0.333
 
 === Summary ===
 
@@ -206,7 +206,7 @@ Weighted Avg.    NaN      NaN      NaN        NaN      NaN        NaN      NaN  
 
 <div class="ui bottom attached active tab segment" data-tab="file">
   <div class="field">
-      <label for="files">Test set ARFF file: </label>
+      <label for="files">Test data set ARFF file: </label>
     </div>
     <div class="field">
       <input class="myfile" name="files[]" id="files" multiple="" type="file" />

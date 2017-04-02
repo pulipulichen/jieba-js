@@ -44,6 +44,20 @@
   Input
 </h1>
 
+    <!-- -------------------------------------- -->
+<div class="inline field">
+      <label for="class_field">Class分類目標欄位</label>
+      <input type="text" id="class_field" value="class" />
+</div>
+<div class="inline field">
+      <label for="string_fields">String欄位 (用逗號分隔多個欄位)</label>
+      <input type="text" id="string_fields" value="document" />
+</div>
+<div class="inline field">
+      <input type="checkbox" id="enable_toker" checked="checked" />
+      <!-- <input type="checkbox" id="enable_toker" /> -->
+      <label for="enable_toker">String欄位使用jieba斷詞</label>
+</div>
     <div class="ui top attached tabular menu">
       <div class="item" data-tab="textarea">Textarea</div>
       <div class="active item" data-tab="file">File</div>
@@ -92,20 +106,6 @@
 
 </div> <!-- <div class="ui bottom attached tab segment" data-tab="file"> -->
 
-    <!-- -------------------------------------- -->
-<div class="inline field">
-      <label for="class_field">Class分類目標欄位</label>
-      <input type="text" id="class_field" value="class" />
-</div>
-<div class="inline field">
-      <label for="string_fields">String欄位 (用逗號分隔多個欄位)</label>
-      <input type="text" id="string_fields" value="document" />
-</div>
-<div class="inline field">
-      <input type="checkbox" id="enable_toker" checked="checked" />
-      <!-- <input type="checkbox" id="enable_toker" /> -->
-      <label for="enable_toker">String欄位使用jieba斷詞</label>
-</div>
 
         </div> <!-- <div class="ui segment"> -->
     </div> <!-- <div class="column"> -->
@@ -124,13 +124,13 @@
 		<div class="eight wide column">
                     <button type="button" class="fluid ui large right labeled icon green button download-file">
                         <i class="right download icon"></i>
-                        DOWNLOAD Train Doc
+                        Train Data Set
                     </button>
 		</div>
 		<div class="eight wide column">
                     <button type="button" class="fluid ui large right labeled icon green button download-test-file">
                             <i class="right download icon"></i>
-                            DOWNLOAD Test Doc
+                            Test Data Set
                     </button>
 		</div>
 	</div>
