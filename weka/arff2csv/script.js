@@ -173,6 +173,8 @@ var _process_file = function(_input, _buffer, _callback) {
         if (_has_predicted === false) {
             _attr_list.push("predictedclass");
         }
+        
+        _attr_list.push("entropy");
 
         if (typeof (_pro_dis[0]) === "object") {
             for (var _i = 0; _i < _pro_dis[0].length; _i++) {
@@ -189,7 +191,6 @@ var _process_file = function(_input, _buffer, _callback) {
             _attr_list.push(_attr);
         }
         
-        _attr_list.push("entropy");
         
         //console.log(_attr_list);
     }
@@ -222,6 +223,8 @@ var _process_file = function(_input, _buffer, _callback) {
             if (_has_predicted === false) {
                 _temp_line.push(_predicted_data[_l]);
             }
+            
+            _temp_line.push(_entropy_list[_l]);
 
             // ---------------------------
 
@@ -240,7 +243,6 @@ var _process_file = function(_input, _buffer, _callback) {
             //_pro_dis_attr[_max_index] = _predict;
             //console.log([_max_index, _predict]);
             
-            _temp_line.push(_entropy_list[_l]);
         }
         else {
             if (_has_predicted === false && typeof (_predicted_data[_l]) !== "undefined") {
