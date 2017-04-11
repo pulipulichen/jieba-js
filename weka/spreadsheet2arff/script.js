@@ -418,6 +418,10 @@ var _load_file = function (evt) {
                 var _line = [];
                 for (var _row in _worksheet_json[_col]) {
                     var _cell = _worksheet_json[_col][_row];
+                    _cell = _cell.replace(",", " ");
+                    if (_cell.indexOf(",") > -1) {
+                        console.log(_cell);
+                    }
                     _cell = _cell.replace("\n", " ");
                     _line.push(_cell);
                 }
