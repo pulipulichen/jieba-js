@@ -94,6 +94,28 @@ var _process_file = function (_input, _callback) {
         }
     }
     
+    var _title = "Weka Spreadsheet to ARFF (file process framework 20170401)";
+    
+    var _loop_wait = function (_data, _row_index, _col_index, _callback) {
+        
+        
+        if (_row_index % 100 === 0) {
+            try {
+                //console.log([_row_index, _data.length, _col_index, _data[_row_index].length]);
+                var _percent = Math.ceil(_row_index / _data.length * 100);
+                var _percent_title = "(" + _percent + "%) " + _title;
+                document.title = _percent_title;
+            }
+            catch (e) {}
+            
+            setTimeout(function () {    
+                _loop(_data, _row_index, _col_index, _callback);
+            }, 1);
+        }
+        else {
+            _loop(_data, _row_index, _col_index, _callback);
+        }
+    };
 
     var _loop = function (_data, _row_index, _col_index, _callback) {
         if (_row_index < _data.length) {
@@ -110,7 +132,7 @@ var _process_file = function (_input, _callback) {
                     _data[_row_index][_col_index] = _text;
 
                     _col_index++;
-                    _loop(_data, _row_index, _col_index, _callback);
+                    _loop_wait(_data, _row_index, _col_index, _callback);
                     return;
                 }
                 else {
@@ -120,7 +142,7 @@ var _process_file = function (_input, _callback) {
                             _data[_row_index][_col_index] = "'" + _result + "'";
 
                             _col_index++;
-                            _loop(_data, _row_index, _col_index, _callback);
+                            _loop_wait(_data, _row_index, _col_index, _callback);
                         });
                     }
                     else {
@@ -128,17 +150,18 @@ var _process_file = function (_input, _callback) {
                         _data[_row_index][_col_index] = "'" + _result + "'";
 
                         _col_index++;
-                        _loop(_data, _row_index, _col_index, _callback);
+                        _loop_wait(_data, _row_index, _col_index, _callback);
                     }
                 }
             }
             else {
                 _col_index = 0;
                 _row_index++;
-                _loop(_data, _row_index, _col_index, _callback);
+                _loop_wait(_data, _row_index, _col_index, _callback);
             }
         }
         else {
+            document.title = _title;
             _callback();
         }
     };
@@ -373,7 +396,7 @@ var _load_file = function (evt) {
         //document.forms['myform'].elements['text'].value = evt.target.result;
         _result = evt.target.result;
         
-        if (typeof(_file_type) !== "csv") {
+        if (_file_type !== "csv") {
             var workbook = XLSX.read(_result, {type: 'binary'});
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
