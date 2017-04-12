@@ -198,26 +198,29 @@ var _draw_stat_table = function (_result) {
         // -------------------------
         // 再畫數量
         
+        
+        var _count_avg = _float_to_fixed( (_full_count/ (_cluster_count.length - 1)) , _to_fixed);
+        
         var _count_tr = $('<tr class="compare-data"></tr>').appendTo(_tbody);
         _count_tr.append('<th>' + DICT['Count'] + '</th>');
         _count_tr.append('<td title="Full Data, count" class="fulldata count">' 
-                + _full_count + '<br />(平均: ' + _float_to_fixed((_full_count/ (_cluster_count.length - 1)), _to_fixed) + ')'
-                + '</td>');
+            + _full_count + '<br />(平均: ' + _count_avg + ')'
+            + '</td>');
                 
         var _row_data = _cluster_count;
         for (var _i = 0; _i < _cluster_count.length; _i++) {
-                if (typeof(_cluster_count[_i]) === "undefined") {
-                                continue;
-                }
-                var _classname = "normal";
-                if ( _cluster_count[_i] > (_full_count/_cluster_count.length) ) {
-                        _classname = "large";
-                }
-                else {
-                        _classname = "small";
-                }
-                _count_tr.append('<td class="marks count ' + _classname + '" title="Cluster ' + _i + ', count" data-ori-value="' + _cluster_count[_i] + '">' 
-                        + _cluster_count[_i] + '</td>');
+            if (typeof(_cluster_count[_i]) === "undefined") {
+                continue;
+            }
+            var _classname = "normal";
+            if ( _cluster_count[_i] > (_full_count/ (_cluster_count.length - 1)) ) {
+                _classname = "large";
+            }
+            else {
+                _classname = "small";
+            }
+            _count_tr.append('<td class="marks count ' + _classname + '" title="Cluster ' + _i + ', count" data-ori-value="' + _cluster_count[_i] + '">' 
+                    + _cluster_count[_i] + '</td>');
         }
         //_count_tr.append('<td></td>');
         
