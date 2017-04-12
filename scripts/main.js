@@ -350,13 +350,6 @@ if (_host !== undefined) {
         });
         
         require([ _host + "scripts/data/dictionary.js"], _require_callback);
-        
-        setTimeout(function () {
-            console.log(["check", _loaded]);
-            if (_loaded === false) {
-                _require_dictionary();
-            }
-        }, 1000);
     };
     
     //$.get(_host + "scripts/data/dictionary.js", function () {
