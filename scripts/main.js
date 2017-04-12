@@ -344,6 +344,11 @@ if (_host !== undefined) {
     };
     
     var _require_dictionary = function () {
+        requirejs.config({
+            enforceDefine: true,
+            waitSeconds: 0,
+        });
+        
         require([ _host + "scripts/data/dictionary.js"], _require_callback);
         
         setTimeout(function () {
