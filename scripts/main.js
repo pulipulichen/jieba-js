@@ -344,10 +344,16 @@ if (_host !== undefined) {
     };
     
     var _require_dictionary = function () {
-        requirejs.config({
-            //enforceDefine: true,
-            waitSeconds: 0,
-        });
+        try {
+            requirejs.config({
+                //enforceDefine: true,
+                waitSeconds: 0,
+            });
+        }
+        catch (e) {
+            _require_dictionary();
+            return;
+        }
         
         require([ _host + "scripts/data/dictionary.js"], _require_callback);
     };
