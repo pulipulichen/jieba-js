@@ -346,7 +346,7 @@ if (_host !== undefined) {
     var _require_dictionary = function () {
         try {
             requirejs.config({
-                //enforceDefine: true,
+                enforceDefine: true,
                 waitSeconds: 0,
             });
         }
