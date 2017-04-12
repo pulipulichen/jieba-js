@@ -25,3 +25,4 @@ call_jieba_cut(_text, function (_result) {
 - Spreadsheet to ARFF線上轉換: http://pulipulichen.github.io/jieba-js/weka/spreadsheet2arff/index.html
 - ARFF result to CSV線上轉換: http://pulipulichen.github.io/jieba-js/weka/arff2csv/index.html
 - http://pulipulichen.github.io/jieba-js/weka/simple-kmeans
+- http://pulipulichen.github.io/jieba-js/weka/simple-kmeans/cascadeKMeans1.0.4.zip

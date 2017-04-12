@@ -32,7 +32,7 @@ jieba_parsing = function(dictionary, _callback) {
         }
 
         return [trie, lfreq, ltotal];
-    }
+    };
 
     var initialize = function() {
         if (initialized === true) {
@@ -60,7 +60,7 @@ jieba_parsing = function(dictionary, _callback) {
         initialized = true;
 
         //console.log("Trie built!", trie);
-    }
+    };
 
     var get_DAG = function(sentence) {
         var N = sentence.length,
@@ -98,7 +98,7 @@ jieba_parsing = function(dictionary, _callback) {
             }
         }
         return DAG;
-    }
+    };
 
     var calc = function( sentence, DAG, idx, route ) {
         var N = sentence.length;
@@ -116,7 +116,7 @@ jieba_parsing = function(dictionary, _callback) {
             //console.log('max is', m);
             route[idx] = [m, candidates_x[candidates.indexOf(m)]];
         }
-    }
+    };
 
     var __cut_DAG = function(sentence) {
         // finalseg is still to be implemented,
@@ -184,7 +184,7 @@ jieba_parsing = function(dictionary, _callback) {
             }
         }
         return yieldValues;
-    }
+    };
 
     var __cut_DAG_NO_HMM = function (sentence) {
         var re_eng = /[a-zA-Z0-9]/,
@@ -223,7 +223,7 @@ jieba_parsing = function(dictionary, _callback) {
             buf = '';
         }
         return yieldValues;
-    }
+    };
 
     var cut = function(sentence){
         var cut_all = false,
@@ -326,7 +326,7 @@ if (typeof(get_host) === "function") {
 }
 
 if (_host !== undefined) {
-    require([ _host + "scripts/data/dictionary.js"], function (_dictionary) {
+    var _require_callback = function (_dictionary) {
         if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
             require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
                 for (var _i = 0; _i < _custom_dictionary.length; _i++) {
@@ -338,5 +338,15 @@ if (_host !== undefined) {
         else {
             jieba_parsing(_dictionary);
         }
-    });
+    };
+    
+    var _require_dictionary = function () {
+        try {
+            require([ _host + "scripts/data/dictionary.js"], _require_callback);
+        }
+        catch (e) {
+            _require_dictionary();
+        }
+    };
+    _require_dictionary();
 }
