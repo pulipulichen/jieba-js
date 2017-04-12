@@ -326,7 +326,10 @@ if (typeof(get_host) === "function") {
 }
 
 if (_host !== undefined) {
+    var _loaded = false;
+    
     var _require_callback = function (_dictionary) {
+        _loaded = true;
         if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
             require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
                 for (var _i = 0; _i < _custom_dictionary.length; _i++) {
@@ -341,12 +344,16 @@ if (_host !== undefined) {
     };
     
     var _require_dictionary = function () {
-        try {
-            require([ _host + "scripts/data/dictionary.js"], _require_callback);
-        }
-        catch (e) {
-            _require_dictionary();
-        }
+        require([ _host + "scripts/data/dictionary.js"], _require_callback);
+        
+        setTimeout(function () {
+            if (_loaded === false) {
+                _require_dictionary();
+            }
+        }, 1000);
     };
+    
+    //$.get(_host + "scripts/data/dictionary.js", function () {
     _require_dictionary();
+    //});
 }
