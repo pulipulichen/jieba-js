@@ -201,7 +201,7 @@ var _draw_stat_table = function (_result) {
         var _count_tr = $('<tr class="compare-data"></tr>').appendTo(_tbody);
         _count_tr.append('<th>' + DICT['Count'] + '</th>');
         _count_tr.append('<td title="Full Data, count" class="fulldata count">' 
-                + _full_count + '<br />(平均: ' + _float_to_fixed((_full_count/_cluster_count.length), _to_fixed) + ')'
+                + _full_count + '<br />(平均: ' + _float_to_fixed((_full_count/ (_cluster_count.length - 1)), _to_fixed) + ')'
                 + '</td>');
                 
         var _row_data = _cluster_count;
