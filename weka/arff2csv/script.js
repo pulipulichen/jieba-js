@@ -343,8 +343,8 @@ var _change_to_fixed = function () {
 
 // -------------------------------------
 
-var _output_filename_surffix="_test_result";
-var _output_filename_test_surffix="_test_document";
+var _output_filename_surffix="-result";
+//var _output_filename_test_surffix="_test_set";
 var _output_filename_ext=".csv";
 
 
@@ -364,7 +364,8 @@ var _load_file = function(evt) {
     var _result;
 
     var _original_file_name = evt.target.files[0].name;
-    var _pos = _original_file_name.lastIndexOf(".");
+    //var _pos = _original_file_name.lastIndexOf(".");
+    var _pos = _original_file_name.length;
     var _file_name = _original_file_name.substr(0, _pos)
         + _output_filename_surffix
         + _original_file_name.substring(_pos, _original_file_name.length);
@@ -488,7 +489,7 @@ var _load_textarea = function(evt) {
   
     var local = new Date(utc);
     var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
-    var _file_name = "test_result_" + _file_date + _output_filename_ext;
+    var _file_name = "result-" + _file_date + _output_filename_ext;
     var _test_file_name = "test_document_" + _file_date + _output_filename_ext;
 
     _panel.find(".filename").val(_file_name);

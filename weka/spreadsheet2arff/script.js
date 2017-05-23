@@ -50,9 +50,11 @@ var _process_file = function (_input, _callback) {
             }
             else {
                 //console.log([isNaN(_value), _value]);
-                if (_f !== _class_index && isNaN(_value) === true) {
+                if (_f !== _class_index && (isNaN(_value) === true && _value !== "?") ) {
                     
-                    _value = "'" + _value + "'";
+                    if (_value !== "?") {
+                        _value = "'" + _value + "'";
+                    }
                     
                     var _attr = _attr_list[_f];
                     if ($.inArray(_attr, _string_fields) === -1) {
@@ -125,7 +127,7 @@ var _process_file = function (_input, _callback) {
                 var _attr = _attr_list[_col_index];
                 //console.log([_attr, _string_fields]);
                 if ($.inArray(_attr, _string_fields) === -1) {
-                    if (isNaN(_text) === true) {
+                    if (isNaN(_text) === true && _text !== '?') {
                         _text = _text.substring(1, _text.length - 1);
                         _text = "'" + _text + "'";
                     }
@@ -368,12 +370,12 @@ var _load_file = function (evt) {
 
     var _original_file_name = evt.target.files[0].name;
     var _pos = _original_file_name.lastIndexOf(".");
-    var _file_name = _original_file_name.substr(0, _pos)
-            + _output_filename_surffix
+    var _file_name = "train_set-" + _original_file_name.substr(0, _pos)
+            //+ _output_filename_surffix
             + _original_file_name.substring(_pos, _original_file_name.length);
     _file_name = _file_name + _output_filename_ext;
-    var _test_file_name = _original_file_name.substr(0, _pos)
-            + _output_filename_test_surffix
+    var _test_file_name = "test_set-" + _original_file_name.substr(0, _pos)
+            //+ _output_filename_test_surffix
             + _original_file_name.substring(_pos, _original_file_name.length);
     _test_file_name = _test_file_name + _output_filename_ext;
     
@@ -644,5 +646,5 @@ $(function () {
     $("#show_std").change(_change_show_std);
 
     // 20170108 測試用
-    _load_textarea();
+    //_load_textarea();
 });
