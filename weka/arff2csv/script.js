@@ -346,6 +346,7 @@ var _change_to_fixed = function () {
 var _output_filename_surffix="-result";
 //var _output_filename_test_surffix="_test_set";
 var _output_filename_ext=".csv";
+var _output_filename_prefix="csv_result-";
 
 
 // -------------------------------------
@@ -365,10 +366,12 @@ var _load_file = function(evt) {
 
     var _original_file_name = evt.target.files[0].name;
     //var _pos = _original_file_name.lastIndexOf(".");
-    var _pos = _original_file_name.length;
-    var _file_name = _original_file_name.substr(0, _pos)
-        + _output_filename_surffix
-        + _original_file_name.substring(_pos, _original_file_name.length);
+    //var _pos = _original_file_name.length;
+    var _pos = _original_file_name.indexOf(".");
+    //var _file_name = _original_file_name.substr(0, _pos)
+    //    + _output_filename_surffix
+    //    //+ _original_file_name.substring(_pos, _original_file_name.length);
+    var _file_name = _output_filename_prefix + _original_file_name.substr(0, _pos);
     _file_name = _file_name + _output_filename_ext;
     
     _panel.find(".filename").val(_file_name);
@@ -488,8 +491,11 @@ var _load_textarea = function(evt) {
     var utc = d.getTime() - (d.getTimezoneOffset() * 60000);
   
     var local = new Date(utc);
-    var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
-    var _file_name = "result-" + _file_date + _output_filename_ext;
+    //var _file_date = local.toJSON().slice(0,19).replace(/:/g, "-");
+    var time = new Date();
+    var _file_date = ("0" + time.getHours()).slice(-2)
+            + ("0" + time.getMinutes()).slice(-2);
+    var _file_name = "csv_result-" + _file_date + _output_filename_ext;
     var _test_file_name = "test_document_" + _file_date + _output_filename_ext;
 
     _panel.find(".filename").val(_file_name);
@@ -547,9 +553,8 @@ var _download_file = function (data, filename, type) {
         }, 0); 
     }
 
-}
+};
 
-// ------------------------
 // ----------------------------
 
 var _copy_table = function () {
