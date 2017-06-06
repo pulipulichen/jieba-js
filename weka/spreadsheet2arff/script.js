@@ -47,6 +47,7 @@ var _process_file = function (_input, _callback) {
                 if (_value === _class_field) {
                     _class_index = _f;
                 }
+                //console.log(_value);
             }
             else {
                 //console.log([isNaN(_value), _value]);
@@ -179,14 +180,19 @@ var _process_file = function (_input, _callback) {
         var _result = "@relation '" + _train_title + "'\n\n";
         var _test_result = "@relation '" + _test_title + "'\n\n";
 
+        //console.log(_attr_list.length);
         for (var _a = 0; _a < _attr_list.length; _a++) {
             var _attr = _attr_list[_a];
             //if (_attr !== "class") {
+            //console.log(_attr);
             if (_attr !== _class_field) {
             
                 var _attr_setting = "@attribute " + _attr + " ";
                 if (_attr_type[_attr] === "nominal") {
-                    _attr_setting = _attr_setting + "{" + _norminal_list[_attr].join(", ") + "}";
+                    // 排序一下
+                    var _array = JSON.parse(JSON.stringify(_norminal_list[_attr]));
+                    _array = _array.sort();
+                    _attr_setting = _attr_setting + "{" + _array.join(", ") + "}";
                 }
                 else {
                     _attr_setting = _attr_setting + _attr_type[_attr];
@@ -197,8 +203,10 @@ var _process_file = function (_input, _callback) {
             }
             else {
                 if (_is_numeric === false) {
-                    _result = _result + "@attribute " + _class_field + " {" + _class_list.join(", ") + "}\n";
-                    _test_result = _test_result + "@attribute " + _class_field + " {" + _class_list.join(", ") + "}\n";
+                    var _array = _class_list;
+                    _array = _array.sort();
+                    _result = _result + "@attribute " + _class_field + " {" + _array.join(", ") + "}\n";
+                    _test_result = _test_result + "@attribute " + _class_field + " {" + _array.join(", ") + "}\n";
                 }
                 else {
                     _result = _result + "@attribute " + _class_field + " numeric\n";
