@@ -257,14 +257,14 @@ var _process_file = function(_input, _buffer, _callback) {
             }
         }
 
-        _temp_result.push(_temp_line.join(","));
+        _temp_result.push((_l+1) + "," + _temp_line.join(","));
     }
     _result = _temp_result.join("\n");
 
 
     // -----------------------------
 
-    _result = _attr_list.join(",") + "\n" + _result;
+    _result = "id," + _attr_list.join(",") + "\n" + _result;
 
     _loading_disable();
     if (typeof (_callback) === "function") {
