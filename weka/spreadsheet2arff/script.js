@@ -9,6 +9,7 @@ var _process_file = function (_input, _callback) {
     
     var _class_field = $("#class_field").val().trim();
     var _string_fields = $("#string_fields").val().trim().split(",");
+    var _date_fields = $("#date_fields").val().trim().split(",");
     //console.log(_input);
 
     var _attr_list = [];
@@ -58,7 +59,14 @@ var _process_file = function (_input, _callback) {
                     }
                     
                     var _attr = _attr_list[_f];
-                    if ($.inArray(_attr, _string_fields) === -1) {
+                    //console.log(_attr);
+                    if ($.inArray(_attr, _string_fields) > -1) {
+                        _attr_type[_attr] = "string";
+                    }
+                    else if ($.inArray(_attr, _date_fields) > -1) {
+                        _attr_type[_attr] = "date 'yyyy-MM-dd'";
+                    }
+                    else {
                         _attr_type[_attr] = "nominal";
                         if ( typeof(_norminal_list[_attr]) === "undefined") {
                             _norminal_list[_attr] = [];
@@ -66,9 +74,6 @@ var _process_file = function (_input, _callback) {
                         if ($.inArray(_value, _norminal_list[_attr]) === -1) {
                             _norminal_list[_attr].push(_value);
                         }
-                    }
-                    else {
-                        _attr_type[_attr] = "string";
                     }
                     
                 }
