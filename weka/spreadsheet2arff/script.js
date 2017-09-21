@@ -10,6 +10,7 @@ var _process_file = function (_input, _callback) {
     var _class_field = $("#class_field").val().trim();
     var _string_fields = $("#string_fields").val().trim().split(",");
     var _date_fields = $("#date_fields").val().trim().split(",");
+    var _timestamp_fields = $("#timestamp_fields").val().trim().split(",");
     //console.log(_input);
 
     var _attr_list = [];
@@ -65,6 +66,9 @@ var _process_file = function (_input, _callback) {
                     }
                     else if ($.inArray(_attr, _date_fields) > -1) {
                         _attr_type[_attr] = "date 'yyyy-MM-dd'";
+                    }
+                    else if ($.inArray(_attr, _timestamp_fields) > -1) {
+                        _attr_type[_attr] = "date 'yyyy-MM-dd HH:mm:ss'";
                     }
                     else {
                         _attr_type[_attr] = "nominal";
