@@ -11,6 +11,7 @@ var _process_file = function (_input, _callback) {
     var _string_fields = $("#string_fields").val().trim().split(",");
     var _date_fields = $("#date_fields").val().trim().split(",");
     var _timestamp_fields = $("#timestamp_fields").val().trim().split(",");
+    var _is_timeseries_forecast_mode = false;
     //console.log(_input);
 
     var _attr_list = [];
@@ -20,6 +21,11 @@ var _process_file = function (_input, _callback) {
     var _class_list = [];
     var _train_data = [];
     var _test_data = [];
+    var _date_attr_index = -1;
+    var _timestamp_attr_index = -1;
+    var _month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    var _timeseries_periodics_custom_fields = {};
+    
     var _toker = $('[name="toker"]:checked').val();
     for (var _l = 0; _l < _lines.length; _l++) {
         if (_l > 0 && _class_index === undefined) {
@@ -33,6 +39,7 @@ var _process_file = function (_input, _callback) {
         
         var _fields = _lines[_l].split(",");
         var _line_fields = [];
+        
         for (var _f = 0; _f < _fields.length; _f++) {
             var _value = _fields[_f].trim();
             if ((_value.substr(0, 1) === '"' || _value.substr(0, 1) === "'")
@@ -66,9 +73,13 @@ var _process_file = function (_input, _callback) {
                     }
                     else if ($.inArray(_attr, _date_fields) > -1) {
                         _attr_type[_attr] = "date 'yyyy-MM-dd'";
+                        _is_timeseries_forecast_mode = true;
+                        _date_attr_index = _f;
                     }
                     else if ($.inArray(_attr, _timestamp_fields) > -1) {
                         _attr_type[_attr] = "date 'yyyy-MM-dd HH:mm:ss'";
+                        _is_timeseries_forecast_mode = true;
+                        _timestamp_attr_index = _f;
                     }
                     else {
                         _attr_type[_attr] = "nominal";
@@ -91,7 +102,7 @@ var _process_file = function (_input, _callback) {
                     }
                 }
             }
-        }
+        }   //  for (var _f = 0; _f < _fields.length; _f++) {
 
         if (_line_fields.length > 0) {
             //console.log(_fields[_class_index].trim());
@@ -102,7 +113,64 @@ var _process_file = function (_input, _callback) {
             else {
                 _test_data.push(_line_fields);
             }
-
+            
+            if (_is_timeseries_forecast_mode === true) {
+                var _date;
+                //var _next_date;
+                
+                //var _next_line_fields = [];
+                //if (_l < _lines.length - 1) {
+                //    _next_line_fields = _lines[(_l+1)].split(",");
+                //}
+                //else {
+                //    _next_line_fields = _lines[(_l-1)].split(",");
+                //}
+                
+                if (_date_attr_index > -1) {
+                    _date = _line_fields[_date_attr_index].trim();
+                    _date = new Date(_date);
+                    
+                    //_next_date = _next_line_fields[_date_attr_index].trim();
+                    //_next_date = new Date(_next_date);
+                    //var _interval_time = Math.abs(_next_date.getTime() - _date.getTime());
+                    //console.log([_next_date.getTime(), _date.getTime()]);
+                    //_next_date = new Date((_date.getTime() + _interval_time));
+                    
+                    //_date = '=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() + ':*:*:*:*:*:*:*/';
+                    //_date = '>=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() + ':*:*:*:*:*:*:*' 
+                    //        + ' <' +  _date.getFullYear() + ':' + _month_names[((_date.getMonth()+1)%12)] + ':' + _date.getDate() + ':*:*:*:*:*:*:*' + '/';
+                    //_date = '<=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() + ':*:*:*:*:*:*:*/';
+                    //_date = '=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + '*' + ':*:*:*:*:*:*:*/';
+                    //_date = '>=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() + ':*:*:*:*:*:*:*' 
+                    //        + ' <' +  _next_date.getFullYear() + ':' + _month_names[_next_date.getMonth()] + ':' + _next_date.getDate() + ':*:*:*:*:*:*:*' + '/';
+                    _date = '=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':*:*:*:' + _date.getDate() + ':*:*:*:*/';
+                }
+                else if (_timestamp_attr_index > -1) {
+                    _date = _line_fields[_timestamp_attr_index].trim();
+                    _date = new Date(_date);
+                    _date = '>=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() 
+                            + ':*:*:*:*:' + _date.getHours() + ':' + _date.getMinutes() + ':' + _date.getSeconds() + '/';
+                }
+                for (var _t = 0; _t < _line_fields.length; _t++) {
+                    if (_t === _timestamp_attr_index || _t === _date_attr_index || _t === _class_index) {
+                        continue;
+                    }
+                    var _label = _line_fields[_t];
+                    if (_label.substr(0,1) === "'") {
+                        _label = _label.substr(1, _label.length-2);
+                    }
+                    var _attr_name = _attr_list[_t];
+                    _date = _date + _label;
+                    //console.log(_attr_name);
+                    //console.log(_date);
+                    
+                    if (typeof(_timeseries_periodics_custom_fields[_attr_name]) === 'undefined') {
+                        _timeseries_periodics_custom_fields[_attr_name] = [];
+                    }
+                    _timeseries_periodics_custom_fields[_attr_name].push(_date);
+                }
+                
+            }
         }
     }
     
@@ -239,6 +307,37 @@ var _process_file = function (_input, _callback) {
         _test_result = _test_result.trim();
 
         _panel.find(".test_preview").val(_test_result);
+        
+        // --------------------------
+        
+        if (_is_timeseries_forecast_mode === true) {
+           var _periodics_date = "time-series-periodics\n*pre-defined*:AM\n*pre-defined*:DayOfWeek\n*pre-defined*:DayOfMonth\n*pre-defined*:NumDaysInMonth\n*pre-defined*:Weekend\n*pre-defined*:Month\n*pre-defined*:Quarter"; 
+           for (var _attr_name in _timeseries_periodics_custom_fields) {
+               _periodics_date = _periodics_date + "\n*custom*:" + _attr_name + "\n" + _timeseries_periodics_custom_fields[_attr_name].join("\n");
+           }
+           _panel.find("#periodics_preview").val(_periodics_date);
+        }
+        
+        if (_is_timeseries_forecast_mode === true) {
+            $(".download-periodics-data-set").show();
+            $(".periodics-filename-field").show();
+            $(".periodics-content-field").show();
+            
+            $(".download-test-data-set").hide();
+            $(".test-filename-field").hide();
+            $(".test-content-field").hide();
+        }
+        else {
+            $(".download-periodics-data-set").hide();
+            $(".periodics-filename-field").hide();
+            $(".periodics-content-field").hide();
+            
+            $(".download-test-data-set").show();
+            $(".test-filename-field").show();
+            $(".test-content-field").show();
+        }
+        
+        // --------------------------
 
         _loading_disable();
         if (typeof (_callback) === "function") {
@@ -370,7 +469,9 @@ var _change_to_fixed = function () {
 
 var _output_filename_surffix = "_train_set";
 var _output_filename_test_surffix = "_test_set";
+var _output_filename_periodics_surffix = "_periodics_set";
 var _output_filename_ext = ".arff";
+var _output_filename_periodics_ext = ".periodics";
 
 
 // -------------------------------------
@@ -397,13 +498,18 @@ var _load_file = function (evt) {
             //+ _output_filename_test_surffix
             //+ _original_file_name.substring(_pos, _original_file_name.length);
     _test_file_name = _test_file_name + _output_filename_ext;
+    var _periodics_file_name = "periodics_set-" + _original_file_name.substr(0, _pos)
+            //+ _output_filename_test_surffix
+            //+ _original_file_name.substring(_pos, _original_file_name.length);
+    _periodics_file_name = _periodics_file_name + _output_filename_periodics_ext;
     
     var _file_type = _original_file_name.substring(_original_file_name.lastIndexOf(".")+1, _original_file_name.length).toLowerCase();
     //console.log(_file_type);
 
     _panel.find(".filename").val(_file_name);
     _panel.find(".test_filename").val(_test_file_name);
-
+    _panel.find(".periodics_filename").val(_periodics_file_name);
+    
     reader.onload = function (evt) {
         if (evt.target.readyState !== 2)
             return;
@@ -547,6 +653,14 @@ var _download_test_file_button = function () {
     _download_file(_data, _file_name, "arff");
 };
 
+var _download_periodics_file_button = function () {
+    var _panel = $(".file-process-framework");
+
+    var _file_name = _panel.find(".periodics_filename").val();
+    var _data = _panel.find(".periodics_preview").val();
+
+    _download_file(_data, _file_name, "periodics");
+};
 
 var _download_file = function (data, filename, type) {
     var a = document.createElement("a"),
@@ -658,6 +772,7 @@ $(function () {
     _panel.find(".myfile").change(_load_file);
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".download-test-file").click(_download_test_file_button);
+    _panel.find(".download-periodics-file").click(_download_periodics_file_button);
 
     $('.menu .item').tab();
     $("button.copy-table").click(_copy_table);

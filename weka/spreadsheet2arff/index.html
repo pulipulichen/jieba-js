@@ -48,36 +48,36 @@
 
     <!-- -------------------------------------- -->
 <div class="inline field">
-      <label for="class_field">指定Class分類目標的欄位</label>
-      <input type="text" id="class_field" value="class" />
+    <label for="class_field">指定Class分類目標的欄位</label>
+    <input type="text" id="class_field" value="class" />
 </div>
 <div class="inline field">
-      <label for="string_fields">指定String資料類型的欄位，請用逗號分隔多個欄位：</label>
-      <input type="text" id="string_fields" value="document" />
+    <label for="string_fields">指定String資料類型的欄位，請用逗號分隔多個欄位：</label>
+    <input type="text" id="string_fields" value="document" />
 </div>
 <div class="inline field">
-      <label for="date_fields">指定Date資料類型的欄位，格式是yyyy-MM-dd，例如2017-09-21，請用逗號分隔多個欄位：</label>
-      <input type="text" id="date_fields" value="date" />
+    <input type="checkbox" id="enable_toker" checked="checked" />
+    <!-- <input type="checkbox" id="enable_toker" /> -->
+    <label for="enable_toker">String類型欄位使用斷詞：</label>
+
+    <input type="radio" name="toker" id="radio_jieba" value="radio_jieba" checked="checked" />
+    <label for="radio_jieba">jieba斷詞</label>
+
+    <input type="radio" name="toker" id="radio_word" value="radio_word" />
+    <label for="radio_word">單字</label>
 </div>
 <div class="inline field">
-      <label for="timestamp_fields">指定Timestamp資料類型的欄位，格式是yyyy-MM-dd HH:mm:ss，例如2017-09-21 09:21:00，請用逗號分隔多個欄位：</label>
-      <input type="text" id="timestamp_fields" value="timestamp" />
+    <label for="date_fields">指定Date資料類型的欄位，格式是yyyy-MM-dd，例如2017-09-21，請用逗號分隔多個欄位：</label>
+    <input type="text" id="date_fields" value="date" />
 </div>
 <div class="inline field">
-      <input type="checkbox" id="enable_toker" checked="checked" />
-      <!-- <input type="checkbox" id="enable_toker" /> -->
-      <label for="enable_toker">String類型欄位使用斷詞：</label>
-      
-      <input type="radio" name="toker" id="radio_jieba" value="radio_jieba" checked="checked" />
-      <label for="radio_jieba">jieba斷詞</label>
-      
-      <input type="radio" name="toker" id="radio_word" value="radio_word" />
-      <label for="radio_word">單字</label>
+    <label for="timestamp_fields">指定Timestamp資料類型的欄位，格式是yyyy-MM-dd HH:mm:ss，例如2017-09-21 09:21:00，請用逗號分隔多個欄位：</label>
+    <input type="text" id="timestamp_fields" value="timestamp" />
 </div>
-    <div class="ui top attached tabular menu">
-      <div class="item" data-tab="textarea">Textarea</div>
-      <div class="active item" data-tab="file">File</div>
-    </div>
+<div class="ui top attached tabular menu">
+    <div class="item" data-tab="textarea">Textarea</div>
+    <div class="active item" data-tab="file">File</div>
+</div>
 
 <!-- --------------------------------- -->
 
@@ -143,10 +143,16 @@
                         Train Data Set
                     </button>
 		</div>
-		<div class="eight wide column">
+		<div class="eight wide column download-test-data-set">
                     <button type="button" class="fluid ui large right labeled icon green button download-test-file">
                             <i class="right download icon"></i>
                             Test Data Set
+                    </button>
+		</div>
+            <div class="eight wide column download-periodics-data-set" style="display: none;">
+                    <button type="button" class="fluid ui large right labeled icon green button download-periodics-file">
+                            <i class="right download icon"></i>
+                            Periodics Data Set
                     </button>
 		</div>
 	</div>
@@ -156,13 +162,13 @@
     <div class="source-code">
     
     <div class="field">
-      <label for="filename">Train Document File Name: </label>
+      <label for="filename">Train document file name: </label>
       <input type="text" onfocus="this.select()" id="filename" class="filename" style="width: calc(100% - 15em)" />
     </div>
     
     <div class="field">
       <label for="preview">
-        Result Preview: 
+        Train data set preview: 
         <div class="ui pointing below  medium blue basic label encoding" style="margin-left: 1em">
           Get error encoding text? 
           <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
@@ -178,14 +184,14 @@
     
     <!-- -------------------------------- -->
     
-    <div class="field">
-      <label for="test_filename">Test Document File Name: </label>
+    <div class="field test-filename-field">
+      <label for="test_filename">Test document file name: </label>
       <input type="text" onfocus="this.select()" id="test_filename" class="test_filename" style="width: calc(100% - 15em)" />
     </div>
     
-    <div class="field">
-      <label for="preview">
-        Result Preview: 
+    <div class="field test-content-field">
+      <label for="test_preview">
+        Test data set preview: 
         <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
           Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
         </div>
@@ -196,6 +202,26 @@
       </label>
         
       <textarea id="test_preview" class="test_preview" onfocus="this.select();"></textarea>
+    </div>
+    
+    
+    <div class="field periodics-filename-field" style="display: none;">
+      <label for="filename">Periodics data file name: </label>
+      <input type="text" onfocus="this.select()" id="filename" class="periodics_filename" style="width: calc(100% - 15em)" />
+    </div>
+    <div class="field periodics-content-field" style="display: none;">
+      <label for="periodics_preview">
+        Periodics data set preview: 
+        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+            <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
+                COPY ARFF File
+                <i class="copy icon"></i>
+	    </button>
+      </label>
+        
+      <textarea id="periodics_preview" class="periodics_preview" onfocus="this.select();"></textarea>
     </div>
     
     </div> <!-- <div class="source-code"> -->
