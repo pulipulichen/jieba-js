@@ -7,10 +7,12 @@ var _process_file = function (_input, _callback) {
 
     var _lines = _input.trim().split("\n");
     
-    var _class_field = $("#class_field").val().trim();
+    var _class_field = $("#class_field").val().trim().split(",");
+    var _class_field_name = null; 
     var _string_fields = $("#string_fields").val().trim().split(",");
     var _date_fields = $("#date_fields").val().trim().split(",");
     var _timestamp_fields = $("#timestamp_fields").val().trim().split(",");
+    var _skiplist_fields = $("#skiplist_fields").val().trim().split(",");
     var _is_timeseries_forecast_mode = false;
     //console.log(_input);
 
@@ -23,13 +25,15 @@ var _process_file = function (_input, _callback) {
     var _test_data = [];
     var _date_attr_index = -1;
     var _timestamp_attr_index = -1;
+    var _skiplist_attr_index = -1;
     var _month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     var _timeseries_periodics_custom_fields = {};
+    var _skiplist_date_content = [];
     
     var _toker = $('[name="toker"]:checked').val();
     for (var _l = 0; _l < _lines.length; _l++) {
         if (_l > 0 && _class_index === undefined) {
-            alert('Class field "' + _class_field + '" not found.');
+            alert('Class field "' + _class_field.join(", ") + '" not found.');
             _loading_disable();
             if (typeof (_callback) === "function") {
                 _callback();
@@ -50,11 +54,15 @@ var _process_file = function (_input, _callback) {
             //console.log(_value);
 
             if (_l === 0) {
+                // 第一行，是屬性
                 _attr_list.push(_value);
                 _attr_type[_value] = 'numeric';
                 //if (_value === "class") {
-                if (_value === _class_field) {
+                //if (_value === _class_field) {
+                //console.log(_value);
+                if ($.inArray(_value, _class_field) > -1 ) {
                     _class_index = _f;
+                    _class_field_name = _value;
                 }
                 //console.log(_value);
             }
@@ -89,11 +97,18 @@ var _process_file = function (_input, _callback) {
                         if ($.inArray(_value, _norminal_list[_attr]) === -1) {
                             _norminal_list[_attr].push(_value);
                         }
+                        
+                        if ($.inArray(_attr, _skiplist_fields) > -1) {
+                            _skiplist_attr_index = _f;
+                            //console.log(_f);
+                        }
                     }
                     
                 }
                 _line_fields.push(_value);
-                if (_f === _class_index && _value !== "?" && $.inArray(_value, _class_list) === -1) {
+                if (_f === _class_index 
+                        && _value !== "?" 
+                        && $.inArray(_value, _class_list) === -1) {
                     _class_list.push(_value);
 
                     //console.log([_value, isNaN(_value)]);
@@ -107,6 +122,8 @@ var _process_file = function (_input, _callback) {
         if (_line_fields.length > 0) {
             //console.log(_fields[_class_index].trim());
             //console.log([_class_index], _fields);
+            //if (_fields[_class_index].trim() !== "?"
+            //        || _is_timeseries_forecast_mode === true) {
             if (_fields[_class_index].trim() !== "?") {
                 _train_data.push(_line_fields);
             }
@@ -115,6 +132,7 @@ var _process_file = function (_input, _callback) {
             }
             
             if (_is_timeseries_forecast_mode === true) {
+                var _ori_date;
                 var _date;
                 //var _next_date;
                 
@@ -127,8 +145,8 @@ var _process_file = function (_input, _callback) {
                 //}
                 
                 if (_date_attr_index > -1) {
-                    _date = _line_fields[_date_attr_index].trim();
-                    _date = new Date(_date);
+                    _ori_date = _line_fields[_date_attr_index].trim();
+                    _date = new Date(_ori_date);
                     
                     //_next_date = _next_line_fields[_date_attr_index].trim();
                     //_next_date = new Date(_next_date);
@@ -146,28 +164,47 @@ var _process_file = function (_input, _callback) {
                     _date = '=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':*:*:*:' + _date.getDate() + ':*:*:*:*/';
                 }
                 else if (_timestamp_attr_index > -1) {
-                    _date = _line_fields[_timestamp_attr_index].trim();
-                    _date = new Date(_date);
+                    _ori_date = _line_fields[_timestamp_attr_index].trim();
+                    _date = new Date(_ori_date);
                     _date = '>=' + _date.getFullYear() + ':' + _month_names[_date.getMonth()] + ':' + _date.getDate() 
                             + ':*:*:*:*:' + _date.getHours() + ':' + _date.getMinutes() + ':' + _date.getSeconds() + '/';
                 }
+                
                 for (var _t = 0; _t < _line_fields.length; _t++) {
                     if (_t === _timestamp_attr_index || _t === _date_attr_index || _t === _class_index) {
                         continue;
                     }
-                    var _label = _line_fields[_t];
-                    if (_label.substr(0,1) === "'") {
-                        _label = _label.substr(1, _label.length-2);
+                    else if (_t === _skiplist_attr_index) {
+                        var _label = _line_fields[_t];
+                        _label = _label.toLowerCase();
+                        //console.log()
+                        if (_label === "'true'") {
+                            if (_ori_date.substr(0,1) === "'") {
+                                _ori_date = _ori_date.substr(1, _ori_date.length-2);
+                            }
+                            if (_date_attr_index > -1) {
+                                _skiplist_date_content.push(_ori_date + '@yyyy-MM-dd');
+                            }
+                            else {
+                                _skiplist_date_content.push(_ori_date + '@yyyy-MM-dd HH:mm:ss');
+                            }
+                        }
                     }
-                    var _attr_name = _attr_list[_t];
-                    _date = _date + _label;
-                    //console.log(_attr_name);
-                    //console.log(_date);
-                    
-                    if (typeof(_timeseries_periodics_custom_fields[_attr_name]) === 'undefined') {
-                        _timeseries_periodics_custom_fields[_attr_name] = [];
+                    else {
+                        var _label = _line_fields[_t];
+                        if (_label.substr(0,1) === "'") {
+                            _label = _label.substr(1, _label.length-2);
+                        }
+                        var _attr_name = _attr_list[_t];
+                        _date = _date + _label;
+                        //console.log(_attr_name);
+                        //console.log(_date);
+
+                        if (typeof(_timeseries_periodics_custom_fields[_attr_name]) === 'undefined') {
+                            _timeseries_periodics_custom_fields[_attr_name] = [];
+                        }
+                        _timeseries_periodics_custom_fields[_attr_name].push(_date);
                     }
-                    _timeseries_periodics_custom_fields[_attr_name].push(_date);
                 }
                 
             }
@@ -262,7 +299,8 @@ var _process_file = function (_input, _callback) {
             var _attr = _attr_list[_a];
             //if (_attr !== "class") {
             //console.log(_attr);
-            if (_attr !== _class_field) {
+            //if (_attr !== _class_field) {
+            if ($.inArray(_attr, _class_field) === -1) {
             
                 var _attr_setting = "@attribute " + _attr + " ";
                 if (_attr_type[_attr] === "nominal") {
@@ -282,12 +320,12 @@ var _process_file = function (_input, _callback) {
                 if (_is_numeric === false) {
                     var _array = _class_list;
                     _array = _array.sort();
-                    _result = _result + "@attribute " + _class_field + " {" + _array.join(", ") + "}\n";
-                    _test_result = _test_result + "@attribute " + _class_field + " {" + _array.join(", ") + "}\n";
+                    _result = _result + "@attribute " + _class_field_name + " {" + _array.join(", ") + "}\n";
+                    _test_result = _test_result + "@attribute " + _class_field_name + " {" + _array.join(", ") + "}\n";
                 }
                 else {
-                    _result = _result + "@attribute " + _class_field + " numeric\n";
-                    _test_result = _test_result + "@attribute " + _class_field + " numeric\n";
+                    _result = _result + "@attribute " + _class_field_name + " numeric\n";
+                    _test_result = _test_result + "@attribute " + _class_field_name + " numeric\n";
                 }
             }
         }
@@ -316,12 +354,18 @@ var _process_file = function (_input, _callback) {
                _periodics_date = _periodics_date + "\n*custom*:" + _attr_name + "\n" + _timeseries_periodics_custom_fields[_attr_name].join("\n");
            }
            _panel.find("#periodics_preview").val(_periodics_date);
+           
+           _panel.find("#skiplist_preview").val(_skiplist_date_content.join(","));
         }
         
         if (_is_timeseries_forecast_mode === true) {
             $(".download-periodics-data-set").show();
             $(".periodics-filename-field").show();
             $(".periodics-content-field").show();
+            
+            $(".download-skiplist-data-set").show();
+            $(".skiplist-filename-field").show();
+            $(".skiplist-content-field").show();
             
             $(".download-test-data-set").hide();
             $(".test-filename-field").hide();
@@ -331,6 +375,10 @@ var _process_file = function (_input, _callback) {
             $(".download-periodics-data-set").hide();
             $(".periodics-filename-field").hide();
             $(".periodics-content-field").hide();
+            
+            $(".download-skiplist-data-set").hide();
+            $(".skiplist-filename-field").hide();
+            $(".skiplist-content-field").hide();
             
             $(".download-test-data-set").show();
             $(".test-filename-field").show();
@@ -472,6 +520,7 @@ var _output_filename_test_surffix = "_test_set";
 var _output_filename_periodics_surffix = "_periodics_set";
 var _output_filename_ext = ".arff";
 var _output_filename_periodics_ext = ".periodics";
+var _output_filename_skiplist_ext = ".txt";
 
 
 // -------------------------------------
@@ -502,6 +551,7 @@ var _load_file = function (evt) {
             //+ _output_filename_test_surffix
             //+ _original_file_name.substring(_pos, _original_file_name.length);
     _periodics_file_name = _periodics_file_name + _output_filename_periodics_ext;
+    var _skiplist_file_name = "skip_list-" + _original_file_name.substr(0, _pos) + ".txt";
     
     var _file_type = _original_file_name.substring(_original_file_name.lastIndexOf(".")+1, _original_file_name.length).toLowerCase();
     //console.log(_file_type);
@@ -509,6 +559,7 @@ var _load_file = function (evt) {
     _panel.find(".filename").val(_file_name);
     _panel.find(".test_filename").val(_test_file_name);
     _panel.find(".periodics_filename").val(_periodics_file_name);
+    _panel.find(".skiplist_filename").val(_skiplist_file_name);
     
     reader.onload = function (evt) {
         if (evt.target.readyState !== 2)
@@ -662,6 +713,15 @@ var _download_periodics_file_button = function () {
     _download_file(_data, _file_name, "periodics");
 };
 
+var _download_skiplist_file_button = function () {
+    var _panel = $(".file-process-framework");
+
+    var _file_name = _panel.find(".skiplist_filename").val();
+    var _data = _panel.find(".skiplist_preview").val();
+
+    _download_file(_data, _file_name, "text");
+};
+
 var _download_file = function (data, filename, type) {
     var a = document.createElement("a"),
             file = new Blob([data], {type: type});
@@ -773,6 +833,7 @@ $(function () {
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".download-test-file").click(_download_test_file_button);
     _panel.find(".download-periodics-file").click(_download_periodics_file_button);
+    _panel.find(".download-skiplist-file").click(_download_skiplist_file_button);
 
     $('.menu .item').tab();
     $("button.copy-table").click(_copy_table);
