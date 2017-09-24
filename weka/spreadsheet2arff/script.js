@@ -30,6 +30,8 @@ var _process_file = function (_input, _callback) {
     var _timeseries_periodics_custom_fields = {};
     var _skiplist_date_content = [];
     
+    var _unknown_count = 0;
+    
     var _toker = $('[name="toker"]:checked').val();
     for (var _l = 0; _l < _lines.length; _l++) {
         if (_l > 0 && _class_index === undefined) {
@@ -119,16 +121,30 @@ var _process_file = function (_input, _callback) {
             }
         }   //  for (var _f = 0; _f < _fields.length; _f++) {
 
+        
         if (_line_fields.length > 0) {
             //console.log(_fields[_class_index].trim());
             //console.log([_class_index], _fields);
             //if (_fields[_class_index].trim() !== "?"
             //        || _is_timeseries_forecast_mode === true) {
+            
             if (_fields[_class_index].trim() !== "?") {
                 _train_data.push(_line_fields);
+                
+                if (_is_timeseries_forecast_mode === true) {
+                    _unknown_count = 0;
+                }
             }
             else {
                 _test_data.push(_line_fields);
+                
+                console.log(_line_fields[_skiplist_attr_index].toLowerCase());
+                if (_is_timeseries_forecast_mode === true
+                        && _skiplist_attr_index > -1
+                        && (_line_fields[_skiplist_attr_index].toLowerCase().indexOf('false') > -1)) {
+                    _unknown_count = _unknown_count + 1;
+                }
+                //console.log(_unknown_count);
             }
             
             if (_is_timeseries_forecast_mode === true) {
@@ -207,6 +223,7 @@ var _process_file = function (_input, _callback) {
                     }
                 }
                 
+                $(".step_filename").val(_unknown_count);
             }
         }
     }
@@ -367,6 +384,9 @@ var _process_file = function (_input, _callback) {
             $(".skiplist-filename-field").show();
             $(".skiplist-content-field").show();
             
+            //console.log($(".step-filename-field").length);
+            $(".step-filename-field").show();
+            
             $(".download-test-data-set").hide();
             $(".test-filename-field").hide();
             $(".test-content-field").hide();
@@ -379,6 +399,8 @@ var _process_file = function (_input, _callback) {
             $(".download-skiplist-data-set").hide();
             $(".skiplist-filename-field").hide();
             $(".skiplist-content-field").hide();
+            
+            $(".step-filename-field").hide();
             
             $(".download-test-data-set").show();
             $(".test-filename-field").show();
