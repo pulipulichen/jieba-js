@@ -138,7 +138,7 @@ var _process_file = function (_input, _callback) {
             else {
                 _test_data.push(_line_fields);
                 
-                console.log(_line_fields[_skiplist_attr_index].toLowerCase());
+                //console.log(_line_fields[_skiplist_attr_index].toLowerCase());
                 if (_is_timeseries_forecast_mode === true
                         && _skiplist_attr_index > -1
                         && (_line_fields[_skiplist_attr_index].toLowerCase().indexOf('false') > -1)) {
