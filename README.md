@@ -26,3 +26,8 @@ call_jieba_cut(_text, function (_result) {
 - ARFF result to CSV線上轉換: http://pulipulichen.github.io/jieba-js/weka/arff2csv/index.html
 - http://pulipulichen.github.io/jieba-js/weka/simple-kmeans
 - http://pulipulichen.github.io/jieba-js/weka/simple-kmeans/cascadeKMeans1.0.4.zip
+
+# Reference
+
+- Chinese stopwords https://github.com/stopwords-iso/stopwords-zh
+- English stopwords https://github.com/stopwords-iso/stopwords-en

@@ -1,20 +1,25 @@
 // <script data-main="scripts/main" src="scripts/require.js"></script>
 
 var _JIEBA_CUT_QUEUE = [];
+
+/**
+ * 自訂詞典
+ * @type JSON
+ */
 JIEBA_CUSTOM_DICTIONARY = undefined;
 
 call_jieba_cut = function (_text, _dict, _callback) {
 	
-	if (typeof(_dict) === "function") {
-		_callback = _dict;
-		_dict = undefined;
-	}
+    if (typeof(_dict) === "function") {
+        _callback = _dict;
+        _dict = undefined;
+    }
 	
     if (typeof(_callback) !== "function") {
         return;
     }
 
-    if (typeof(_dict) === "string") {
+    if (typeof(_dict) === "string" || Array.isArray(_dict)) {
         JIEBA_CUSTOM_DICTIONARY = _dict;
     }
     
@@ -50,6 +55,7 @@ call_jieba_cut_join = function (_text, _join, _callback) {
 };
 
 resume_jieba_cut = function () {
+    //console.log(_JIEBA_CUT_QUEUE.length);
     for (var _i = 0; _i < _JIEBA_CUT_QUEUE.length; _i++) {
         var _text = _JIEBA_CUT_QUEUE[_i].text;
         var _callback = _JIEBA_CUT_QUEUE[_i].callback;
@@ -98,6 +104,7 @@ get_host = function () {
     else {
         _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
     }
+    console.log("host: " + _host);
     return _host;
 };
 

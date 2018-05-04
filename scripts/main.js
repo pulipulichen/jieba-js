@@ -20,7 +20,7 @@ jieba_parsing = function(dictionary, _callback) {
                 freq = entry[1];
             lfreq[word] = freq;
             ltotal += freq;
-            p = trie;
+            var p = trie;
             for (var ci = 0; ci < word.length; ci++) {
                 var c = word[ci];
                 if (!(c in p)) {
@@ -50,7 +50,7 @@ jieba_parsing = function(dictionary, _callback) {
 
         var min_freq = Infinity;
         // normalize:
-        for (k in FREQ) {
+        for (var k in FREQ) {
             var v = FREQ[k];
             FREQ[k] = Math.log(v / total);
             if (FREQ[k] < min_freq) {
@@ -104,9 +104,9 @@ jieba_parsing = function(dictionary, _callback) {
         var N = sentence.length;
         route[N] = [0.0, ''];
         for (idx = N - 1; idx > -1; idx--) {
-            candidates = [];
-            candidates_x = [];
-            for (xi in DAG[idx]) {
+            var candidates = [];
+            var candidates_x = [];
+            for (var xi in DAG[idx]) {
                 var x = DAG[idx][xi];
                 var f = ((sentence.substring(idx, x+1) in FREQ) ? FREQ[sentence.substring(idx, x+1)] : min_freq);
                 candidates.push(f + route[x+1][0]);
@@ -152,7 +152,7 @@ jieba_parsing = function(dictionary, _callback) {
                             }
                         }
                         else {
-                            for (elem in buf) {
+                            for (var elem in buf) {
                                 yieldValues.push(buf[elem]);
                             }
                         }
@@ -172,12 +172,12 @@ jieba_parsing = function(dictionary, _callback) {
             else {
                 if (!(buf in FREQ)) {
                     var recognized = finalseg.cut(buf);
-                    for (t in recognized) {
+                    for (var t in recognized) {
                         yieldValues.push(recognized[t]);
                     }
                 }
                 else {
-                    for (elem in buf) {
+                    for (var elem in buf) {
                         yieldValues.push(buf[elem]);
                     }
                 }
@@ -194,16 +194,15 @@ jieba_parsing = function(dictionary, _callback) {
         var DAG = get_DAG(sentence);
         //console.log("DAG", DAG);
         calc(sentence, DAG, 0, route);
-
-        //console.log(route);
+        console.log(route);
 
         var x = 0,
             buf = '',
             N = sentence.length;
 
         while (x < N) {
-            y = route[x][1] + 1;
-            l_word = sentence.substring(x, y);
+            var y = route[x][1] + 1;
+            var l_word = sentence.substring(x, y);
             //console.log(l_word, l_word.match(re_eng))
             if (l_word.match(re_eng) && l_word.length === 1) {
                 buf += l_word;
@@ -217,7 +216,8 @@ jieba_parsing = function(dictionary, _callback) {
                 yieldValues.push(l_word);
                 x = y;
             }
-        }
+        }   // while (x < N) {
+        
         if (buf.length > 0) {
             yieldValues.push(buf);
             buf = '';
@@ -236,7 +236,7 @@ jieba_parsing = function(dictionary, _callback) {
         var blocks = sentence.split(re_han);
         var cut_block = HMM ? __cut_DAG : __cut_DAG_NO_HMM;
 
-        for (b in blocks) {
+        for (var b in blocks) {
             var blk = blocks[b];
             //console.log(b, blk);
             if (blk.length === 0) {
@@ -245,8 +245,9 @@ jieba_parsing = function(dictionary, _callback) {
 
             if (blk.match(re_han)) {
                 var cutted = cut_block(blk);
+                
                 //console.log("matches", cutted);
-                for (w in cutted) {
+                for (var w in cutted) {
                     var word = cutted[w];
                     yieldValues.push(word);
                 }
@@ -255,6 +256,7 @@ jieba_parsing = function(dictionary, _callback) {
                 var tmp = blk.split(re_skip);
                 for (var i = 0; i < tmp.length; i++) {
                     var x = tmp[i];
+                    
                     if (x.match(re_skip)) {
                         yieldValues.push(x);
                     }
@@ -338,6 +340,12 @@ if (_host !== undefined) {
                 jieba_parsing(_dictionary);
             });
         }
+        else if (Array.isArray(JIEBA_CUSTOM_DICTIONARY)) {
+            for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
+                _dictionary.push(JIEBA_CUSTOM_DICTIONARY[_i]);
+            }
+            jieba_parsing(_dictionary);
+        }
         else {
             jieba_parsing(_dictionary);
         }
@@ -347,7 +355,7 @@ if (_host !== undefined) {
         try {
             requirejs.config({
                 enforceDefine: true,
-                waitSeconds: 0,
+                waitSeconds: 0
             });
         }
         catch (e) {
@@ -361,4 +369,4 @@ if (_host !== undefined) {
     //$.get(_host + "scripts/data/dictionary.js", function () {
     _require_dictionary();
     //});
-}
+}   // if (_host !== undefined) {
