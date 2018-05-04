@@ -194,7 +194,7 @@ jieba_parsing = function(dictionary, _callback) {
         var DAG = get_DAG(sentence);
         //console.log("DAG", DAG);
         calc(sentence, DAG, 0, route);
-        console.log(route);
+        //console.log(route);
 
         var x = 0,
             buf = '',
