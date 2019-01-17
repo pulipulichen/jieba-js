@@ -13,7 +13,7 @@ jieba_parsing = function(dictionary, _callback) {
         var lfreq = {},
             trie = {},
             ltotal = 0.0;
-
+        //console.log(dictionary)
         for (var i = 0; i < dictionary.length; i++) {
             var entry = dictionary[i],
                 word = entry[0],
@@ -34,8 +34,8 @@ jieba_parsing = function(dictionary, _callback) {
         return [trie, lfreq, ltotal];
     };
 
-    var initialize = function() {
-        if (initialized === true) {
+    var initialize = function(force) {
+        if (force !== true && initialized === true) {
             return;
         }
         if (trie) {
@@ -225,7 +225,11 @@ jieba_parsing = function(dictionary, _callback) {
         return yieldValues;
     };
 
-    var cut = function(sentence){
+    var cut = function(sentence, dict){
+      if (dict !== undefined) {
+        dictionary = dict
+        initialize(true)
+      }
         var cut_all = false,
             HMM = false,
             yieldValues = [];
@@ -297,7 +301,7 @@ node_jieba_parsing = function (_dicts, _text, _callback) {
     }
     
     if (typeof(jieba_cut) === "function") {
-        var _result = jieba_cut(_text);
+        var _result = jieba_cut(_text, _dicts);
         //console.log(_result.join(" "));
         _callback(_result);
         return _result;
@@ -315,7 +319,7 @@ node_jieba_parsing = function (_dicts, _text, _callback) {
     }
     
     jieba_parsing(_dict, function () {  
-        var _result = jieba_cut(_text);
+        var _result = jieba_cut(_text, _dict);
         //console.log(_result.join(" "));
         _callback(_result);
     });
@@ -351,7 +355,7 @@ if (_host !== undefined) {
         }
     };
     
-    var _require_dictionary = function () {
+    var _require_dictionary = function (_callback) {
         try {
             requirejs.config({
                 enforceDefine: true,
@@ -363,7 +367,12 @@ if (_host !== undefined) {
             return;
         }
         
-        require([ _host + "scripts/data/dictionary.js"], _require_callback);
+        require([ _host + "scripts/data/dictionary.js"], function () {
+          _require_callback()
+          if (typeof(_callback) === "function") {
+            _callback()
+          }
+        });
     };
     
     //$.get(_host + "scripts/data/dictionary.js", function () {

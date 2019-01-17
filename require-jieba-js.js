@@ -32,7 +32,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
     }
     else {
         if (typeof(_callback) === 'function') {
-            var _result = jieba_cut(_text);
+            var _result = jieba_cut(_text, _dict);
             _callback(_result);
         }
     }
