@@ -13,7 +13,7 @@ jieba_parsing = function(dictionary, _callback) {
         var lfreq = {},
             trie = {},
             ltotal = 0.0;
-        //console.log(dictionary)
+        //console.log(dictionary.length)
         for (var i = 0; i < dictionary.length; i++) {
             var entry = dictionary[i],
                 word = entry[0],
@@ -35,8 +35,10 @@ jieba_parsing = function(dictionary, _callback) {
     };
 
     var initialize = function(force) {
-        if (force !== true && initialized === true) {
-            return;
+        if (force === undefined || force === false) {
+          if (initialized === true) {
+              return;
+          }
         }
         if (trie) {
             trie = {};
@@ -226,10 +228,10 @@ jieba_parsing = function(dictionary, _callback) {
     };
 
     var cut = function(sentence, dict){
-      if (dict !== undefined) {
-        dictionary = dict
-        initialize(true)
-      }
+        if (dict !== undefined) {
+          dictionary = dict
+          initialize(true)
+        }
         var cut_all = false,
             HMM = false,
             yieldValues = [];
@@ -368,7 +370,7 @@ if (_host !== undefined) {
             return;
         }
         require([ _host + "scripts/data/dictionary.js"], function (_dictionary) {
-          PREDIFINED_DICTIONARY = _dictionary
+          PREDIFINED_DICTIONARY = JSON.parse(JSON.stringify(_dictionary))
           _require_callback(_dictionary, _callback)
         });
     };
@@ -396,6 +398,6 @@ if (_host !== undefined) {
     };
     
     //$.get(_host + "scripts/data/dictionary.js", function () {
-    //_require_dictionary();
+    _require_dictionary();
     //});
 }   // if (_host !== undefined) {

@@ -8,6 +8,8 @@ var _JIEBA_CUT_QUEUE = [];
  */
 JIEBA_CUSTOM_DICTIONARY = undefined;
 
+LAST_DICT = null
+
 call_jieba_cut = function (_text, _dict, _callback) {
 	
     if (typeof(_dict) === "function") {
@@ -20,7 +22,8 @@ call_jieba_cut = function (_text, _dict, _callback) {
     }
 
     if (typeof(_dict) === "string" || Array.isArray(_dict)) {
-        JIEBA_CUSTOM_DICTIONARY = _dict;
+      //console.log(_dict)
+      JIEBA_CUSTOM_DICTIONARY = _dict;
     }
     
     if (typeof(jieba_cut) !== 'function') {
@@ -29,13 +32,40 @@ call_jieba_cut = function (_text, _dict, _callback) {
             text: _text,
             callback: _callback
         });
-        _require_dictionary();
+        //_require_dictionary();
     }
     else {
         if (typeof(_callback) === 'function') {
-            var _result = jieba_cut(_text);
+          var _result
+          if (LAST_DICT !== null && JSON.stringify(JIEBA_CUSTOM_DICTIONARY) !== LAST_DICT) {
+            //console.log(JIEBA_CUSTOM_DICTIONARY)
+            var _dict = []
+            for (var _i = 0; _i < PREDIFINED_DICTIONARY.length; _i++) {
+                _dict.push(PREDIFINED_DICTIONARY[_i]);
+            }
+            for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
+                _dict.push(JIEBA_CUSTOM_DICTIONARY[_i]);
+            }
+            //console.log(_dict)
+            _result = jieba_cut(_text, _dict);
+            //jieba_parsing(JIEBA_CUSTOM_DICTIONARY, function () {
+              //_result = jieba_cut(_text);
+               //LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
+                console.log(_result);
+            //})
+            LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
             _callback(_result);
-            //jieba_cut = null
+            return
+          }
+          else {
+            _result = jieba_cut(_text);
+            if (LAST_DICT === null) {
+              LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
+            }
+            _callback(_result);
+          }
+          
+         
         }
     }
 };
@@ -63,6 +93,8 @@ resume_jieba_cut = function () {
         var _callback = _JIEBA_CUT_QUEUE[_i].callback;
         call_jieba_cut(_text, _callback);
     }
+    
+    _JIEBA_CUT_QUEUE = []
 };
 
 // ------------------------------------------------------
