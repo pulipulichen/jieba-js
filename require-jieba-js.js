@@ -29,11 +29,13 @@ call_jieba_cut = function (_text, _dict, _callback) {
             text: _text,
             callback: _callback
         });
+        _require_dictionary();
     }
     else {
         if (typeof(_callback) === 'function') {
             var _result = jieba_cut(_text);
             _callback(_result);
+            //jieba_cut = null
         }
     }
 };

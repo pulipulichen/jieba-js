@@ -13,7 +13,7 @@ jieba_parsing = function(dictionary, _callback) {
         var lfreq = {},
             trie = {},
             ltotal = 0.0;
-
+        //console.log(dictionary)
         for (var i = 0; i < dictionary.length; i++) {
             var entry = dictionary[i],
                 word = entry[0],
@@ -34,8 +34,8 @@ jieba_parsing = function(dictionary, _callback) {
         return [trie, lfreq, ltotal];
     };
 
-    var initialize = function() {
-        if (initialized === true) {
+    var initialize = function(force) {
+        if (force !== true && initialized === true) {
             return;
         }
         if (trie) {
@@ -225,7 +225,11 @@ jieba_parsing = function(dictionary, _callback) {
         return yieldValues;
     };
 
-    var cut = function(sentence){
+    var cut = function(sentence, dict){
+      if (dict !== undefined) {
+        dictionary = dict
+        initialize(true)
+      }
         var cut_all = false,
             HMM = false,
             yieldValues = [];
@@ -297,7 +301,7 @@ node_jieba_parsing = function (_dicts, _text, _callback) {
     }
     
     if (typeof(jieba_cut) === "function") {
-        var _result = jieba_cut(_text);
+        var _result = jieba_cut(_text, _dicts);
         //console.log(_result.join(" "));
         _callback(_result);
         return _result;
@@ -315,7 +319,7 @@ node_jieba_parsing = function (_dicts, _text, _callback) {
     }
     
     jieba_parsing(_dict, function () {  
-        var _result = jieba_cut(_text);
+        var _result = jieba_cut(_text, _dict);
         //console.log(_result.join(" "));
         _callback(_result);
     });
@@ -329,29 +333,30 @@ if (typeof(get_host) === "function") {
 
 if (_host !== undefined) {
     var _loaded = false;
+    PREDIFINED_DICTIONARY = null
     
-    var _require_callback = function (_dictionary) {
+    var _require_callback = function (_dictionary, callback) {
         _loaded = true;
         if (typeof(JIEBA_CUSTOM_DICTIONARY) === "string") {
             require([ JIEBA_CUSTOM_DICTIONARY ], function (_custom_dictionary) {
                 for (var _i = 0; _i < _custom_dictionary.length; _i++) {
                     _dictionary.push(_custom_dictionary[_i]);
                 }
-                jieba_parsing(_dictionary);
+                jieba_parsing(_dictionary, callback);
             });
         }
         else if (Array.isArray(JIEBA_CUSTOM_DICTIONARY)) {
             for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
                 _dictionary.push(JIEBA_CUSTOM_DICTIONARY[_i]);
             }
-            jieba_parsing(_dictionary);
+            jieba_parsing(_dictionary, callback);
         }
         else {
-            jieba_parsing(_dictionary);
+            jieba_parsing(_dictionary, callback);
         }
     };
     
-    var _require_dictionary = function () {
+    var _require_dictionary = function (_callback) {
         try {
             requirejs.config({
                 enforceDefine: true,
@@ -359,14 +364,38 @@ if (_host !== undefined) {
             });
         }
         catch (e) {
-            _require_dictionary();
+            _require_dictionary(_callback);
             return;
         }
-        
-        require([ _host + "scripts/data/dictionary.js"], _require_callback);
+        require([ _host + "scripts/data/dictionary.js"], function (_dictionary) {
+          PREDIFINED_DICTIONARY = _dictionary
+          _require_callback(_dictionary, _callback)
+        });
+    };
+    
+    var _reload_custom_dictionary = function (_custom_dictionary, _callback) {
+        var _dictionary = JSON.parse(JSON.stringify(PREDIFINED_DICTIONARY))
+        //_loaded = true;
+        if (typeof(_custom_dictionary) === "string") {
+            require([ _custom_dictionary ], function (_custom_dictionary) {
+                for (var _i = 0; _i < _custom_dictionary.length; _i++) {
+                    _dictionary.push(_custom_dictionary[_i]);
+                }
+                jieba_parsing(_dictionary, _callback);
+            });
+        }
+        else if (Array.isArray(_custom_dictionary)) {
+            for (var _i = 0; _i < _custom_dictionary.length; _i++) {
+                _dictionary.push(_custom_dictionary[_i]);
+            }
+            jieba_parsing(_dictionary, _callback);
+        }
+        else {
+            jieba_parsing(_dictionary, _callback);
+        }
     };
     
     //$.get(_host + "scripts/data/dictionary.js", function () {
-    _require_dictionary();
+    //_require_dictionary();
     //});
 }   // if (_host !== undefined) {
