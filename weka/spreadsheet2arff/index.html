@@ -109,11 +109,17 @@
     <!-- <input type="checkbox" id="enable_toker" /> -->
     <label for="enable_toker">String類型欄位使用斷詞：</label>
 
-    <input type="radio" name="toker" id="radio_jieba" value="radio_jieba" checked="checked" />
+    <input type="radio" name="toker" id="radio_seg_auto" value="radio_seg_auto" checked="checked" />
+    <label for="radio_seg_auto">自動判斷</label>
+    
+    <input type="radio" name="toker" id="radio_jieba" value="radio_jieba" />
     <label for="radio_jieba">jieba斷詞</label>
 
+    <input type="radio" name="toker" id="radio_space" value="radio_space" />
+    <label for="radio_space">已經用空格斷詞</label>
+    
     <input type="radio" name="toker" id="radio_word" value="radio_word" />
-    <label for="radio_word">以空格隔開的單字</label>
+    <label for="radio_word">單一字元</label>
 </div>
 <div class="inline field">
     <label for="date_fields">指定Date資料類型的欄位，資料格式是yyyy-MM-dd，例如2017-09-21，請用逗號分隔多個欄位：</label>

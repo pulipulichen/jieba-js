@@ -271,6 +271,18 @@ var _process_file = function (_input, _callback) {
                 }
                 else {
                     _text = _text.substring(1, _text.length - 1);
+                    if (_toker === "radio_seg_auto") {
+                      var _slice = _text.slice(0,20)
+                      console.log(_slice)
+                      if (_slice.split(" ").length > 3) {
+                        _toker = "radio_space"
+                      }
+                      else {
+                        _toker = "radio_jieba"
+                      }
+                      console.log(_toker)
+                    }
+                    
                     if (_toker === "radio_jieba") {
                         call_jieba_cut_join(_text, ' ', function (_result) {
                             _data[_row_index][_col_index] = "'" + _result + "'";
@@ -278,6 +290,12 @@ var _process_file = function (_input, _callback) {
                             _col_index++;
                             _loop_wait(_data, _row_index, _col_index, _callback);
                         });
+                    }
+                    else if (_toker === "radio_space") {
+                        _data[_row_index][_col_index] = "'" + _text + "'";
+
+                        _col_index++;
+                        _loop_wait(_data, _row_index, _col_index, _callback);
                     }
                     else {
                         var _result = _add_chinese_space(_text)
