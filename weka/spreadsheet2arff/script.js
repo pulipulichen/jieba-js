@@ -2,17 +2,29 @@ var _process_file = function (_input, _callback) {
     _loading_enable();
     var _panel = $(".file-process-framework");
     //------------------
+    
+    let removeQuote = item => {
+      if (item.startsWith('"') && item.endsWith('"')) {
+        item = item.slice(0, -1)
+      }
+      return item
+    }
 
     var _is_numeric = true;
 
     var _lines = _input.trim().split("\n");
     
     var _class_field = $("#class_field").val().trim().split(",");
+    _class_field.forEach(removeQuote)
     var _class_field_name = null; 
     var _string_fields = $("#string_fields").val().trim().split(",");
+    _string_fields.forEach(removeQuote)
     var _date_fields = $("#date_fields").val().trim().split(",");
+    _date_fields.forEach(removeQuote)
     var _timestamp_fields = $("#timestamp_fields").val().trim().split(",");
+    _timestamp_fields.forEach(removeQuote)
     var _skiplist_fields = $("#skiplist_fields").val().trim().split(",");
+    _skiplist_fields.forEach(removeQuote)
     var _is_timeseries_forecast_mode = false;
     //console.log(_input);
 
@@ -48,12 +60,18 @@ var _process_file = function (_input, _callback) {
         
         for (var _f = 0; _f < _fields.length; _f++) {
             var _value = _fields[_f].trim();
-            if ((_value.substr(0, 1) === '"' || _value.substr(0, 1) === "'")
-                    && (_value.substr(_value.length - 1, 1) === '"' || _value.substr(_value.length - 1, 1) === "'")) {
-                _value = _value.substr(1, _value.length - 1);
+            //if ((_value.substr(0, 1) === '"' || _value.substr(0, 1) === "'")
+            //        && (_value.substr(_value.length - 1, 1) === '"' || _value.substr(_value.length - 1, 1) === "'")) {
+                //_value = _value.substr(1, _value.length - 1);
+            //}
+            if (_value.startsWith('"') && _value.endsWith('"')) {
+              _value = _value.slice(1, -1)
+            }
+            if (_value.startsWith("'") && _value.endsWith("'")) {
+              _value = _value.slice(1, -1)
             }
 
-            //console.log(_value);
+            console.log(_value);
 
             if (_l === 0) {
                 // 第一行，是屬性
