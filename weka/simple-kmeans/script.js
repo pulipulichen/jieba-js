@@ -23,7 +23,7 @@ var _process_file = function(_input, _callback) {
     var _needle = "\n@data\n";
     var _pos =    _input.indexOf(_needle);
     if (_pos === -1) {
-            _pos =    _input.indexOf("@data")-1;
+      _pos = _input.indexOf("@data") - 1;
     }
     //console.log(_pos);
     var _result;
@@ -35,9 +35,10 @@ var _process_file = function(_input, _callback) {
         _arff_mode = false;
         _result = _input.substring(_input.indexOf("\n")+1, _input.length).trim();
     }
-
+    
     // -----------------
     var _attr_list = [];
+    var _attr_values = [];
     if (_arff_mode === true) {
         var _attr_input = _input.substr(0, _pos);
         var _lines = _attr_input.split("\n");
@@ -48,14 +49,39 @@ var _process_file = function(_input, _callback) {
                     var _fields = _line.split(" ");
                     var _attr = _fields[1];
                     _attr_list.push(_attr);
+                    var _values = _fields[2].slice(1, -1).split(',')
+                    _attr_values.push(_values)
             }
         }
         //console.log(_attr_list);
+        
+        if (_result.startsWith('{') && _result.endsWith('}')) {
+          //console.log('aaa')
+          let output = []
+          _result.split('\n').forEach(line => {
+            let fields = new Array(_attr_list.length)
+            
+            line.trim().slice(1, -1).split(',').forEach(field => {
+              let pos = field.indexOf(' ')
+              let i = field.slice(0, pos)
+              i = parseInt(i, 10)
+              let value = field.slice(pos+1)
+              fields[i] = value
+            })
+            
+            for (let i = 0; i < _attr_list.length; i++) {
+              if (typeof(fields[i]) === 'undefined') {
+                fields[i] = _attr_values[i][0]
+              }
+            }
+            output.push(fields.join(','))
+          })
+          _result = output.join('\n')
+        }
     }
     else {
         var _attr_line = _input.substr(0, _input.indexOf("\n")).trim();
         _attr_list = _attr_line.split(",");
-        
     }
     _result = _attr_list.join(",") + "\n" + _result;
     _draw_stat_table(_result);
@@ -109,6 +135,9 @@ var _draw_stat_abs_table = function () {
                 for (var _d = 1; _d < _td_list.length; _d++) {
                         var _cluster = _d-1;
                         
+                        var _avg = _avg_tr_list.eq(_r).find(`td:eq(${_d})`).text();
+                        eval('_avg = ' + _avg)
+                        
                         if (typeof(_good[_cluster]) === "undefined") {
                             _good[_cluster] = [];
                         }
@@ -131,6 +160,8 @@ var _draw_stat_abs_table = function () {
                         if (_td.hasClass("largest")) {
                             _set_attr = '<span class="largest">' + _set_attr + '</span>';
                         }
+                        
+                        _set_attr = `<span data-avg="${_avg}">${_set_attr}</span>`
                         
                         if (_td.hasClass("small") || _td.hasClass("x-small") || _td.hasClass("xx-small")) {
                             _bad[_cluster].push(_set_attr);
@@ -156,6 +187,14 @@ var _draw_stat_abs_table = function () {
                 var _value = _bad[_i].join("<br />");
                 _bad_tr.append('<td>' + _value + '</td>');
         }
+        
+        //setTimeout(() => {
+          _abs_table.find('thead tr th:not(:first)').each((_i, th) => {
+            //console.log($('table.stat-result:first tr.compare-data:first td:eq(' + (_i+1) + ')').length)
+            let count = $('table.stat-result:first tr.compare-data:first td:eq(' + (_i+1) + ')').text()
+            let button = $('<button type="button" onclick="TagCloud.donwload(this, ' + (_i+1) + ', ' + count + ')">下載</button>').appendTo($(th))
+          })
+        //}, 1000)
 };
 
 // ---------------------

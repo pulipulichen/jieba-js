@@ -49,7 +49,8 @@ ga('send', 'pageview');
         </div>
         <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
         <textarea name="input" id="input" class="ui raised segment"
->這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。</textarea>
+>這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，
+喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。</textarea>
     </div> <!-- <div class="eight wide column"> -->
     <div class="eight wide column field">
         <div class="ui grid">
@@ -161,6 +162,9 @@ ga('send', 'pageview');
             var _custom_dict = _load_custom_dict();
             //console.log(_custom_dict);
             
+            // ---------------------------
+            
+            /*
             call_jieba_cut(_text, _custom_dict, function (_result) {
                 _result = _filter_stop_words(_result);
                 
@@ -178,6 +182,41 @@ ga('send', 'pageview');
                 _submit.html("開始斷詞");
                 $("body").css("cursor", "default");
             });
+            */
+            
+            var _text_array = _text.split('\n')
+            var _result_array = []
+            
+            let loop = (i) => {
+              if (i < _text_array.length) {
+                call_jieba_cut(_text_array[i], _custom_dict, function (_result) {
+                  _result = _filter_stop_words(_result);
+
+                  _result = _result.join(" ");
+                  while (_result.indexOf("  ") > -1) {
+                      _result = _result.replace(/  /g, ' ');
+                  }
+                  _result = _result.replace(/ \n /g, "\n");
+                  _result = _result.replace(/ \t /g, "\t");
+                  _result = _result.replace(/ \' /g, "'");
+                  _result = _result.replace(/\' /g, "'");
+                  _result = _result.trim();
+                  
+                  _result_array.push(_result)
+                  i++
+                  loop(i)
+                });
+              }
+              else {
+                $("#output").val(_result_array.join('\n'));
+                  _submit.removeAttr("disabled");
+                  _submit.html("開始斷詞");
+                  $("body").css("cursor", "default");
+              }
+            }
+            
+            loop(0)
+           
             return false;
         });
         
