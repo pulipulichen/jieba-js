@@ -120,8 +120,8 @@ var _draw_stat_table = function (_result) {
                 
                 //let count = $('table.stat-result:first tbody tr.compare-data:first td:eq(' + (_i+1) + ')').text()
                 //count = parseInt(count, 10)
-                
-                _thead.append('<th>' + DICT['Cluster 1'] + _i + DICT['Cluster 2'] + '</th>');
+                //console.log('<th>' + DICT['Cluster 1'] + _i + DICT['Cluster 2'] + '(' +  _cluster_count[_i] + ') </th>')
+                _thead.append('<th>' + DICT['Cluster 1'] + _i + DICT['Cluster 2'] + '(' +  _cluster_count[_i] + ') </th>');
                 // <button type="button" onclick="TagCloud.donwload(this, ' + _i + ', ' + count + ')">下載</button>
         }
         //_thead.append('<th>' +    DICT['SSE_TH'] + '</th>');
@@ -159,7 +159,7 @@ var _draw_stat_table = function (_result) {
         // ---------------------------
         
         if (_row_data.length > 1 && arrayMin(_row_data) !== arrayMax(_row_data)) {
-            console.log([arrayMin(_row_data), arrayMax(_row_data)]);
+            //console.log([arrayMin(_row_data), arrayMax(_row_data)]);
             // 如果有最大值跟最小值的差別，才作這樣的標示
             
             // 表示最小值

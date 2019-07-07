@@ -96,13 +96,19 @@ https://semantic-ui.com/collections/form.html
     </h2>
 	
 	<div class="ui doubling grid">
-		<div class="six wide column">
+		<div class="four wide column">
 			<button type="button" class="fluid ui large right labeled icon green button download-file">
 				<i class="right download icon"></i>
 				DOWNLOAD
 			  </button>
 		</div>
-		<div class="ten wide column">
+    <div class="four wide column">
+			<button type="button" class="fluid ui large right labeled icon green button download-cluster-file">
+				<i class="right download icon"></i>
+        DOWNLOAD<br />CLUSTER RESULT
+			  </button>
+		</div>
+		<div class="eight wide column">
 			<a href="https://docs.google.com/spreadsheet/ccc?new" target="_blank">
 				<button type="button" class="fluid ui large right labeled icon button">
 					<i class="right table icon"></i>
@@ -130,6 +136,7 @@ https://semantic-ui.com/collections/form.html
       </label>
         
       <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
+      <textarea id="previewCluster" class="preview-cluster" onfocus="this.select();"></textarea>
     </div>
 	<div class="field">
 	

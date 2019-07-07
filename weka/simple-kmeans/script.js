@@ -178,14 +178,14 @@ var _draw_stat_abs_table = function () {
         _good_tr.append("<th>" + DICT["Larger than Avg."] + "</th>");
         for (var _i = 0; _i < _good.length; _i++) {
                 var _value = _good[_i].join("<br />");
-                _good_tr.append('<td>' + _value + '</td>');
+                _good_tr.append('<td><div>' + _value + '</div></td>');
         }
         
         var _bad_tr = _abs_table.find("tr.bad").empty();
         _bad_tr.append("<th>" + DICT["Smaller than Avg."] + "</th>");
         for (var _i = 0; _i < _bad.length; _i++) {
                 var _value = _bad[_i].join("<br />");
-                _bad_tr.append('<td>' + _value + '</td>');
+                _bad_tr.append('<td><div>' + _value + '</div></td>');
         }
         
         //setTimeout(() => {
@@ -363,8 +363,39 @@ var _change_sse = function () {
 var _output_filename_surffix="_output";
 var _output_filename_ext=".csv";
 
-
 // -------------------------------------
+
+let setPreviewCluster = function (result) {
+  console.log(result)
+  let header = result.slice(0, result.indexOf('\n')).split(',')
+  let clusterFieldIndex
+  for (let i = 0; i < header.length; i++) {
+    if (header[i] === 'cluster') {
+      clusterFieldIndex = i
+      break
+    }
+  }
+  
+  if (clusterFieldIndex === undefined) {
+    return
+  }
+  
+  let clusterResult = ['cluster']
+  result.slice(result.indexOf('\n')+1).split('\n').forEach(line => {
+    let fields = line.split(',')
+    let cluster = fields[clusterFieldIndex]
+    if ((cluster.startsWith('"') && cluster.endsWith('"')) 
+            || (cluster.startsWith("'") && cluster.endsWith("'"))) {
+      cluster = cluster.slice(1, -1)
+    }
+  
+    clusterResult.push(cluster)
+    
+  })
+  
+  $('#previewCluster').val(clusterResult.join('\n'))
+  console.log(clusterResult.join('\n'))
+}
 
 var _load_file = function(evt) {
         //console.log(1);
@@ -398,6 +429,9 @@ var _load_file = function(evt) {
 
                 _process_file(_result, function (_result) {
                         _panel.find(".preview").val(_result);
+                        
+                        setPreviewCluster(_result)
+                        
                         _panel.find(".filename").val(_file_name);
                                                 
                         $(".file-process-framework .myfile").val("");
@@ -446,6 +480,7 @@ var _load_textarea = function(evt) {
 
         _process_file(_result, function (_result) {
                 _panel.find(".preview").val(_result);
+                setPreviewCluster(_result)
                 _panel.find(".filename").val(_file_name);
 
                 _panel.find(".loading").addClass("hide");
@@ -464,6 +499,24 @@ var _download_file_button = function () {
         
         var _file_name = _panel.find(".filename").val();
         var _data = _panel.find(".preview").val();
+        if (_file_name.endsWith('.csv') === false) {
+          _file_name = _file_name + '.csv'
+        }
+        _download_file(_data, _file_name, "csv");
+};
+
+var _download_cluster_file_button = function () {
+        var _panel = $(".file-process-framework");
+        
+        var _file_name = _panel.find(".filename").val()
+        if (_file_name.endsWith('.csv')) {
+          _file_name = _file_name.slice(0, -4) + '-cluster.csv'
+        }
+        else {
+          _file_name = _file_name + '-cluster.csv'
+        }
+        
+        var _data = _panel.find(".preview-cluster").val();
         
         _download_file(_data, _file_name, "csv");
 };
@@ -619,6 +672,7 @@ $(function () {
     _panel.find(".input-mode.textarea").click(_load_textarea).keyup(_load_textarea);
     _panel.find(".myfile").change(_load_file);
     _panel.find(".download-file").click(_download_file_button);
+    _panel.find(".download-cluster-file").click(_download_cluster_file_button);
     
     $('.menu .item').tab();
     $("button.copy-table").click(_copy_table);
@@ -630,6 +684,7 @@ $(function () {
     
     // 20170108 測試用
     $.get("data.csv", function (_data) {
+    //$.get("data-text-mining.csv", function (_data) {
             $("#input_mode_textarea").val(_data);
             $("#input_mode_textarea").keyup();
     });

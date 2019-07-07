@@ -32,6 +32,10 @@ body {
 .stat-result-container {
   overflow: auto;
   padding: 5px;
+  
+  max-height: 100vh;
+  max-width: 80vw;
+  display: inline-block;
 }
 
 .stat-result td.large {
@@ -91,6 +95,8 @@ body {
   font-weight: bold;
 }
 
+
+
 .stat-result-abstract span.largest {
     color: green;
 }
@@ -134,6 +140,11 @@ label {
 
 .stat-result-abstract tbody td {
   vertical-align: top;
+}
+
+.stat-result-abstract tbody td > div {
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
 .stat-result-abstract tbody tr.good th {
