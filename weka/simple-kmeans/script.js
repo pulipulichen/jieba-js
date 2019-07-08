@@ -366,7 +366,7 @@ var _output_filename_ext=".csv";
 // -------------------------------------
 
 let setPreviewCluster = function (result) {
-  console.log(result)
+  //console.log(result)
   let header = result.slice(0, result.indexOf('\n')).split(',')
   let clusterFieldIndex
   for (let i = 0; i < header.length; i++) {
@@ -394,7 +394,7 @@ let setPreviewCluster = function (result) {
   })
   
   $('#previewCluster').val(clusterResult.join('\n'))
-  console.log(clusterResult.join('\n'))
+  //console.log(clusterResult.join('\n'))
 }
 
 var _load_file = function(evt) {

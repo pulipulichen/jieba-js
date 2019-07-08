@@ -2,12 +2,16 @@ TagCloud = {
   donwload: function (button, _i, count) {
     let data = []
 
-    let td = $(button).parents('table:first').find('tbody > tr.good > td:eq(' + (_i-1) +  ')')
+    let td = $(button).parents('table:first').find('tbody > tr.good > td:eq(' + (_i-1) +  ') > div')
     td.children().each((i, span) => {
       span = $(span)
       let avg = span.attr('data-avg')
       eval('avg = ' + avg)
       let attr = span.text().trim()
+      if (attr.indexOf(': ') > 0) {
+        attr = attr.slice(attr.indexOf(': ') + 2).trim()
+      }
+      
       if (attr === '' || attr.startsWith('筆數')) {
         return
       }
