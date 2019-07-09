@@ -1,4 +1,12 @@
+input.input-field[type='file'] {
+  display: none;
+}
 
-    input.input-field[type='file'] {
-        display: none;
-    }
+.fields.config textarea {
+  height: 9em !important;
+  min-height: inherit !important;
+}
+
+.n-gram-number {
+  width: 4rem !important;
+}
