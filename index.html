@@ -83,66 +83,100 @@ ga('send', 'pageview');
         </select>
     </div> <!-- <div class="sixteen wide column field"> -->
     
-    <div class="eight wide column">
-        
-        <div class="ui grid">
-            <div class="six wide column">
-                <label>User Dictionary</label>
-            </div>
-            <div class="ten wide column" style="text-align:right; margin-bottom: 5px;">
-                <button class="ui mini basic button" onclick="_load_file('user_dict.txt', 'user_dict');">
-                    <i class="file alternate outline icon"></i>
-                    example
-                </button>
-                
-                <button class="ui mini icon basic button" onclick="$('#user_dict_file').click();">
-                    <i class="upload icon"></i>
-                </button>
-                <input type="file" class="input-field" 
-                       id="user_dict_file" load_content_to="#user_dict" />
-                <button class="ui mini icon basic button" onclick="_download_file('user_dict');">
-                    <i class="download icon"></i>
-                </button>
-                <button class="ui mini icon basic button" copy-from="#user_dict">
-                    <i class="copy icon"></i>
-                </button>
-            </div>
-        </div>
-        <textarea name="user_dict" id="user_dict">找尋樂趣,9999999,n
-無聊的世界,9999999,n</textarea>
-    </div> <!-- <div class="eight wide column"> -->
-    <div class="eight wide column">
-        <div class="ui grid">
-            <div class="six wide column">
-                <label>Stop Words</label>
-            </div>
-            <div class="ten wide column" style="text-align:right; margin-bottom: 5px;">
-                <button class="ui mini basic button" onclick="_load_file('stop_words.txt', 'stop_words');">
-                    <i class="file alternate outline icon"></i>
-                    example
-                </button>
-                
-                <button class="ui mini icon basic button" onclick="$('#stop_words_file').click();">
-                    <i class="upload icon"></i>
-                </button>
-                <input type="file" class="input-field" 
-                       id="stop_words_file" load_content_to="#stop_words" />
-                <button class="ui mini icon basic button" onclick="_download_file('stop_words');">
-                    <i class="download icon"></i>
-                </button>
-                <button class="ui mini icon basic button" copy-from="#stop_words">
-                    <i class="copy icon"></i>
-                </button>
-            </div>
-        </div>
-        
-        
-            
-        <textarea name="stop_words" id="stop_words">這個
-，
-、
-。</textarea>
-    </div> <!-- <div class="eight wide column"> -->
+    <div class="fields">
+      <div class="field">
+
+          <div class="ui grid">
+              <div>
+                  <label>Work Remap</label>
+              </div>
+              <div style="text-align:right; margin-bottom: 25px;">
+                  <button class="ui mini basic button" onclick="_load_file('word_remap.txt', 'word_remap');">
+                      <i class="file alternate outline icon"></i>
+                      example
+                  </button>
+
+                  <button class="ui mini icon basic button" onclick="$('#word_remap').click();">
+                      <i class="upload icon"></i>
+                  </button>
+                  <input type="file" class="input-field" 
+                         id="user_dict_file" load_content_to="#word_remap" />
+                  <button class="ui mini icon basic button" onclick="_download_file('word_remap');">
+                      <i class="download icon"></i>
+                  </button>
+                  <button class="ui mini icon basic button" copy-from="#word_remap">
+                      <i class="copy icon"></i>
+                  </button>
+              </div>
+          </div>
+          <div class="ui field">
+            <textarea name="word_remap" id="word_remap">台灣 臺灣</textarea>
+          </div>
+
+      </div> <!-- <div class="eight wide column"> -->
+      <div class="field">
+
+          <div class="ui grid">
+              <div>
+                  <label>User Dictionary</label>
+              </div>
+              <div style="text-align:right; margin-bottom: 25px;">
+                  <button class="ui mini basic button" onclick="_load_file('user_dict.txt', 'user_dict');">
+                      <i class="file alternate outline icon"></i>
+                      example
+                  </button>
+
+                  <button class="ui mini icon basic button" onclick="$('#user_dict_file').click();">
+                      <i class="upload icon"></i>
+                  </button>
+                  <input type="file" class="input-field" 
+                         id="user_dict_file" load_content_to="#user_dict" />
+                  <button class="ui mini icon basic button" onclick="_download_file('user_dict');">
+                      <i class="download icon"></i>
+                  </button>
+                  <button class="ui mini icon basic button" copy-from="#user_dict">
+                      <i class="copy icon"></i>
+                  </button>
+              </div>
+          </div>
+          <textarea name="user_dict" id="user_dict">找尋樂趣,9999999,n
+  無聊的世界,9999999,n</textarea>
+      </div> <!-- <div class="eight wide column"> -->
+      
+      
+      <div class="field">
+          <div class="ui grid">
+              <div>
+                  <label>Stop Words</label>
+              </div>
+              <div style="text-align:right; margin-bottom: 25px;">
+                  <button class="ui mini basic button" onclick="_load_file('stop_words.txt', 'stop_words');">
+                      <i class="file alternate outline icon"></i>
+                      example
+                  </button>
+
+                  <button class="ui mini icon basic button" onclick="$('#stop_words_file').click();">
+                      <i class="upload icon"></i>
+                  </button>
+                  <input type="file" class="input-field" 
+                         id="stop_words_file" load_content_to="#stop_words" />
+                  <button class="ui mini icon basic button" onclick="_download_file('stop_words');">
+                      <i class="download icon"></i>
+                  </button>
+                  <button class="ui mini icon basic button" copy-from="#stop_words">
+                      <i class="copy icon"></i>
+                  </button>
+              </div>
+          </div>
+
+
+
+          <textarea name="stop_words" id="stop_words">這個
+  ，
+  、
+  。</textarea>
+      </div> <!-- <div class="eight wide column"> -->
+    </div>
     
 </div> <!-- <div class="ui grid container"> -->
    
@@ -152,6 +186,8 @@ ga('send', 'pageview');
         var _submit_button = _form.find('button#trigger');
         _submit_button.click(function () {
             var _text = $("#input").val().trim();
+            _text = filterWordRemap(_text)
+            
             $("#output").val("");
             //console.log(_text);
             var _submit = $(this).find("button#trigger");
@@ -233,6 +269,19 @@ ga('send', 'pageview');
         _submit_button.click(); // 網頁讀取時即開始執行斷詞
     });
     
+    let filterWordRemap = (text) => {
+      $("#word_remap").val().trim().split("\n").forEach(line => {
+        line = line.trim()
+        if (line.indexOf(' ') === -1) {
+          return
+        }
+        let targetWord = line.slice(0, line.indexOf(' ')).trim()
+        let replaceWord = line.slice(line.indexOf(' ') + 1).trim()
+        text = text.split(targetWord).join(replaceWord)
+      })
+      return text
+    }
+    
     var _load_file = function (_url, _textarea_id, _callback) {
         $.get(_url, function (_result) {
             $("#" + _textarea_id).val(_result);
@@ -259,7 +308,7 @@ ga('send', 'pageview');
     var _filter_stop_words = function (_result) {
         var _stopwords = $("#stop_words").val().trim().split("\n");
         for (var _s in _stopwords) {
-            _stopwords[_s] = _stopwords[_s].trim();
+          _stopwords[_s] = _stopwords[_s].trim();
         }
         
         var _output = [];

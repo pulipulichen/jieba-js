@@ -51,7 +51,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
             //jieba_parsing(JIEBA_CUSTOM_DICTIONARY, function () {
               //_result = jieba_cut(_text);
                //LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
-                console.log(_result);
+                //console.log(_result);
             //})
             LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
             _callback(_result);
