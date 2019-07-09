@@ -75,11 +75,11 @@ ga('send', 'pageview');
       <div class="eight wide field">
         <div class="fields">
           <div class="inline input field">
-            <input type="radio" name="token_rule" value="dictionary">
+            <input type="radio" name="token_rule" value="dictionary" checked="checked">
             <label>Dictionary</label>
           </div>
           <div class="inline input field">
-            <input type="radio" name="token_rule" value="n-gram" checked="checked">
+            <input type="radio" name="token_rule" value="n-gram">
             <label>
               <input type="number" value="2" class="n-gram-number" />
               -gram
@@ -248,7 +248,7 @@ ga('send', 'pageview');
             var _result_array = []
             
             let next = (_result, i) => {
-              console.log(_result)
+              //console.log(_result)
               _result = _filter_stop_words(_result);
 
               _result = _result.join(" ");
