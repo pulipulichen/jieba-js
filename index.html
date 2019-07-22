@@ -279,7 +279,7 @@ ga('send', 'pageview');
                   let line = _text_array[i]
                   if ((line.startsWith('"') && line.endsWith('"')) 
                           || (line.startsWith("'") && line.endsWith("'"))) {
-                    line = line.slice(1, -1)
+                    line = line.slice(1, -1).trim()
                   }
                   call_jieba_cut(line, _custom_dict, function (_result) {
                     next(_result, i)
