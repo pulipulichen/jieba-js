@@ -259,9 +259,13 @@ ga('send', 'pageview');
                   _result = _result.replace(/  /g, ' ');
               }
               _result = _result.replace(/ \n /g, "\n");
-              _result = _result.replace(/ \t /g, "\t");
+              _result = _result.replace(/ \t /g, " ");
+              _result = _result.replace(/\t/g, " ");
               _result = _result.replace(/ \' /g, "'");
               _result = _result.replace(/\' /g, "'");
+              if (_result.startsWith('" ')) {
+                _result = _result.slice(2)
+              }
               _result = _result.trim();
 
               _result_array.push(_result)
@@ -373,7 +377,7 @@ ga('send', 'pageview');
                 _line[2]
             ]);
         }
-        console.log(_output)
+        //console.log(_output)
         return _output;
     };
     
