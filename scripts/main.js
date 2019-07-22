@@ -354,7 +354,8 @@ if (_host !== undefined) {
             jieba_parsing(_dictionary, callback);
         }
         else {
-            jieba_parsing(_dictionary, callback);
+          console.log('沒有dict，讀取預設的')
+          jieba_parsing(_dictionary, callback);
         }
     };
     

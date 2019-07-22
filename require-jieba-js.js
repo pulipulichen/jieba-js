@@ -21,9 +21,12 @@ call_jieba_cut = function (_text, _dict, _callback) {
         return;
     }
 
-    if (typeof(_dict) === "string" || Array.isArray(_dict)) {
-      //console.log(_dict)
+    if (typeof(_dict) === "string" || (Array.isArray(_dict) && _dict.length > 0)) {
+      console.log(_dict)
       JIEBA_CUSTOM_DICTIONARY = _dict;
+    }
+    if (JIEBA_CUSTOM_DICTIONARY === undefined) {
+      console.log('沒有資料')
     }
     
     if (typeof(jieba_cut) !== 'function') {

@@ -160,6 +160,9 @@ ga('send', 'pageview');
           </div>
           <textarea name="user_dict" id="user_dict">找尋樂趣,9999999,n
 無聊的世界,9999999,n</textarea>
+          <!--
+          <textarea name="user_dict" id="user_dict"></textarea>
+          -->
       </div> <!-- <div class="eight wide column"> -->
       
       
@@ -360,6 +363,9 @@ ga('send', 'pageview');
         var _config = $("#user_dict").val().trim().split("\n");
         var _output = [];
         for (var _l in _config) {
+          if (_config[_l].indexOf(',') === -1) {
+            continue
+          }
             var _line = _config[_l].split(",");
             _output.push([
                 _line[0].trim(),
@@ -367,6 +373,7 @@ ga('send', 'pageview');
                 _line[2]
             ]);
         }
+        console.log(_output)
         return _output;
     };
     
