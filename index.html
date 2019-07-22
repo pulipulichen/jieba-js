@@ -276,7 +276,12 @@ ga('send', 'pageview');
             let loop = (i) => {
               if (i < _text_array.length) {
                 if (rule === 'dictionary') {
-                  call_jieba_cut(_text_array[i], _custom_dict, function (_result) {
+                  let line = _text_array[i]
+                  if ((line.startsWith('"') && line.endsWith('"')) 
+                          || (line.startsWith("'") && line.endsWith("'"))) {
+                    line = line.slice(1, -1)
+                  }
+                  call_jieba_cut(line, _custom_dict, function (_result) {
                     next(_result, i)
                   });
                 }
