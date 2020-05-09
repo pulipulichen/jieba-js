@@ -10,7 +10,7 @@ var app = new Vue({
 喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。`,
     outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 一種 不能 吃 的 食物
 喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
-    step: 2,
+    //step: 2,
     segmentationMethod: 'dictionary',
     nGramLength: 2,
     configUserDictionary: `找尋樂趣,9999999,n
@@ -26,7 +26,9 @@ var app = new Vue({
     usePorterStemmer: true,
     jiebaInited: false,
     processOutputWait: false,
-    displayPanel: 'text',
+    //displayPanel: 'text',
+    displayPanel: 'configuration',
+    persistKey: 'jieba-js.' + location.href
   },
   computed: {
     configWordRemapArray () {
@@ -76,11 +78,54 @@ var app = new Vue({
     
     //console.log(stemmer("hopefully", true), stemmer("loves", true))
     
+    this.loadPersistedData()
+    
     setTimeout(() => {
       //this.processOutput()
     }, 1000)
   },
+  watch: {
+    segmentationMethod () {
+      this.persist()
+    },
+    nGramLength () {
+      this.persist()
+    },
+    configUserDictionary () {
+      this.persist()
+    },
+    configWordRemap () {
+      this.persist()
+    },
+    configStopWords () {
+      this.persist()
+    },
+    usePorterStemmer () {
+      this.persist()
+    },
+  },
   methods: {
+    persist () {
+      let key = this.persistKey
+      let data = {
+        segmentationMethod: this.segmentationMethod,
+        nGramLength: this.nGramLength,
+        configUserDictionary: this.configUserDictionary,
+        configWordRemap: this.configWordRemap,
+        configStopWords: this.configStopWords,
+        usePorterStemmer: this.usePorterStemmer
+      }
+      localStorage.setItem(key, JSON.stringify(data))
+    },
+    loadPersistedData () {
+      let dataString = localStorage.getItem(this.persistKey)
+      if (dataString) {
+        let data = JSON.parse(dataString)
+        for (let key in data) {
+          this[key] = data[key]
+        }
+      }
+    },
     loadInputFile (evt) {
       //console.log(1);
       if(!window.FileReader) return; // Browser is not compatible
@@ -302,6 +347,7 @@ var app = new Vue({
     drawWordCloud () {
       let url = '//pulipulichen.github.io/d3-cloud/index.html'
       //let url = 'http://localhost:8383/d3-cloud/index.html'
+      //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
       postMessageAPI.send(url, this.outputText, {
         mode: 'popup'
@@ -310,9 +356,11 @@ var app = new Vue({
     analyzeText () {
       let url = '//pulipulichen.github.io/HTML5-Text-Analyzer/index.html'
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
+      //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
       
       postMessageAPI.send(url, this.outputText, {
-        mode: 'popup'
+        mode: 'popup',
+        newWindow: true
       })
     },
     extractThemes () {

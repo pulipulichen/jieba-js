@@ -222,10 +222,16 @@
                       <label>Dictionary</label>
                     </div>
                     <div class="field">
-                      <input type="radio" v-model="segmentationMethod" value="n-gram" />
+                      <input 
+                        type="radio" 
+                        v-model="segmentationMethod" 
+                        value="n-gram" />
                     </div>
                     <div class="field">
-                      <input type="number" v-model="nGramLength" v-on:change="segmentationMethod = 'n-gram'" />
+                      <input 
+                        type="number" 
+                        v-model="nGramLength" 
+                        v-on:change="segmentationMethod = 'n-gram'" />
                     </div>
                     <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
                       <label>

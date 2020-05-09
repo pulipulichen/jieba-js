@@ -1,11 +1,27 @@
 $(() => {
   
   let data = {}
-  let localStorageKey = 'puli-form-persist'
+  let localStorageKey = 'puli-form-persist.' + location.href + '.'
   
-  $('.data-auto-save').change(function () {
-    data[this.name] = this.value
-    //console.log(data)
+  $('.data-auto-save[name],.data-auto-save[id]').change(function () {
+    let name = this.name
+    if (!name) {
+      name = '#' + this.id
+    }
+    if (!name) {
+      return false
+    }
+    
+    let type = this.type
+    // console.log(type)
+    
+    if (this.type === 'checkbox' || this.type === 'radio') {
+      data[name] = this.checked
+    }
+    else {
+      data[name] = this.value
+    }
+    
     localStorage.setItem(localStorageKey, JSON.stringify(data))
   })
   
@@ -15,7 +31,21 @@ $(() => {
           && itemFromLocalStorage !== '') {
     data = JSON.parse(itemFromLocalStorage)
     Object.keys(data).forEach((name) => {
-      $(`.data-auto-save[name="${name}"]`).val(data[name])
+      let input
+      if (name.startsWith('#')) {
+        input = $(`${name}`)
+      }
+      else {
+        input = $(`.data-auto-save[name="${name}"]`)
+      }
+      
+      let type = input.attr('type')
+      if (type === 'checkbox' || type === 'radio') {
+        input.attr('checked', data[name])
+      }
+      else {
+        input.val(data[name])
+      }
     })
   }
 })
