@@ -4,9 +4,7 @@
     <title>jieba-js demo</title>
     <link rel="icon" type="image/png" href="icon.png" />
 
-    <!--
     <link rel="stylesheet" href="html-lib/style.css" />
-    -->
 
     <script src="jquery.js"></script>
     <script src="require-jieba-js.js"></script>
@@ -18,21 +16,38 @@
     <script src="html-lib/vendors/clipboard/clipboard.min.js"></script>
     <script src="html-lib/vendors/clipboard/puli-util.clipboard.js"></script>
     <script src="html-lib/vendors/puli-post-message-api/puli-post-message-api.min.js"></script>
-    <script src="html-lib/vendors/vue/vue.min.js"></script>
-    
-    <link rel="stylesheet/less" type="text/css" href="html-lib/styles/styles.less" />
-    <script>less = { env: 'production'};</script>
-    <script src="html-lib/vendors/less/less.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
 
 
     <form onsubmit="return false;" class="ui form" id="app">
 
-      
+      <div class="ui ordered fluid steps">
+        <div class="step"
+             v-bind:class="computedStepClass(0)"
+             v-on:click="step=0">
+          <div class="content">
+            <div class="title">Input Raw Text</div>
+          </div>
+        </div>
+        <div class="step"
+             v-bind:class="computedStepClass(1)"
+             v-on:click="step=1">
+          <div class="content">
+            <div class="title">Configuration</div>
+          </div>
+        </div>
+        <div class="step"
+             v-bind:class="computedStepClass(2)"
+             v-on:click="step=2">
+          <div class="content">
+            <div class="title">Output Segmentation Result</div>
+          </div>
+        </div>
+      </div>
 
-      <div class="ui grid"
+      <div class="ui grid container"
            v-show="step === 0">
         <div class="row">
           <div class="ten wide column">
@@ -52,58 +67,23 @@
         <div class="row">
           <div class="sixteen wide column">
             <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-            <textarea name="input" id="input" class="ui raised fluid segment input-textarea"
+            <textarea name="input" id="input" class="ui raised fluid segment"
                       >這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
 喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。</textarea>
           </div>
         </div>
       </div>
 
-      <!-- =============================================================== -->
-      
       <div class="ui grid container"
            v-show="step === 1">
         STEP2
       </div>
-      
-      <!-- =============================================================== -->
 
       <div class="ui grid container"
            v-show="step === 2">
         STEP3
       </div>
-      
-      <!-- =============================================================== -->
 
-      <div class="ui bottom fixed menu">
-        <div class="ui ordered fluid steps">
-          <div class="step"
-               v-bind:class="computedStepClass(0)"
-               v-on:click="step=0">
-            <div class="content">
-              <div class="title">Input Raw Text</div>
-            </div>
-          </div>
-          <div class="step"
-               v-bind:class="computedStepClass(1)"
-               v-on:click="step=1">
-            <div class="content">
-              <div class="title">Configuration</div>
-            </div>
-          </div>
-          <div class="step"
-               v-bind:class="computedStepClass(2)"
-               v-on:click="step=2">
-            <div class="content">
-              <div class="title">Output Segmentation Result</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- =============================================================== -->
-      
-      
       <div class="ui grid container">
 
         <div class="eight wide column field">

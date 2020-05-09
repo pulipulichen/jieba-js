@@ -22,7 +22,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
     }
 
     if (typeof(_dict) === "string" || (Array.isArray(_dict) && _dict.length > 0)) {
-      console.log(_dict)
+      //console.log(_dict)
       JIEBA_CUSTOM_DICTIONARY = _dict;
     }
     if (JIEBA_CUSTOM_DICTIONARY === undefined) {
@@ -141,16 +141,19 @@ get_host = function () {
     else {
         _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
     }
-    console.log("host: " + _host);
+    //console.log("host: " + _host);
     return _host;
 };
 
-if (typeof (document) === "object") {
-    var _host = get_host();
+$(() => {
+  if (typeof (document) === "object") {
+      var _host = get_host();
 
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.setAttribute("data-main", _host + "scripts/main");
-    s.src = _host + "scripts/require.js";
-    document.body.appendChild(s);
-}
+      var s = document.createElement("script");
+      s.type = "text/javascript";
+      s.setAttribute("data-main", _host + "scripts/main");
+      s.src = _host + "scripts/require.js";
+      document.body.appendChild(s);
+  }
+})
+  

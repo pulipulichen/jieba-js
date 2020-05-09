@@ -12,5 +12,14 @@ input.input-field[type='file'] {
 }
 
 .input-textarea {
-  height: calc(100vh - 30rem) !important;
+  height: calc(100vh - 8rem) !important;
+  max-height: 100vh !important;
+}
+
+.step {
+  cursor: pointer;
+  
+  &.active {
+    cursor: default !important;
+  }
 }

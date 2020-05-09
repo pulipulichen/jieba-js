@@ -31,3 +31,5 @@ call_jieba_cut(_text, function (_result) {
 
 - Chinese stopwords https://github.com/stopwords-iso/stopwords-zh
 - English stopwords https://github.com/stopwords-iso/stopwords-en
+
+- ICON: https://www.iconninja.com/break-icon-689544

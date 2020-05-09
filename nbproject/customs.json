@@ -1,6 +1,9 @@
 {
   "elements": {},
   "attributes": {
+    "v-bind:class": {
+      "context": "div"
+    },
     "load_content_to": {
       "context": "input"
     },

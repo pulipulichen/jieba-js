@@ -107,7 +107,7 @@ $(function () {
    */
 
    setTimeout(() => {
-     _submit_button.click(); // 網頁讀取時即開始執行斷詞
+     //_submit_button.click(); // 網頁讀取時即開始執行斷詞
    }, 1000)
 });
 
