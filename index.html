@@ -158,6 +158,14 @@
               <button
                 type="button"
                 class="ui button"
+                v-on:click="analyzeText"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="crosshairs icon"></i>
+                Analyze text
+              </button>
+              <button
+                type="button"
+                class="ui button"
                 v-on:click="extractThemes"
                 v-bind:class="{'disabled': outputButtonDisabled }">
                 <i class="lightbulb outline icon"></i>

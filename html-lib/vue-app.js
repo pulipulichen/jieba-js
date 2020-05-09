@@ -300,8 +300,16 @@ var app = new Vue({
       saveAs(blob, _file_name)
     },
     drawWordCloud () {
-      //let url = '//pulipulichen.github.io/d3-cloud/index.html'
-      let url = 'http://localhost:8383/d3-cloud/index.html'
+      let url = '//pulipulichen.github.io/d3-cloud/index.html'
+      //let url = 'http://localhost:8383/d3-cloud/index.html'
+      
+      postMessageAPI.send(url, this.outputText, {
+        mode: 'popup'
+      })
+    },
+    analyzeText () {
+      let url = '//pulipulichen.github.io/HTML5-Text-Analyzer/index.html'
+      //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       
       postMessageAPI.send(url, this.outputText, {
         mode: 'popup'
