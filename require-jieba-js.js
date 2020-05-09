@@ -147,13 +147,13 @@ get_host = function () {
 
 $(() => {
   if (typeof (document) === "object") {
-      var _host = get_host();
+    var _host = get_host();
 
-      var s = document.createElement("script");
-      s.type = "text/javascript";
-      s.setAttribute("data-main", _host + "scripts/main");
-      s.src = _host + "scripts/require.js";
-      document.body.appendChild(s);
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.setAttribute("data-main", _host + "scripts/main");
+    s.src = _host + "scripts/require.js";
+    document.body.appendChild(s);
   }
 })
   

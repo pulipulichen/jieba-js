@@ -17,7 +17,47 @@ var app = new Vue({
 、
 。`,
     configStopWordsExample: '',
-    usePorterStemmer: true
+    usePorterStemmer: true,
+    jiebaInited: false,
+    processOutputWait: false
+  },
+  computed: {
+    configWordRemapArray () {
+      let output = this.configWordRemap.trim().split("\n")
+      output = output.map(line => line.trim())
+              .filter(line => (line.indexOf(',') > -1 && line !== '') )
+              .map(line => {
+                let targetWord = line.slice(0, line.indexOf(',')).trim()
+                let replaceWord = line.slice(line.indexOf(',') + 1).trim()
+                return {
+                  targetWord,
+                  replaceWord
+                }
+              })
+      return output
+    },
+    configUserDictionaryArray () {
+      var _config = this.configUserDictionary.trim().split("\n")
+      var _output = [];
+      for (var _l in _config) {
+        if (_config[_l].indexOf(',') === -1) {
+          continue
+        }
+        var _line = _config[_l].split(",");
+        _output.push([
+          _line[0].trim(),
+          parseInt(_line[1]),
+          _line[2]
+        ]);
+      }
+      //console.log(_output)
+      return _output;
+    },
+    configStopWordsArray () {
+      return this.configStopWords.trim().split("\n")
+              .map(line => line.trim())
+              .filter(line => (line !== '') )
+    }
   },
   mounted () {
     this.configUserDictionaryExample = this.configUserDictionary
@@ -25,6 +65,10 @@ var app = new Vue({
     this.configStopWordsExample = this.configStopWords
     
     //console.log(stemmer("hopefully", true), stemmer("loves", true))
+    
+    setTimeout(() => {
+      this.processOutput()
+    }, 1000)
   },
   methods: {
     computedStepClass: function (stepID) {
@@ -83,6 +127,119 @@ var app = new Vue({
     },
     extractThemes () {
       console.error('@TODO')
+    },
+    processOutput () {
+      this.step = 2
+      
+      if (this.jiebaInited === false
+              && this.segmentationMethod === 'dictionary') {
+        $.getScript('require-jieba-js.js', () => {
+          //console.log('OK')
+          this.jiebaInited = true
+          this.processOutputInited()
+        })
+      }
+      else {
+        this.processOutputInited()
+      }
+    },
+    processOutputInited: async function () {
+      this.processOutputWait = true
+      var _text = this.inputText
+      _text = this.filterWordRemap(_text)
+
+      this.outputText
+      
+      let rule = this.segmentationMethod
+      //if (rule === 'n-gram') {
+      //  _text = this.filterStopWords(_text)
+      //}
+
+      var _custom_dict = this.configUserDictionaryArray
+
+      var _text_array = _text.split('\n')
+      var _result_array = []
+      return new Promise((resolve, reject) => {
+        //console.log('start promise')
+        let next = (_result, i) => {
+          _result = this.filterStopWords(_result);
+
+          _result = _result.join(" ");
+          while (_result.indexOf("  ") > -1) {
+            _result = _result.replace(/  /g, ' ');
+          }
+          _result = _result.replace(/ \n /g, "\n");
+          _result = _result.replace(/ \t /g, " ");
+          _result = _result.replace(/\t/g, " ");
+          _result = _result.replace(/ \' /g, "'");
+          _result = _result.replace(/\' /g, "'");
+          if (_result.startsWith('" ')) {
+            _result = _result.slice(2)
+          }
+          _result = _result.trim();
+
+          _result_array.push(_result)
+          i++
+          loop(i)
+        }
+
+        let loop = (i) => {
+          //console.log('loop', i)
+          if (i < _text_array.length) {
+            if (rule === 'dictionary') {
+              let line = _text_array[i]
+              if ((line.startsWith('"') && line.endsWith('"'))
+                      || (line.startsWith("'") && line.endsWith("'"))) {
+                line = line.slice(1, -1).trim()
+              }
+              call_jieba_cut(line, _custom_dict, function (_result) {
+                next(_result, i)
+              });
+            } else {
+              let _result = this.processNGram(_text_array[i])
+              next(_result, i)
+            }
+          } else {
+            // 完成
+            //console.log(_result_array)
+            this.outputText = _result_array.join('\n')
+            this.processOutputWait = false
+            resolve(true)
+          }
+        }
+
+        loop(0)
+      })
+    },
+    filterWordRemap (text) {
+      this.configWordRemapArray.forEach((targetWord, replaceWord) => {
+        text = text.split(targetWord).join(replaceWord)
+      })
+      return text
+    },
+    filterStopWords (result) {
+      //console.log(result)
+      return result.filter(word => (this.configStopWordsArray.indexOf(word) === -1))
+    },
+    processNGram (text) {
+      text = text.trim()
+      //console.log(text)
+      let gram = this.nGramLength
+      gram = parseInt(gram, 10)
+      let output = []
+      //console.log([gram, text.substr(0, 2), text.length - gram + 1])
+
+      text.split(' ').forEach(part => {
+        part = part.trim()
+        if (part.length < gram) {
+          output.push(part)
+        }
+        for (let i = 0; i < part.length - gram + 1; i++) {
+          output.push(part.substr(i, gram))
+        }
+      })
+
+      return output
     }
   }
 })

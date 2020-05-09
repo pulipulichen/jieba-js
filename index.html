@@ -11,7 +11,10 @@
     -->
 
     <script src="jquery.js"></script>
+    <!--
     <script src="require-jieba-js.js"></script>
+    -->
+    
     <link rel="stylesheet" href="html-lib/vendors/semantic-ui/semantic.min.css" />
     <script src="html-lib/vendors/semantic-ui/semantic.min.js"></script>
     <!-- <script src="html-lib/Garlic.js/garlic.js"></script> -->
@@ -293,12 +296,17 @@
           </div>
           <div class="step"
                v-bind:class="computedStepClass(2)"
-               v-on:click="step=2">
+               v-on:click="processOutput">
             <div class="content">
               <div class="title">Output Segmentation Result</div>
             </div>
           </div>
         </div>
+      </div>
+      
+      <div class="loading-modal" 
+           v-if="processOutputWait">
+        <img src="html-lib/loading.svg" />
       </div>
       
       <!-- =============================================================== -->
