@@ -207,7 +207,7 @@
           <div class="sixteen wide column">
             <div class="ui form">
 
-              <div class="two fields">
+              <div class="three fields">
                 <div class="field">
 
                   <label>
@@ -241,7 +241,29 @@
 
                   </div>
                 </div>
+                
                 <div class="field">
+                  <label>
+                    Remove
+                  </label>
+                  
+                  <div class="ui checkbox">
+                    <input 
+                      type="checkbox" 
+                      v-model="removeEnglish">
+                      <label>Remove English</label>
+                  </div>
+                  
+                  <div class="ui checkbox">
+                    <input 
+                      type="checkbox" 
+                      v-model="removeNumber">
+                      <label>Remove Number</label>
+                  </div>
+                </div>
+                
+                <div class="field"
+                     v-bind:class="{'disabled': removeEnglish}">
                   <label>
                     Use Porter Stemmer
                     <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
@@ -249,18 +271,13 @@
                       (Help)
                     </a>
                   </label>
-                  <div class="inline fields">
-                    <div class="field">
-                      <input 
-                        type="checkbox" 
-                        tabindex="0" 
-                        class="hidden"
-                        id="usePorterStemmer"
-                        v-model="usePorterStemmer">
-                    </div>
-                    <div class="field">
+                  
+                  <div class="ui disabled checkbox">
+                    <input 
+                      type="checkbox" 
+                      id="usePorterStemmer"
+                      v-model="usePorterStemmer">
                       <label for="usePorterStemmer">Enable</label>
-                    </div>
                   </div>
                 </div>
               </div>

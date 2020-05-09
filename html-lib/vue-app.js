@@ -6,9 +6,9 @@ var app = new Vue({
   el: '#app',
   data: {
     inputFilename: `Raw Text`,
-    inputText: `這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
+    inputText: `這個布丁 是在無聊的世界中找尋樂趣的 1 種不能吃的食物，
 喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。`,
-    outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 一種 不能 吃 的 食物
+    outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 1 種 不能 吃 的 食物
 喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
     //step: 2,
     segmentationMethod: 'dictionary',
@@ -23,6 +23,8 @@ var app = new Vue({
 、
 。`,
     configStopWordsExample: '',
+    removeEnglish: true,
+    removeNumber: true,
     usePorterStemmer: true,
     jiebaInited: false,
     processOutputWait: false,
