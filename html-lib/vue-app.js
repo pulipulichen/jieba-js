@@ -1,7 +1,10 @@
 var app = new Vue({
   el: '#app',
   data: {
-    step: 1,
+    inputText: `這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
+喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。`,
+    outputText: ``,
+    step: 2,
     segmentationMethod: 'dictionary',
     nGramLength: 2,
     configUserDictionary: `找尋樂趣,9999999,n
@@ -63,6 +66,21 @@ var app = new Vue({
         return false
       }
       this.configStopWords = this.configStopWordsExample
+    },
+    copyOutput () {
+      console.error('@TODO')
+    },
+    saveAsText () {
+      console.error('@TODO')
+    },
+    saveAsSheet () {
+      console.error('@TODO')
+    },
+    drawWordCloud () {
+      console.error('@TODO')
+    },
+    extractThemes () {
+      console.error('@TODO')
     }
   }
 })

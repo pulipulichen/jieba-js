@@ -30,10 +30,8 @@
 
     <form onsubmit="return false;" class="ui form" id="app">
 
-      
-
       <div class="ui grid"
-           v-show="step === 0">
+           v-if="step === 0">
         <div class="row">
           <div class="ten wide column">
             <label class="ui header">Raw Text</label>
@@ -52,9 +50,12 @@
         <div class="row">
           <div class="sixteen wide column">
             <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-            <textarea name="input" id="input" class="ui raised fluid segment input-textarea"
-                      >這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
-喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。</textarea>
+            <textarea 
+              name="input" 
+              id="input" 
+              class="ui raised fluid segment input-textarea"
+              v-model="inputText"
+              ></textarea>
           </div>
         </div>
       </div>
@@ -62,7 +63,7 @@
       <!-- =============================================================== -->
       
       <div class="ui grid configuration-step"
-           v-show="step === 1">
+           v-if="step === 1">
         <div class="row">
           <div class="ten wide column">
             <label class="ui header">Configuration</label>
@@ -205,22 +206,74 @@
           </div>
         </div>
       </div>
-
-            
-        
-      </div>
       
       <!-- =============================================================== -->
 
-      <div class="ui grid"
-           v-show="step === 2">
-        STEP3
+      <div class="ui grid output-step"
+           v-if="step === 2">
+        <div class="row">
+          <div class="sixteen wide column">
+            <label class="ui header">Output Segmentation Result</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen wide column">
+            <textarea 
+              name="output" 
+              id="output" 
+              class="ui raised segment output-textarea" 
+              data-storage="false"
+              v-model="outputText"
+              ></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <div class="ui fluid buttons">
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="copyOutput">
+                <i class="copy icon"></i>
+                Copy
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="saveAsText">
+                <i class="file alternate outline icon"></i>
+                Save as text
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="saveAsSheet">
+                <i class="table icon"></i>
+                Save as sheet
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="drawWordCloud">
+                <i class="cloud icon"></i>
+                Draw word cloud
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="extractThemes">
+                <i class="lightbulb outline icon"></i>
+                Extract themes
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- =============================================================== -->
 
       <div class="ui bottom fixed menu">
-        <div class="ui ordered fluid steps">
+        <div class="ui ordered fluid unstackable steps">
           <div class="step"
                v-bind:class="computedStepClass(0)"
                v-on:click="step=0">
@@ -247,180 +300,6 @@
       
       <!-- =============================================================== -->
       
-      
-      <div class="ui grid container">
-
-        <div class="eight wide column field">
-
-          <div class="ui grid">
-            <div class="ten wide column">
-              <label>Raw Text</label>
-            </div>
-            <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-              <button class="ui mini icon basic button" onclick="$('#input_file').click();">
-                <i class="upload icon"></i>
-              </button>
-              <input type="file" class="input-field" 
-                     id="input_file" load_content_to="#input" />
-              <button class="ui mini icon basic button" copy-from="#input">
-                <i class="copy icon"></i>
-              </button>
-            </div>
-          </div>
-          <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-          <textarea name="input" id="input" class="ui raised segment"
-                    >這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
-喜愛動漫畫、遊戲、程式coding，以及跟世間脫節的生活步調。</textarea>
-        </div> <!-- <div class="eight wide column"> -->
-        <div class="eight wide column field">
-          <div class="ui grid">
-            <div class="ten wide column">
-              <label>Processed Text</label>
-            </div>
-            <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-              <button class="ui mini icon basic button" onclick="_download_file('output');">
-                <i class="download icon"></i>
-              </button>
-              <button class="ui mini icon basic button" copy-from="#output">
-                <i class="copy icon"></i>
-              </button>
-            </div>
-          </div>
-
-          <textarea name="output" id="output" class="ui raised segment" data-storage="false"></textarea>
-        </div> <!-- <div class="eight wide column"> -->
-
-        <div class="sixteen wide column">
-          <div class="fields">
-            <div class="eight wide field">
-              <div class="fields">
-                <div class="inline input field">
-                  <input type="radio" name="token_rule" value="dictionary" checked="checked">
-                  <label>Dictionary</label>
-                </div>
-                <div class="inline input field">
-                  <input type="radio" name="token_rule" value="n-gram">
-                  <label>
-                    <input type="number" value="2" class="n-gram-number" />
-                    -gram
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="eight wide field">
-              <button type="submit" class="fluid primary ui button" id="trigger">開始斷詞</button> 
-            </div> <!-- <div class="sixteen wide column field"> -->
-          </div>
-        </div> 
-
-        <!--
-        <div class="eight wide column field">
-            <label>Segment Mode</label>
-            <select name="segment_mode" style="ui dropdown">
-                <option value="A">A</option>
-                <option value="B">B</option>
-            </select>
-        </div> <!-- <div class="sixteen wide column field"> -->
-
-        <div class="fields config">
-          <div class="field">
-
-            <div class="ui grid">
-              <div>
-                <label>Word Remap</label>
-              </div>
-              <div style="text-align:right; margin-bottom: 25px;">
-                <button class="ui mini basic button" onclick="_load_file('word_remap.txt', 'word_remap');">
-                  <i class="file alternate outline icon"></i>
-                  example
-                </button>
-
-                <button class="ui mini icon basic button" onclick="$('#word_remap').click();">
-                  <i class="upload icon"></i>
-                </button>
-                <input type="file" class="input-field" 
-                       id="user_dict_file" load_content_to="#word_remap" />
-                <button class="ui mini icon basic button" onclick="_download_file('word_remap');">
-                  <i class="download icon"></i>
-                </button>
-                <button class="ui mini icon basic button" copy-from="#word_remap">
-                  <i class="copy icon"></i>
-                </button>
-              </div>
-            </div>
-            <div class="ui field">
-              <textarea name="word_remap" id="word_remap" class="data-auto-save">食物,甜點</textarea>
-            </div>
-
-          </div> <!-- <div class="eight wide column"> -->
-          <div class="field">
-
-            <div class="ui grid">
-              <div>
-                <label>User Dictionary</label>
-              </div>
-              <div style="text-align:right; margin-bottom: 25px;">
-                <button class="ui mini basic button" onclick="_load_file('user_dict.txt', 'user_dict');">
-                  <i class="file alternate outline icon"></i>
-                  example
-                </button>
-
-                <button class="ui mini icon basic button" onclick="$('#user_dict_file').click();">
-                  <i class="upload icon"></i>
-                </button>
-                <input type="file" class="input-field" 
-                       id="user_dict_file" load_content_to="#user_dict" />
-                <button class="ui mini icon basic button" onclick="_download_file('user_dict');">
-                  <i class="download icon"></i>
-                </button>
-                <button class="ui mini icon basic button" copy-from="#user_dict">
-                  <i class="copy icon"></i>
-                </button>
-              </div>
-            </div>
-            <textarea name="user_dict" id="user_dict" class="data-auto-save">找尋樂趣,9999999,n
-無聊的世界,9999999,n</textarea>
-            <!--
-            <textarea name="user_dict" id="user_dict"></textarea>
-            -->
-          </div> <!-- <div class="eight wide column"> -->
-
-
-          <div class="field">
-            <div class="ui grid">
-              <div>
-                <label>Stop Words</label>
-              </div>
-              <div style="text-align:right; margin-bottom: 25px;">
-                <button class="ui mini basic button" onclick="_load_file('stop_words.txt', 'stop_words');">
-                  <i class="file alternate outline icon"></i>
-                  example
-                </button>
-
-                <button class="ui mini icon basic button" onclick="$('#stop_words_file').click();">
-                  <i class="upload icon"></i>
-                </button>
-                <input type="file" class="input-field" 
-                       id="stop_words_file" load_content_to="#stop_words" />
-                <button class="ui mini icon basic button" onclick="_download_file('stop_words');">
-                  <i class="download icon"></i>
-                </button>
-                <button class="ui mini icon basic button" copy-from="#stop_words">
-                  <i class="copy icon"></i>
-                </button>
-              </div>
-            </div>
-
-
-
-            <textarea name="stop_words" id="stop_words" class="data-auto-save">這個
-，
-、
-。</textarea>
-          </div> <!-- <div class="eight wide column"> -->
-        </div>
-
-      </div> <!-- <div class="ui grid container"> -->
     </form>
 
     <!-- ========================================== -->

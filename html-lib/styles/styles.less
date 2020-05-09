@@ -12,9 +12,27 @@ input.input-field[type='file'] {
 }
 
 .input-textarea {
-  height: calc(100vh - 8rem) !important;
+  height: calc(100vh - 9rem) !important;
   max-height: 100vh !important;
 }
+
+.output-step {
+  
+  .output-textarea {
+    height: calc(100vh - 10rem) !important;
+    max-height: 100vh !important;
+
+    @media only screen and (max-width: 767px)  {
+      //height: calc(100vh - 33rem) !important;
+    }
+  }
+  
+  .buttons {
+    position: relative;
+    top: -2rem;
+  }
+}
+
 
 .step {
   cursor: pointer;
