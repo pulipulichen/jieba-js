@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sender</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="html-lib/vendors/puli-post-message-api/puli-post-message-api.js"></script>
+    <link rel="icon" type="image/png" href="icon.png" />
+  </head>
+  <body>
+    <h1>Jieba-JS API</h1>
+    <textarea id="data">這個布丁 是在無聊的世界中找尋code的1998種不能吃的codes，
+喜愛動漫畫、遊戲、coding，以及ABCDV跟世間脫節的生活步調。</textarea>
+    <button type="button" id="send">
+      SEND
+    </button>
+    <div id="output"></div>
+    
+    <script>
+      let api = PuliPostMessageAPI()
+      
+      //let url = 'receiver.html'
+      let url = 'http://127.0.0.1:8383/jieba-js/index.html'
+      //let url = 'https://pulipulichen.github.io/puli-post-message-api/receiver.html'
+      
+      document.getElementById('send').addEventListener('click', async function () {
+        let data = document.getElementById('data').value
+        
+        let result = await api.send(url, data)
+        document.getElementById('output').innerHTML = result + '<br />' + document.getElementById('output').innerHTML
+      })
+            
+      setTimeout(function () {
+        document.getElementById('send').click()
+      }, 100)
+    </script>
+  </body>
+</html>
