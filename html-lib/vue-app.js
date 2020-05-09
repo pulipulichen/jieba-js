@@ -115,6 +115,20 @@ var app = new Vue({
     },
   },
   methods: {
+    setupAPI () {
+      postMessageAPI.addReceiveListener(async (data) => {
+        if (typeof(data) === 'string') {
+          this.inputText = data
+        }
+        else {
+          for (let key in data) {
+            this[key] = data[key]
+          }
+        }
+        
+        return await this.processOutput()
+      })
+    },
     persist () {
       this.configChanged = true
       let key = this.persistKey
@@ -404,18 +418,23 @@ var app = new Vue({
     extractThemes () {
       console.error('@TODO')
     },
-    processOutput () {
+    processOutput: async function () {
       this.outputText = ''
       if (this.jiebaInited === false
               && this.segmentationMethod === 'dictionary') {
-        $.getScript('require-jieba-js.js', () => {
-          //console.log('OK')
-          this.jiebaInited = true
-          this.processOutputInited()
+        return new Promise((resolve) => {
+          $.getScript('require-jieba-js.js', async () => {
+            //console.log('OK')
+            this.jiebaInited = true
+            await this.processOutputInited()
+            resolve(this.outputText)
+          })
         })
+          
       }
       else {
-        this.processOutputInited()
+        await this.processOutputInited()
+        return this.outputText
       }
     },
     processOutputInited: async function () {
