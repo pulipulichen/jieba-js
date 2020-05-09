@@ -1,0 +1,11 @@
+{
+  "elements": {},
+  "attributes": {
+    "load_content_to": {
+      "context": "input"
+    },
+    "copy-from": {
+      "context": "button"
+    }
+  }
+}

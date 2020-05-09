@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>jieba-js demo</title>
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-37178375-7', 'auto');
-ga('send', 'pageview');
-</script>
-</head>
-<body>
+    <link rel="icon" type="image/png" href="icon.png" />
+  </head>
+  <body>
 
     <link rel="stylesheet" href="html-lib/style.css" />
-    
+
     <script src="jquery.js"></script>
     <script src="require-jieba-js.js"></script>
     <link rel="stylesheet" href="html-lib/semantic-ui/semantic.min.css" />
@@ -25,398 +17,191 @@ ga('send', 'pageview');
     <script src="html-lib/FileSaver.js"></script>
     <script src="html-lib/clipboard/clipboard.min.js"></script>
     <script src="html-lib/clipboard/puli-util.clipboard.js"></script>
-    
+    <script src="html-lib/puli-post-message-api/puli-post-message-api.min.js"></script>
+
     <form onsubmit="return false;" class="ui form" data-persist="garlic">
-<div class="ui grid container">
-    
-    
-    <div class="eight wide column field">
-        
-        <div class="ui grid">
+      <div class="ui grid container">
+
+
+        <div class="eight wide column field">
+
+          <div class="ui grid">
             <div class="ten wide column">
-                <label>Raw Text</label>
+              <label>Raw Text</label>
             </div>
             <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-                <button class="ui mini icon basic button" onclick="$('#input_file').click();">
-                    <i class="upload icon"></i>
+              <button class="ui mini icon basic button" onclick="$('#input_file').click();">
+                <i class="upload icon"></i>
+              </button>
+              <input type="file" class="input-field" 
+                     id="input_file" load_content_to="#input" />
+              <button class="ui mini icon basic button" copy-from="#input">
+                <i class="copy icon"></i>
+              </button>
+            </div>
+          </div>
+          <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
+          <textarea name="input" id="input" class="ui raised segment"
+                    >這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
+喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。</textarea>
+        </div> <!-- <div class="eight wide column"> -->
+        <div class="eight wide column field">
+          <div class="ui grid">
+            <div class="ten wide column">
+              <label>Processed Text</label>
+            </div>
+            <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
+              <button class="ui mini icon basic button" onclick="_download_file('output');">
+                <i class="download icon"></i>
+              </button>
+              <button class="ui mini icon basic button" copy-from="#output">
+                <i class="copy icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <textarea name="output" id="output" class="ui raised segment" data-storage="false"></textarea>
+        </div> <!-- <div class="eight wide column"> -->
+
+        <div class="sixteen wide column">
+          <div class="fields">
+            <div class="eight wide field">
+              <div class="fields">
+                <div class="inline input field">
+                  <input type="radio" name="token_rule" value="dictionary" checked="checked">
+                  <label>Dictionary</label>
+                </div>
+                <div class="inline input field">
+                  <input type="radio" name="token_rule" value="n-gram">
+                  <label>
+                    <input type="number" value="2" class="n-gram-number" />
+                    -gram
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="eight wide field">
+              <button type="submit" class="fluid primary ui button" id="trigger">開始斷詞</button> 
+            </div> <!-- <div class="sixteen wide column field"> -->
+          </div>
+        </div> 
+
+        <!--
+        <div class="eight wide column field">
+            <label>Segment Mode</label>
+            <select name="segment_mode" style="ui dropdown">
+                <option value="A">A</option>
+                <option value="B">B</option>
+            </select>
+        </div> <!-- <div class="sixteen wide column field"> -->
+
+        <div class="fields config">
+          <div class="field">
+
+            <div class="ui grid">
+              <div>
+                <label>Word Remap</label>
+              </div>
+              <div style="text-align:right; margin-bottom: 25px;">
+                <button class="ui mini basic button" onclick="_load_file('word_remap.txt', 'word_remap');">
+                  <i class="file alternate outline icon"></i>
+                  example
+                </button>
+
+                <button class="ui mini icon basic button" onclick="$('#word_remap').click();">
+                  <i class="upload icon"></i>
                 </button>
                 <input type="file" class="input-field" 
-                       id="input_file" load_content_to="#input" />
-                <button class="ui mini icon basic button" copy-from="#input">
-                    <i class="copy icon"></i>
+                       id="user_dict_file" load_content_to="#word_remap" />
+                <button class="ui mini icon basic button" onclick="_download_file('word_remap');">
+                  <i class="download icon"></i>
                 </button>
-            </div>
-        </div>
-        <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-        <textarea name="input" id="input" class="ui raised segment"
->這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
-喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。</textarea>
-    </div> <!-- <div class="eight wide column"> -->
-    <div class="eight wide column field">
-        <div class="ui grid">
-            <div class="ten wide column">
-                <label>Processed Text</label>
-            </div>
-            <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-                <button class="ui mini icon basic button" onclick="_download_file('output');">
-                    <i class="download icon"></i>
+                <button class="ui mini icon basic button" copy-from="#word_remap">
+                  <i class="copy icon"></i>
                 </button>
-                <button class="ui mini icon basic button" copy-from="#output">
-                    <i class="copy icon"></i>
-                </button>
+              </div>
             </div>
-        </div>
-        
-        <textarea name="output" id="output" class="ui raised segment" data-storage="false"></textarea>
-    </div> <!-- <div class="eight wide column"> -->
-    
-    <div class="sixteen wide column">
-    <div class="fields">
-      <div class="eight wide field">
-        <div class="fields">
-          <div class="inline input field">
-            <input type="radio" name="token_rule" value="dictionary" checked="checked">
-            <label>Dictionary</label>
-          </div>
-          <div class="inline input field">
-            <input type="radio" name="token_rule" value="n-gram">
-            <label>
-              <input type="number" value="2" class="n-gram-number" />
-              -gram
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="eight wide field">
-          <button type="submit" class="fluid primary ui button" id="trigger">開始斷詞</button> 
-      </div> <!-- <div class="sixteen wide column field"> -->
-    </div>
-     </div> 
-    
-    <!--
-    <div class="eight wide column field">
-        <label>Segment Mode</label>
-        <select name="segment_mode" style="ui dropdown">
-            <option value="A">A</option>
-            <option value="B">B</option>
-        </select>
-    </div> <!-- <div class="sixteen wide column field"> -->
-    
-    <div class="fields config">
-      <div class="field">
+            <div class="ui field">
+              <textarea name="word_remap" id="word_remap" class="data-auto-save">食物,甜點</textarea>
+            </div>
 
-          <div class="ui grid">
+          </div> <!-- <div class="eight wide column"> -->
+          <div class="field">
+
+            <div class="ui grid">
               <div>
-                  <label>Word Remap</label>
+                <label>User Dictionary</label>
               </div>
               <div style="text-align:right; margin-bottom: 25px;">
-                  <button class="ui mini basic button" onclick="_load_file('word_remap.txt', 'word_remap');">
-                      <i class="file alternate outline icon"></i>
-                      example
-                  </button>
+                <button class="ui mini basic button" onclick="_load_file('user_dict.txt', 'user_dict');">
+                  <i class="file alternate outline icon"></i>
+                  example
+                </button>
 
-                  <button class="ui mini icon basic button" onclick="$('#word_remap').click();">
-                      <i class="upload icon"></i>
-                  </button>
-                  <input type="file" class="input-field" 
-                         id="user_dict_file" load_content_to="#word_remap" />
-                  <button class="ui mini icon basic button" onclick="_download_file('word_remap');">
-                      <i class="download icon"></i>
-                  </button>
-                  <button class="ui mini icon basic button" copy-from="#word_remap">
-                      <i class="copy icon"></i>
-                  </button>
+                <button class="ui mini icon basic button" onclick="$('#user_dict_file').click();">
+                  <i class="upload icon"></i>
+                </button>
+                <input type="file" class="input-field" 
+                       id="user_dict_file" load_content_to="#user_dict" />
+                <button class="ui mini icon basic button" onclick="_download_file('user_dict');">
+                  <i class="download icon"></i>
+                </button>
+                <button class="ui mini icon basic button" copy-from="#user_dict">
+                  <i class="copy icon"></i>
+                </button>
               </div>
-          </div>
-          <div class="ui field">
-            <textarea name="word_remap" id="word_remap">食物,甜點</textarea>
-          </div>
-
-      </div> <!-- <div class="eight wide column"> -->
-      <div class="field">
-
-          <div class="ui grid">
-              <div>
-                  <label>User Dictionary</label>
-              </div>
-              <div style="text-align:right; margin-bottom: 25px;">
-                  <button class="ui mini basic button" onclick="_load_file('user_dict.txt', 'user_dict');">
-                      <i class="file alternate outline icon"></i>
-                      example
-                  </button>
-
-                  <button class="ui mini icon basic button" onclick="$('#user_dict_file').click();">
-                      <i class="upload icon"></i>
-                  </button>
-                  <input type="file" class="input-field" 
-                         id="user_dict_file" load_content_to="#user_dict" />
-                  <button class="ui mini icon basic button" onclick="_download_file('user_dict');">
-                      <i class="download icon"></i>
-                  </button>
-                  <button class="ui mini icon basic button" copy-from="#user_dict">
-                      <i class="copy icon"></i>
-                  </button>
-              </div>
-          </div>
-          <textarea name="user_dict" id="user_dict">找尋樂趣,9999999,n
+            </div>
+            <textarea name="user_dict" id="user_dict" class="data-auto-save">找尋樂趣,9999999,n
 無聊的世界,9999999,n</textarea>
-          <!--
-          <textarea name="user_dict" id="user_dict"></textarea>
-          -->
-      </div> <!-- <div class="eight wide column"> -->
-      
-      
-      <div class="field">
-          <div class="ui grid">
+            <!--
+            <textarea name="user_dict" id="user_dict"></textarea>
+            -->
+          </div> <!-- <div class="eight wide column"> -->
+
+
+          <div class="field">
+            <div class="ui grid">
               <div>
-                  <label>Stop Words</label>
+                <label>Stop Words</label>
               </div>
               <div style="text-align:right; margin-bottom: 25px;">
-                  <button class="ui mini basic button" onclick="_load_file('stop_words.txt', 'stop_words');">
-                      <i class="file alternate outline icon"></i>
-                      example
-                  </button>
+                <button class="ui mini basic button" onclick="_load_file('stop_words.txt', 'stop_words');">
+                  <i class="file alternate outline icon"></i>
+                  example
+                </button>
 
-                  <button class="ui mini icon basic button" onclick="$('#stop_words_file').click();">
-                      <i class="upload icon"></i>
-                  </button>
-                  <input type="file" class="input-field" 
-                         id="stop_words_file" load_content_to="#stop_words" />
-                  <button class="ui mini icon basic button" onclick="_download_file('stop_words');">
-                      <i class="download icon"></i>
-                  </button>
-                  <button class="ui mini icon basic button" copy-from="#stop_words">
-                      <i class="copy icon"></i>
-                  </button>
+                <button class="ui mini icon basic button" onclick="$('#stop_words_file').click();">
+                  <i class="upload icon"></i>
+                </button>
+                <input type="file" class="input-field" 
+                       id="stop_words_file" load_content_to="#stop_words" />
+                <button class="ui mini icon basic button" onclick="_download_file('stop_words');">
+                  <i class="download icon"></i>
+                </button>
+                <button class="ui mini icon basic button" copy-from="#stop_words">
+                  <i class="copy icon"></i>
+                </button>
               </div>
-          </div>
+            </div>
 
 
 
-          <textarea name="stop_words" id="stop_words">這個
-  ，
-  、
-  。</textarea>
-      </div> <!-- <div class="eight wide column"> -->
-    </div>
-    
-</div> <!-- <div class="ui grid container"> -->
-   
-<script>
-    $(function () {
-        var _form = $("form");
-        var _submit_button = _form.find('button#trigger');
-        _submit_button.click(function () {
-            var _text = $("#input").val().trim();
-            _text = filterWordRemap(_text)
-            
-            $("#output").val("");
-            //console.log(_text);
-            var _submit = $(this).find("button#trigger");
-            _submit.attr("disabled", "disabled");
-            _submit.html("處理中...");
-            $("body").css("cursor", "wait");
-            
-            let rule = $('[name="token_rule"]:checked').val()
-            if (rule === 'n-gram') {
-              _text = filterStopWords(_text)
-            }
-            
-            var _custom_dict = _load_custom_dict();
-            //console.log(_custom_dict);
-            
-            // ---------------------------
-            
-            /*
-            call_jieba_cut(_text, _custom_dict, function (_result) {
-                _result = _filter_stop_words(_result);
-                
-                _result = _result.join(" ");
-                while (_result.indexOf("  ") > -1) {
-                    _result = _result.replace(/  /g, ' ');
-                }
-                _result = _result.replace(/ \n /g, "\n");
-                _result = _result.replace(/ \t /g, "\t");
-                _result = _result.replace(/ \' /g, "'");
-                _result = _result.replace(/\' /g, "'");
-                _result = _result.trim();
-                $("#output").val(_result);
-                _submit.removeAttr("disabled");
-                _submit.html("開始斷詞");
-                $("body").css("cursor", "default");
-            });
-            */
-            
-            var _text_array = _text.split('\n')
-            var _result_array = []
-            
-            let next = (_result, i) => {
-              //console.log(_result)
-              _result = _filter_stop_words(_result);
+            <textarea name="stop_words" id="stop_words" class="data-auto-save">這個
+，
+、
+。</textarea>
+          </div> <!-- <div class="eight wide column"> -->
+        </div>
 
-              _result = _result.join(" ");
-              while (_result.indexOf("  ") > -1) {
-                  _result = _result.replace(/  /g, ' ');
-              }
-              _result = _result.replace(/ \n /g, "\n");
-              _result = _result.replace(/ \t /g, " ");
-              _result = _result.replace(/\t/g, " ");
-              _result = _result.replace(/ \' /g, "'");
-              _result = _result.replace(/\' /g, "'");
-              if (_result.startsWith('" ')) {
-                _result = _result.slice(2)
-              }
-              _result = _result.trim();
+      </div> <!-- <div class="ui grid container"> -->
 
-              _result_array.push(_result)
-              i++
-              loop(i)
-            }
-            
-            let loop = (i) => {
-              if (i < _text_array.length) {
-                if (rule === 'dictionary') {
-                  let line = _text_array[i]
-                  if ((line.startsWith('"') && line.endsWith('"')) 
-                          || (line.startsWith("'") && line.endsWith("'"))) {
-                    line = line.slice(1, -1).trim()
-                  }
-                  call_jieba_cut(line, _custom_dict, function (_result) {
-                    next(_result, i)
-                  });
-                }
-                else {
-                  let _result = processNGram(_text_array[i])
-                  next(_result, i)
-                }
-              }
-              else {
-                $("#output").val(_result_array.join('\n'));
-                  _submit.removeAttr("disabled");
-                  _submit.html("開始斷詞");
-                  $("body").css("cursor", "default");
-              }
-            }
-            
-            loop(0)
-           
-            return false;
-        });
-        
-        /*
-        _load_file("user_dict.txt", "user_dict", function () {
-            _load_file("stop_words.txt", "stop_words", function () {
-                setTimeout(function () {
-                    //_submit_button.click();
-                }, 0);
-            });
-        });
-        */
-        
-        _submit_button.click(); // 網頁讀取時即開始執行斷詞
-    });
-    
-    let processNGram = (text) => {
-      text = text.trim()
-      //console.log(text)
-      let gram = $('.n-gram-number').val()
-      gram = parseInt(gram, 10)
-      let output = []
-      //console.log([gram, text.substr(0, 2), text.length - gram + 1])
       
-      text.split(' ').forEach(part => {
-        part = part.trim()
-        if (part.length < gram) {
-          output.push(part)
-        }
-        for (let i = 0; i < part.length - gram + 1; i++) {
-          output.push(part.substr(i, gram))
-        }
-      })
-        
+      <!-- ========================================== -->
       
-      return output
-    }
-    
-    let filterWordRemap = (text) => {
-      $("#word_remap").val().trim().split("\n").forEach(line => {
-        line = line.trim()
-        if (line.indexOf(',') === -1) {
-          return
-        }
-        let targetWord = line.slice(0, line.indexOf(',')).trim()
-        let replaceWord = line.slice(line.indexOf(',') + 1).trim()
-        text = text.split(targetWord).join(replaceWord)
-      })
-      return text
-    }
-    
-    let filterStopWords = (text) => {
-      $("#stop_words").val().trim().split("\n").forEach(line => {
-        line = line.trim()
-        text = text.split(line).join('')
-      })
-      return text
-    }
-    
-    var _load_file = function (_url, _textarea_id, _callback) {
-        $.get(_url, function (_result) {
-            $("#" + _textarea_id).val(_result);
-            if (typeof(_callback) === "function") {
-                _callback();
-            }
-        });
-    };
-    
-    var _load_custom_dict = function () {
-        var _config = $("#user_dict").val().trim().split("\n");
-        var _output = [];
-        for (var _l in _config) {
-          if (_config[_l].indexOf(',') === -1) {
-            continue
-          }
-            var _line = _config[_l].split(",");
-            _output.push([
-                _line[0].trim(),
-                parseInt(_line[1]),
-                _line[2]
-            ]);
-        }
-        //console.log(_output)
-        return _output;
-    };
-    
-    var _filter_stop_words = function (_result) {
-        var _stopwords = $("#stop_words").val().trim().split("\n");
-        for (var _s in _stopwords) {
-          _stopwords[_s] = _stopwords[_s].trim();
-        }
-        
-        var _output = [];
-        for (var _r in _result) {
-            var _word = _result[_r].trim();
-            if (_stopwords.indexOf(_word) === -1) {
-                _output.push(_word);
-            }
-        }
-        return _output;
-    };
-    
-    var _download_file = function (_textarea_id) {
-        var _file_name = _textarea_id + ".txt";
-        var _file_content = $("#" + _textarea_id).val().trim();
-        if (_file_content === "") {
-            return;
-        }
+      <script src="html-lib/script.js"></script>
+      <script src="html-lib/post-message.js"></script>
+      <script src="html-lib/form-persist.js"></script>
 
-        var _character_encoding = "utf-8";
-
-        // ------------
-
-        var blob = new Blob([_file_content], {type: "text/html;charset=" + _character_encoding});
-        saveAs(blob, _file_name);
-    };
-</script>
-    
-</body>
+      <script src="html-lib/ga.js"></script>
+  </body>
 </html>
