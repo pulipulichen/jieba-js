@@ -179,7 +179,8 @@
       <!-- =============================================================== -->
 
       <div class="ui grid configuration-panel"
-           v-if="displayPanel === 'configuration'">
+           v-if="displayPanel === 'configuration'"
+           v-bind:class="{'n-gram': (segmentationMethod === 'n-gram')}">
         <div class="row">
           <div class="ten wide column">
             <label class="ui header">Configuration</label>
@@ -231,6 +232,7 @@
                       <input 
                         type="number" 
                         v-model="nGramLength" 
+                        class="n-gram-number"
                         v-on:change="segmentationMethod = 'n-gram'" />
                     </div>
                     <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
@@ -247,18 +249,23 @@
                     Remove
                   </label>
                   
-                  <div class="ui checkbox">
-                    <input 
-                      type="checkbox" 
-                      v-model="removeEnglish">
-                      <label>Remove English</label>
-                  </div>
-                  
-                  <div class="ui checkbox">
-                    <input 
-                      type="checkbox" 
-                      v-model="removeNumber">
-                      <label>Remove Number</label>
+                  <div class="inline fields">
+                    <div class="field">
+                      <div class="ui checkbox">
+                        <input 
+                          type="checkbox" 
+                          v-model="removeEnglish">
+                          <label>Remove English</label>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <div class="ui checkbox">
+                        <input 
+                          type="checkbox" 
+                          v-model="removeNumber">
+                          <label>Remove Number</label>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
@@ -291,6 +298,7 @@
                     User Dictionary
                   </label>
                 </div>
+                <!--
                 <div class="field">
                   <button 
                     class="ui mini basic button" 
@@ -300,6 +308,7 @@
                     example
                   </button>
                 </div>
+                -->
               </div>
               <div class="field">
                 <textarea v-model="configUserDictionary"></textarea>
@@ -312,6 +321,7 @@
                     Word Remap
                   </label>
                 </div>
+                <!--
                 <div class="field">
                   <button 
                     class="ui mini basic button" 
@@ -321,6 +331,7 @@
                     example
                   </button>
                 </div>
+                -->
               </div>
               <textarea v-model="configWordRemap"></textarea>
             </div>
@@ -334,11 +345,20 @@
                 <div class="field">
                   <button 
                     class="ui mini basic button" 
+                    v-on:click="loadFullStopWords">
+                    <i class="file alternate outline icon"></i>
+                    full
+                  </button>
+                  
+                  <!--
+                  <button 
+                    class="ui mini basic button" 
                     v-on:click="setExampleStopWords"
                     v-bind:class="{'disabled': (configStopWordsExample === configStopWords)}">
                     <i class="file alternate outline icon"></i>
                     example
                   </button>
+                  -->
                 </div>
               </div>
               <textarea v-model="configStopWords"></textarea>

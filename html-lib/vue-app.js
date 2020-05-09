@@ -23,13 +23,14 @@ var app = new Vue({
 、
 。`,
     configStopWordsExample: '',
-    removeEnglish: true,
-    removeNumber: true,
+    fullStopWords: null,
+    removeEnglish: false,
+    removeNumber: false,
     usePorterStemmer: true,
     jiebaInited: false,
     processOutputWait: false,
-    //displayPanel: 'text',
-    displayPanel: 'configuration',
+    displayPanel: 'text',
+    //displayPanel: 'configuration',
     persistKey: 'jieba-js.' + location.href
   },
   computed: {
@@ -83,8 +84,8 @@ var app = new Vue({
     this.loadPersistedData()
     
     setTimeout(() => {
-      //this.processOutput()
-    }, 1000)
+      this.processOutput()
+    }, 0)
   },
   watch: {
     segmentationMethod () {
@@ -105,6 +106,12 @@ var app = new Vue({
     usePorterStemmer () {
       this.persist()
     },
+    removeEnglish () {
+      this.persist()
+    },
+    removeNumber () {
+      this.persist()
+    },
   },
   methods: {
     persist () {
@@ -115,7 +122,9 @@ var app = new Vue({
         configUserDictionary: this.configUserDictionary,
         configWordRemap: this.configWordRemap,
         configStopWords: this.configStopWords,
-        usePorterStemmer: this.usePorterStemmer
+        usePorterStemmer: this.usePorterStemmer,
+        removeEnglish: this.removeEnglish,
+        removeNumber: this.removeNumber,
       }
       localStorage.setItem(key, JSON.stringify(data))
     },
@@ -283,7 +292,8 @@ var app = new Vue({
       console.error('@TODO')
     },
     setExampleUserDictionary () {
-      if (this.configUserDictionaryExample !== this.configUserDictionary) {
+      if (this.configUserDictionaryExample !== this.configUserDictionary 
+        && this.configUserDictionary.trim() !== '') {
         if (window.confirm('Are you sure to replace existed content?') === false) {
           return false
         }
@@ -294,7 +304,8 @@ var app = new Vue({
       this.configUserDictionary = this.configUserDictionaryExample
     },
     setExampleWordRemap () {
-      if (this.configWordRemapExample !== this.configWordRemap) {
+      if (this.configWordRemapExample !== this.configWordRemap 
+        && this.configWordRemap.trim() !== '') {
         if (window.confirm('Are you sure to replace existed content?') === false) {
           return false
         }
@@ -305,7 +316,8 @@ var app = new Vue({
       this.configWordRemap = this.configWordRemapExample
     },
     setExampleStopWords () {
-      if (this.configStopWordsExample !== this.configStopWords) {
+      if (this.configStopWordsExample !== this.configStopWords 
+        && this.configStopWords.trim() !== '') {
         if (window.confirm('Are you sure to replace existed content?') === false) {
           return false
         }
@@ -314,6 +326,31 @@ var app = new Vue({
         return false
       }
       this.configStopWords = this.configStopWordsExample
+    },
+    loadFullStopWords () {
+      if (!this.fullStopWords) {
+        this.processOutputWait = true
+        $.get('stop_words.txt', (stop_words) => {
+          this.fullStopWords = stop_words
+          this.loadFullStopWordsInited()
+          this.processOutputWait = false
+        })
+      }
+      else {
+        this.loadFullStopWordsInited()
+      }
+    },
+    loadFullStopWordsInited () {
+      if (this.fullStopWords !== this.configStopWords
+        && this.configStopWords.trim() !== '') {
+        if (window.confirm('Are you sure to replace existed content?') === false) {
+          return false
+        }
+      }
+      else {
+        return false
+      }
+      this.configStopWords = this.fullStopWords
     },
     copyOutput () {
       this.$refs.outputCopyTextarea.select()
@@ -385,14 +422,23 @@ var app = new Vue({
     processOutputInited: async function () {
       this.processOutputWait = true
       var _text = this.inputText
+      
+      if (this.removeEnglish) {
+        _text = this.filterEnglish(_text)
+      }
+      if (this.removeNumber) {
+        _text = this.filterNumber(_text)
+      }
       _text = this.filterWordRemap(_text)
-
-      this.outputText
+      
+      //console.log(_text)
+      //return
       
       let rule = this.segmentationMethod
-      //if (rule === 'n-gram') {
-      //  _text = this.filterStopWords(_text)
-      //}
+      if (rule === 'n-gram') {
+        _text = this.filterStopWordsFromText(_text)
+      }
+      //console.log(this.parseSingleCharacter(_text))
 
       var _custom_dict = this.configUserDictionaryArray
 
@@ -401,7 +447,9 @@ var app = new Vue({
       return new Promise((resolve, reject) => {
         //console.log('start promise')
         let next = (_result, i) => {
-          _result = this.filterStopWords(_result);
+          if (rule !== 'n-gram') {
+            _result = this.filterStopWords(_result);
+          }
 
           _result = _result.join(" ");
           while (_result.indexOf("  ") > -1) {
@@ -473,12 +521,70 @@ var app = new Vue({
         if (part.length < gram) {
           output.push(part)
         }
-        for (let i = 0; i < part.length - gram + 1; i++) {
-          output.push(part.substr(i, gram))
+        
+        let partArray = this.parseSingleCharacter(part)
+        for (let i = 0; i < partArray.length - gram + 1; i++) {
+          let ngram = []
+          for (let g = 0; g < gram; g++) {
+            ngram.push(partArray[i+g])
+          }
+          output.push(ngram.join(''))
         }
       })
 
       return output
-    }
+    },
+    filterStopWordsFromText (text) {
+      this.configStopWordsArray.forEach(word => {
+        text = text.split(word).join(' ')
+      })
+      return text
+    },
+    filterEnglish (text) {
+      return text.replace(/[A-Za-z]/g, ' ')
+    },
+    filterNumber (text) {
+      return text.replace(/\d/g, ' ')
+    },
+    parseSingleCharacter(text) {
+      let output = []
+      let word = ''
+      let isMultiCharacter = false
+
+      let regexPunctuations = /[.,\/#!$%\^&\*;:{}=\-_`~()。，、；：「」『』（）—？！…《》～〔〕［］・　]/
+      let regexMultiChar = /^[A-Za-z0-9]+$/
+
+      let addWord = () => {
+        if (word !== '') {
+          output.push(word)
+          word = ''
+          isMultiCharacter = false
+        }
+      }
+
+      text.split("").forEach(c => {
+        if (c === ' ' || regexPunctuations.test(c)) {
+          // 略過空格和標點符號
+          addWord()
+          return false
+        } else if (regexMultiChar.test(c)) {
+          // 英數字的場合
+          if (isMultiCharacter === false) {
+            // 前一個字不是英數字的場合
+            addWord()
+            isMultiCharacter = true
+          }
+          word = word + c
+        } else {
+          // 不是英數字的場合
+          if (isMultiCharacter === true) {
+            // 前一個字是英數字的場合
+            addWord()
+          }
+          output.push(c)
+        }
+      })
+      return output
+    },
   }
 })
