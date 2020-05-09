@@ -1,7 +1,7 @@
 /* global XLSX */
 
 let postMessageAPI = PuliPostMessageAPI({
-  maunalReady: true
+  manuallyReady: true
 })
 
 var app = new Vue({
@@ -133,6 +133,7 @@ var app = new Vue({
   methods: {
     setupAPI () {
       postMessageAPI.addReceiveListener(async (data) => {
+        //console.log('收到資料了', data)
         if (typeof(data) === 'string') {
           this.inputText = data
         }
@@ -144,7 +145,7 @@ var app = new Vue({
         
         return await this.processOutput()
       })
-      console.log('設定好了')
+      //console.log('設定好了')
     },
     persist () {
       this.configChanged = true
@@ -439,12 +440,19 @@ var app = new Vue({
       this.outputText = ''
       if (this.jiebaInited === false
               && this.segmentationMethod === 'dictionary') {
+        //console.log('要讀取了嗎？')
         return new Promise((resolve) => {
-          $.getScript('require-jieba-js.js', async () => {
+          //console.log('要讀取了嗎？')
+          let _this = this
+          $.getScript('require-jieba-js.js', function () {
             //console.log('OK')
-            this.jiebaInited = true
-            await this.processOutputInited()
-            resolve(this.outputText)
+            (async () => {
+              
+              _this.jiebaInited = true
+              //console.log('jieba-js讀取完成，開始斷詞')
+              await _this.processOutputInited()
+              resolve(_this.outputText)
+            })()
           })
         })
           
@@ -538,7 +546,8 @@ var app = new Vue({
             this.outputText = _result_array.join('\n')
             this.processOutputWait = false
             this.configChanged = false
-            resolve(true)
+            //console.log('斷詞完成了')
+            resolve(this.outputText)
           }
         }
 

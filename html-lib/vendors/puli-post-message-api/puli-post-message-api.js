@@ -2,8 +2,8 @@ function PuliPostMessageAPI(options) {
   let pageName = location.href.slice(location.href.lastIndexOf('/') + 1)
   
   options = options ? options : {}
-  let maunalReady = typeof(options.maunalReady) === 'boolean' ? options.maunalReady : false
-  
+  let manuallyReady = typeof(options.manuallyReady) === 'boolean' ? options.manuallyReady : false
+  //console.log(manuallyReady, pageName)
   /**
    * 開啟視窗的呼叫者
    * @type type
@@ -26,9 +26,9 @@ function PuliPostMessageAPI(options) {
     }
   }
   
-  //console.log(opener)
-  if (opener && maunalReady === false) {
+  if (opener && manuallyReady === false) {
     docReady(function () {
+      //console.log('auto ready', manuallyReady, pageName)
       _sendReadyMessage()
     })
   }
@@ -44,7 +44,7 @@ function PuliPostMessageAPI(options) {
       eventName: 'ready',
       url: location.href
     }, '*')
-    console.log('ready', pageName)
+    //console.log('ready', pageName)
   }
   
   let _isSentReadyMessage = false
@@ -307,11 +307,12 @@ function PuliPostMessageAPI(options) {
   let _sendEventHandler = async function (source, origin, eventType, input) {
     let result
     
+    //console.log(_receiveHandler, pageName)
     if (typeof(_receiveHandler[eventType]) === 'function') {
       result = await _receiveHandler[eventType](input)
     }
     else {
-      console.log(typeof(_receiveHandler[eventType]), pageName)
+      //console.log(typeof(_receiveHandler[eventType]), pageName)
       source.postMessage({
         eventName: 'error',
         message: `sender's eventType is not found: ` + eventType,
@@ -369,18 +370,18 @@ function PuliPostMessageAPI(options) {
   let _receiveHandler = {}
   
   let addReceiveListener = function (eventType, callback) {
-    console.log('來', pageName)
+    //console.log('來', pageName)
     if (typeof(eventType) === 'function' && !callback) {
       callback = eventType
       eventType = '_default'
     }
     else if (typeof(callback) !== 'function') {
-      console.log('沒能設定', pageName)
+      //console.log('沒能設定', pageName)
       return false
     }
     
     _receiveHandler[eventType] = callback
-    console.log(_receiveHandler, pageName)
+    //console.log(_receiveHandler, pageName)
   }
   
   let removeReceiveListener = function (eventType, callback) {
