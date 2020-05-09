@@ -1,9 +1,15 @@
+/* global XLSX */
+
+let postMessageAPI = PuliPostMessageAPI()
+
 var app = new Vue({
   el: '#app',
   data: {
+    inputFilename: `Raw Text`,
     inputText: `這個布丁 是在無聊的世界中找尋樂趣的一種不能吃的食物，
 喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。`,
-    outputText: ``,
+    outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 一種 不能 吃 的 食物
+喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
     step: 2,
     segmentationMethod: 'dictionary',
     nGramLength: 2,
@@ -19,7 +25,8 @@ var app = new Vue({
     configStopWordsExample: '',
     usePorterStemmer: true,
     jiebaInited: false,
-    processOutputWait: false
+    processOutputWait: false,
+    displayPanel: 'text',
   },
   computed: {
     configWordRemapArray () {
@@ -57,6 +64,9 @@ var app = new Vue({
       return this.configStopWords.trim().split("\n")
               .map(line => line.trim())
               .filter(line => (line !== '') )
+    },
+    outputButtonDisabled () {
+      return (this.outputText.trim() === '')
     }
   },
   mounted () {
@@ -67,10 +77,155 @@ var app = new Vue({
     //console.log(stemmer("hopefully", true), stemmer("loves", true))
     
     setTimeout(() => {
-      this.processOutput()
+      //this.processOutput()
     }, 1000)
   },
   methods: {
+    loadInputFile (evt) {
+      //console.log(1);
+      if(!window.FileReader) return; // Browser is not compatible
+
+      this.processOutputWait = true
+      var reader = new FileReader();
+      let filename = evt.target.files[0].name
+      let type = evt.target.files[0].type
+      console.log(type)
+      if (filename.indexOf('.') > -1) {
+        filename = filename.slice(0, filename.lastIndexOf('.'))
+      }
+      this.inputFilename = filename
+
+      reader.onload = async (evt) => {
+        if (evt.target.readyState !== 2) {
+          this.processOutputWait = false
+          return;
+        }
+        if (evt.target.error) {
+          alert('Error while reading file');
+          this.processOutputWait = false
+          return;
+        }
+
+        let result = evt.target.result
+        if (type === 'application/vnd.oasis.opendocument.spreadsheet'
+          || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+          this.inputText = await this.processUploadTypeSheet(result)
+        }
+        else if (type === 'application/vnd.oasis.opendocument.text') {
+          this.inputText = await this.processUploadTypeODT(result)
+        }
+        else if (type === 'text/html') {
+          this.inputText = this.processUploadTypeHTML(result)
+        }
+        else if (type === 'text/csv') {
+          this.inputText = await this.processUploadTypeCSV(result)
+        }
+        else {
+          this.inputText = result
+        }
+        this.$refs.inputFileUploadTrigger.value = ''
+        this.processOutputWait = false
+      }
+
+      if (type === 'application/vnd.oasis.opendocument.spreadsheet'
+          || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        let size = evt.target.files[0].size
+        console.log('size', size)
+        if (size > 25000000) {
+          window.alert('ODS/XLSX檔案大小請低於2.5MB。')
+          this.processOutputWait = false
+          return false
+        }
+
+        reader.readAsBinaryString(evt.target.files[0])
+      } else {
+        reader.readAsText(evt.target.files[0])
+      }
+    },
+    processUploadTypeHTML (html) {
+      if (html.indexOf('<article') > -1) {
+        html = html.slice(html.indexOf('<article'), html.lastIndexOf('</article>') + 1)
+        html = html.replace('<article', '<div')
+          .replace('</article>', '</div>')
+      }
+      else if (html.indexOf('<body') > -1) {
+        html = html.slice(html.indexOf('<body'), html.lastIndexOf('</body>') + 1)
+        html = html.replace('<body', '<div')
+          .replace('</body>', '</div>')
+      }
+      
+      let $html = $(html)
+      $html.find('script').remove()
+      html = $html.text()
+
+      html = html.split('\n')
+              .map(line => line.trim())
+              .filter(line => line !== '')
+              .join('\n')
+      return html
+    },
+    processUploadTypeSheet: async function (input) {
+      var workbook = await XLSX.readAsync(input, {type: 'binary'});
+      
+      var result = [];
+      for (let i in workbook.SheetNames) {
+        let sheetName = workbook.SheetNames[i]
+
+        var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], {
+          FS: ' ',
+          blankrows: false
+        });
+        
+        //console.log(csv)
+        result.push(csv.trim())
+      }
+      
+      result = result.join('\n')
+      result = result.split('\n').map(line => line.trim()).filter(line => (line !== '')).join('\n')
+
+      return result
+    },
+    sleep: async function (ms) {
+      if (typeof(ms) !== 'number') {
+        ms = 1
+      }
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true)
+        }, ms)
+      })
+    },
+    processUploadTypeCSV: async function (input) {
+      var workbook = await XLSX.readAsync(input, {type: 'string'});
+      
+      var result = [];
+      for (let i in workbook.SheetNames) {
+        let sheetName = workbook.SheetNames[i]
+
+        var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], {
+          FS: ' ',
+          blankrows: false
+        });
+        
+        //console.log(csv)
+        result.push(csv.trim())
+      }
+      
+      result = result.join('\n')
+      result = result.split('\n').map(line => line.trim()).filter(line => (line !== '')).join('\n')
+
+      return result
+    },
+    processUploadTypeODT: async function (odt) {
+      try {
+        let html = new ODTDocument(odt).getHTML()
+        return this.processUploadTypeHTML(html)
+      } catch (e) {
+        alert("Couldn't parse odt file.");
+        throw e;
+      }
+    },
     computedStepClass: function (stepID) {
       return {
         'completed': (this.step > stepID),
@@ -114,23 +269,49 @@ var app = new Vue({
       this.configStopWords = this.configStopWordsExample
     },
     copyOutput () {
-      console.error('@TODO')
+      this.$refs.outputCopyTextarea.select()
+      document.execCommand("Copy")
     },
     saveAsText () {
-      console.error('@TODO')
+      this.saveFile('txt')
     },
     saveAsSheet () {
       console.error('@TODO')
     },
+    saveFile (ext) {
+      let appendFilename = '_seg' + (new Date()).mmddhhmm()
+      
+      var _file_name = this.inputFilename + appendFilename + "." + ext
+      var _file_content = this.outputText
+      if (_file_content === "") {
+        return;
+      }
+
+      var _character_encoding = "utf-8";
+
+      let mime = 'plain'
+      if (ext === 'csv') {
+        mime = 'csv'
+      }
+
+      // ------------
+
+      var blob = new Blob([_file_content], {type: "text/html;charset=" + _character_encoding})
+      saveAs(blob, _file_name)
+    },
     drawWordCloud () {
-      console.error('@TODO')
+      //let url = '//pulipulichen.github.io/d3-cloud/index.html'
+      let url = 'http://localhost:8383/d3-cloud/index.html'
+      
+      postMessageAPI.send(url, this.outputText, {
+        mode: 'popup'
+      })
     },
     extractThemes () {
       console.error('@TODO')
     },
     processOutput () {
-      this.step = 2
-      
+      this.outputText = ''
       if (this.jiebaInited === false
               && this.segmentationMethod === 'dictionary') {
         $.getScript('require-jieba-js.js', () => {

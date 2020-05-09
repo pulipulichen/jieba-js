@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" href="icon.png" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
     <!--
     <link rel="stylesheet" href="html-lib/style.css" />
     -->
@@ -14,7 +14,7 @@
     <!--
     <script src="require-jieba-js.js"></script>
     -->
-    
+
     <link rel="stylesheet" href="html-lib/vendors/semantic-ui/semantic.min.css" />
     <script src="html-lib/vendors/semantic-ui/semantic.min.js"></script>
     <!-- <script src="html-lib/Garlic.js/garlic.js"></script> -->
@@ -25,32 +25,59 @@
     <script src="html-lib/vendors/puli-post-message-api/puli-post-message-api.min.js"></script>
     <script src="html-lib/vendors/Porter-Stemmer/PorterStemmer1980.min.js"></script>
     <script src="html-lib/vendors/vue/vue.min.js"></script>
+    <script src="html-lib/vendors/date-helper.js"></script>
+    
+    <script src="html-lib/vendors/js-xlsx/shim.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/suppress_export.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/jszip.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/cpexcel.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/xlsx.js"></script>
     
     <link rel="stylesheet/less" type="text/css" href="html-lib/styles/styles.less" />
-    <script>less = { env: 'production'};</script>
+    <script>less = {env: 'production'};</script>
     <script src="html-lib/vendors/less/less.min.js"></script>
-    
+
   </head>
   <body>
 
 
     <form onsubmit="return false;" class="ui form" id="app">
 
-      <div class="ui grid"
-           v-if="step === 0">
+      <div class="ui grid text-panel"
+           v-if="displayPanel === 'text'">
         <div class="row">
           <div class="ten wide column">
-            <label class="ui header">Raw Text</label>
+            <label class="ui header">Input Raw Text</label>
           </div>
           <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-            <button class="ui mini icon basic button" onclick="$('#input_file').click();">
+            <button 
+              class="ui mini icon basic button" 
+              v-on:click="$refs.inputFileUploadTrigger.click()">
               <i class="folder open outline icon"></i>
             </button>
-            <input type="file" class="input-field" 
-                   id="input_file" load_content_to="#input" />
+            <input 
+              type="file" 
+              class="input-field"
+              ref="inputFileUploadTrigger"
+              id="input_file"
+              accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm,.odt"
+              v-on:change="loadInputFile" />
             <button class="ui mini icon basic button" copy-from="#input">
               <i class="copy icon"></i>
             </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen wide column">
+            <div class="inline fields">
+              <label>
+                Filename
+              </label>
+              <input 
+                type="text" 
+                v-model="inputFilename"
+                class="input-filename"/>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -64,12 +91,87 @@
               ></textarea>
           </div>
         </div>
+
+        <div class="row">
+          <div class="sixteen wide column">
+            <button 
+              type="button"
+              class="ui fluid button"
+              v-on:click="processOutput">
+              START SEGMENTATION
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen wide column">
+            <label class="ui header">Output Segmentation Result</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen wide column">
+            <textarea 
+              name="output" 
+              id="output" 
+              class="ui raised segment output-textarea" 
+              data-storage="false"
+              v-model="outputText"
+              ></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <div class="ui top attached fluid buttons"
+                 v-bind:class="{'disabled': outputButtonDisabled }">
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="copyOutput"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="copy icon"></i>
+                Copy
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="saveAsText"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="file alternate outline icon"></i>
+                Save as text
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="saveAsSheet"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="table icon"></i>
+                Save as sheet
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="drawWordCloud"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="cloud icon"></i>
+                Draw word cloud
+              </button>
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="extractThemes"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="lightbulb outline icon"></i>
+                Extract themes
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- =============================================================== -->
-      
-      <div class="ui grid configuration-step"
-           v-if="step === 1">
+
+      <div class="ui grid configuration-panel"
+           v-if="displayPanel === 'configuration'">
         <div class="row">
           <div class="ten wide column">
             <label class="ui header">Configuration</label>
@@ -80,76 +182,77 @@
             </button>
             <input type="file" class="input-field" 
                    id="input_config_file" />
-            
+
             <button class="ui mini icon basic button"
                     v-on:click="downloadConfiguration">
-                <i class="save outline icon"></i>
+              <i class="save outline icon"></i>
             </button>
             <button class="ui mini icon basic button" copy-from="#input">
               <i class="copy icon"></i>
             </button>
           </div>
         </div>
-        
+
         <!-- ================================= -->
-        
+
         <div class="row">
           <div class="sixteen wide column">
             <div class="ui form">
-              
-                <div class="two fields">
-                  <div class="field">
-                    
-                    <label>
-                      Segmentation Method
-                    </label>
-                    <div class="inline fields">
-                      <div class="field">
 
-                      </div>
-                      <div class="field" v-on:click="segmentationMethod = 'dictionary'">
-                        <input type="radio" v-model="segmentationMethod" value="dictionary" />
-                        <label>Dictionary</label>
-                      </div>
-                      <div class="field">
-                        <input type="radio" v-model="segmentationMethod" value="n-gram" />
-                      </div>
-                      <div class="field">
-                        <input type="number" v-model="nGramLength" v-on:change="segmentationMethod = 'n-gram'" />
-                      </div>
-                      <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
-                        <label>
-                          - gram
-                        </label>  
-                      </div>
+              <div class="two fields">
+                <div class="field">
+
+                  <label>
+                    Segmentation Method
+                  </label>
+                  <div class="inline fields">
+                    <div class="field">
 
                     </div>
+                    <div class="field" v-on:click="segmentationMethod = 'dictionary'">
+                      <input type="radio" v-model="segmentationMethod" value="dictionary" />
+                      <label>Dictionary</label>
+                    </div>
+                    <div class="field">
+                      <input type="radio" v-model="segmentationMethod" value="n-gram" />
+                    </div>
+                    <div class="field">
+                      <input type="number" v-model="nGramLength" v-on:change="segmentationMethod = 'n-gram'" />
+                    </div>
+                    <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
+                      <label>
+                        - gram
+                      </label>  
+                    </div>
+
                   </div>
-                  <div class="field">
-                    <label>
-                      <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
-                         target="_blank">
-                        Use Porter Stemmer
-                      </a>
-                    </label>
-                    <div class="inline fields">
-                      <div class="field">
-                        <input 
+                </div>
+                <div class="field">
+                  <label>
+                    Use Porter Stemmer
+                    <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
+                       target="_blank">
+                      (Help)
+                    </a>
+                  </label>
+                  <div class="inline fields">
+                    <div class="field">
+                      <input 
                         type="checkbox" 
                         tabindex="0" 
                         class="hidden"
                         id="usePorterStemmer"
                         v-model="usePorterStemmer">
-                      </div>
-                      <div class="field">
-                        <label for="usePorterStemmer">Enable</label>
-                      </div>
+                    </div>
+                    <div class="field">
+                      <label for="usePorterStemmer">Enable</label>
                     </div>
                   </div>
                 </div>
-                
+              </div>
+
             </div>
-            
+
             <template v-if="segmentationMethod === 'dictionary'">
               <div class="inline fields">
                 <div class="field">
@@ -212,105 +315,39 @@
           </div>
         </div>
       </div>
-      
+
       <!-- =============================================================== -->
 
-      <div class="ui grid output-step"
-           v-if="step === 2">
-        <div class="row">
-          <div class="sixteen wide column">
-            <label class="ui header">Output Segmentation Result</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="sixteen wide column">
-            <textarea 
-              name="output" 
-              id="output" 
-              class="ui raised segment output-textarea" 
-              data-storage="false"
-              v-model="outputText"
-              ></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="column">
-            <div class="ui fluid buttons">
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="copyOutput">
-                <i class="copy icon"></i>
-                Copy
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="saveAsText">
-                <i class="file alternate outline icon"></i>
-                Save as text
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="saveAsSheet">
-                <i class="table icon"></i>
-                Save as sheet
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="drawWordCloud">
-                <i class="cloud icon"></i>
-                Draw word cloud
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="extractThemes">
-                <i class="lightbulb outline icon"></i>
-                Extract themes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <!-- =============================================================== -->
 
-      <div class="ui bottom fixed menu">
-        <div class="ui ordered fluid unstackable steps">
-          <div class="step"
-               v-bind:class="computedStepClass(0)"
-               v-on:click="step=0">
-            <div class="content">
-              <div class="title">Input Raw Text</div>
-            </div>
-          </div>
-          <div class="step"
-               v-bind:class="computedStepClass(1)"
-               v-on:click="step=1">
-            <div class="content">
-              <div class="title">Configuration</div>
-            </div>
-          </div>
-          <div class="step"
-               v-bind:class="computedStepClass(2)"
-               v-on:click="processOutput">
-            <div class="content">
-              <div class="title">Output Segmentation Result</div>
-            </div>
-          </div>
-        </div>
+      <div class="ui inverted two item bottom fixed menu">
+        <a class="item"
+           v-bind:class="{'active': (displayPanel === 'text')}"
+           v-on:click="displayPanel = 'text'">
+          <i class="file alternate icon"></i>
+          Text
+        </a>
+        <a class="item"
+           v-bind:class="{'active': (displayPanel === 'configuration')}"
+           v-on:click="displayPanel = 'configuration'">
+          <i class="cogs icon"></i>
+          Configuration
+        </a>
       </div>
-      
+
       <div class="loading-modal" 
            v-if="processOutputWait">
         <img src="html-lib/loading.svg" />
       </div>
       
+      <textarea 
+        ref="outputCopyTextarea" 
+        v-model="outputText"
+        class="output-copy-textarea"
+        ></textarea>
+
       <!-- =============================================================== -->
-      
+
     </form>
 
     <!-- ========================================== -->

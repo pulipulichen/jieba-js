@@ -10,6 +10,9 @@
     "v-if": {
       "context": "div"
     },
+    "ref": {
+      "context": "input"
+    },
     "v-on:click": {
       "context": "div"
     },
