@@ -6,8 +6,8 @@ var app = new Vue({
   el: '#app',
   data: {
     inputFilename: `Raw Text`,
-    inputText: `這個布丁 是在無聊的世界中找尋樂趣的 1 種不能吃的食物，
-喜愛動漫畫、遊戲、coding，以及跟世間脫節的生活步調。`,
+    inputText: `這個布丁 是在無聊的世界中找尋樂趣的 1998 種不能吃的食物，
+喜愛動漫畫、遊戲、coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 1 種 不能 吃 的 食物
 喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
     //step: 2,
@@ -347,9 +347,6 @@ var app = new Vue({
           return false
         }
       }
-      else {
-        return false
-      }
       this.configStopWords = this.fullStopWords
     },
     copyOutput () {
@@ -516,6 +513,30 @@ var app = new Vue({
       let output = []
       //console.log([gram, text.substr(0, 2), text.length - gram + 1])
 
+      let temp = []
+      this.parseSingleCharacter(text).forEach(word => {
+        if (this.isEnglishNumberWord(word) === false) {
+          temp.push(word)
+          
+          if (temp.length === gram) {
+            output.push(temp.join(''))
+            temp.shift()
+          }
+        }
+        else {
+          if (temp.length === gram) {
+            output.push(temp.join(''))
+          }
+          temp = []
+            
+          if (this.usePorterStemmer) {
+            word = stemmer(word, true)
+          }
+          output.push(word)
+        }
+      })
+      /*
+      console.log(this.parseSingleCharacter(text))
       text.split(' ').forEach(part => {
         part = part.trim()
         if (part.length < gram) {
@@ -531,7 +552,7 @@ var app = new Vue({
           output.push(ngram.join(''))
         }
       })
-
+      */
       return output
     },
     filterStopWordsFromText (text) {
@@ -545,6 +566,10 @@ var app = new Vue({
     },
     filterNumber (text) {
       return text.replace(/\d/g, ' ')
+    },
+    isEnglishNumberWord (text) {
+      var english = /^[A-Za-z0-9]*$/;
+      return english.test(text)
     },
     parseSingleCharacter(text) {
       let output = []
@@ -563,7 +588,7 @@ var app = new Vue({
       }
 
       text.split("").forEach(c => {
-        if (c === ' ' || regexPunctuations.test(c)) {
+        if (c === ' ') {
           // 略過空格和標點符號
           addWord()
           return false
