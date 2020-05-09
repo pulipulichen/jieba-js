@@ -97,7 +97,8 @@
             <button 
               type="button"
               class="ui fluid button"
-              v-on:click="processOutput">
+              v-on:click="processOutput"
+              v-bind:class="{'green': configChanged }">
               START SEGMENTATION
             </button>
           </div>

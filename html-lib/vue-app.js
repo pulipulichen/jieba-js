@@ -6,7 +6,7 @@ var app = new Vue({
   el: '#app',
   data: {
     inputFilename: `Raw Text`,
-    inputText: `這個布丁 是在無聊的世界中找尋樂趣的 1998 種不能吃的食物，
+    inputText: `這個布丁 是在無聊的世界中找尋code的1998種不能吃的codes，
 喜愛動漫畫、遊戲、coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 1 種 不能 吃 的 食物
 喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
@@ -31,7 +31,8 @@ var app = new Vue({
     processOutputWait: false,
     displayPanel: 'text',
     //displayPanel: 'configuration',
-    persistKey: 'jieba-js.' + location.href
+    persistKey: 'jieba-js.' + location.href,
+    configChanged: false
   },
   computed: {
     configWordRemapArray () {
@@ -115,6 +116,7 @@ var app = new Vue({
   },
   methods: {
     persist () {
+      this.configChanged = true
       let key = this.persistKey
       let data = {
         segmentationMethod: this.segmentationMethod,
@@ -381,7 +383,7 @@ var app = new Vue({
       saveAs(blob, _file_name)
     },
     drawWordCloud () {
-      let url = '//pulipulichen.github.io/d3-cloud/index.html'
+      let url = 'https://pulipulichen.github.io/d3-cloud/index.html'
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
@@ -390,7 +392,7 @@ var app = new Vue({
       })
     },
     analyzeText () {
-      let url = '//pulipulichen.github.io/HTML5-Text-Analyzer/index.html'
+      let url = 'https://pulipulichen.github.io/HTML5-Text-Analyzer/index.html'
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
       
@@ -444,8 +446,19 @@ var app = new Vue({
       return new Promise((resolve, reject) => {
         //console.log('start promise')
         let next = (_result, i) => {
+          _result = _result.map(word => word.trim()).filter(word => word !== '')
+          
           if (rule !== 'n-gram') {
             _result = this.filterStopWords(_result);
+          }
+          
+          if (this.usePorterStemmer) {
+            _result = _result.map(word => {
+              if (this.isEnglishNumberWord(word)) {
+                word = stemmer(word, false)
+              }
+              return word
+            })
           }
 
           _result = _result.join(" ");
@@ -460,7 +473,7 @@ var app = new Vue({
           if (_result.startsWith('" ')) {
             _result = _result.slice(2)
           }
-          _result = _result.trim();
+          _result = _result.trim()
 
           _result_array.push(_result)
           i++
@@ -488,6 +501,7 @@ var app = new Vue({
             //console.log(_result_array)
             this.outputText = _result_array.join('\n')
             this.processOutputWait = false
+            this.configChanged = false
             resolve(true)
           }
         }
@@ -529,9 +543,9 @@ var app = new Vue({
           }
           temp = []
             
-          if (this.usePorterStemmer) {
-            word = stemmer(word, true)
-          }
+          //if (this.usePorterStemmer) {
+          //  word = stemmer(word, true)
+          //}
           output.push(word)
         }
       })
