@@ -1,6 +1,8 @@
 /* global XLSX */
 
-let postMessageAPI = PuliPostMessageAPI()
+let postMessageAPI = PuliPostMessageAPI({
+  maunalReady: true
+})
 
 var app = new Vue({
   el: '#app',
@@ -73,9 +75,19 @@ var app = new Vue({
     },
     outputButtonDisabled () {
       return (this.outputText.trim() === '')
+    },
+    searchParams () {
+      let output = {}
+      const currentURL = new URL(location.href)
+      for(let [key, value] of currentURL.searchParams.entries()) {
+        output[key] = value
+      }
+      return output
     }
   },
   mounted () {
+    this.setupAPI()
+    
     this.configUserDictionaryExample = this.configUserDictionary
     this.configWordRemapExample = this.configWordRemap
     this.configStopWordsExample = this.configStopWords
@@ -83,10 +95,14 @@ var app = new Vue({
     //console.log(stemmer("hopefully", true), stemmer("loves", true))
     
     this.loadPersistedData()
+    postMessageAPI.ready()
     
-    setTimeout(() => {
-      this.processOutput()
-    }, 0)
+    //console.log(this.searchParams.api)
+    if (!this.searchParams.api) {
+      setTimeout(() => {
+        this.processOutput()
+      }, 0)
+    }
   },
   watch: {
     segmentationMethod () {
@@ -128,6 +144,7 @@ var app = new Vue({
         
         return await this.processOutput()
       })
+      console.log('設定好了')
     },
     persist () {
       this.configChanged = true

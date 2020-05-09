@@ -1,4 +1,6 @@
 function PuliPostMessageAPI(options) {
+  let pageName = location.href.slice(location.href.lastIndexOf('/') + 1)
+  
   options = options ? options : {}
   let maunalReady = typeof(options.maunalReady) === 'boolean' ? options.maunalReady : false
   
@@ -42,7 +44,7 @@ function PuliPostMessageAPI(options) {
       eventName: 'ready',
       url: location.href
     }, '*')
-    //console.log('ready', location.href.slice(location.href.lastIndexOf('/') + 1))
+    console.log('ready', pageName)
   }
   
   let _isSentReadyMessage = false
@@ -100,7 +102,7 @@ function PuliPostMessageAPI(options) {
     
     options = options ? options : {}
     let {eventType, callback, newWindow} = options
-    eventType = eventType ? eventType : 'default'
+    eventType = eventType ? eventType : '_default'
     //console.log(options)
     
     let mode = 'iframe'
@@ -309,6 +311,7 @@ function PuliPostMessageAPI(options) {
       result = await _receiveHandler[eventType](input)
     }
     else {
+      console.log(typeof(_receiveHandler[eventType]), pageName)
       source.postMessage({
         eventName: 'error',
         message: `sender's eventType is not found: ` + eventType,
@@ -334,7 +337,7 @@ function PuliPostMessageAPI(options) {
   }
   
   let _errorEventHandler = function (url, message) {
-    console.error(message)
+    console.error(message, pageName)
     
     // 清空呼叫的資料
     _receiverReturnQueue[url] = []
@@ -366,22 +369,24 @@ function PuliPostMessageAPI(options) {
   let _receiveHandler = {}
   
   let addReceiveListener = function (eventType, callback) {
+    console.log('來', pageName)
     if (typeof(eventType) === 'function' && !callback) {
       callback = eventType
-      eventType = 'default'
+      eventType = '_default'
     }
-    
-    if (typeof(callback) !== 'function') {
+    else if (typeof(callback) !== 'function') {
+      console.log('沒能設定', pageName)
       return false
     }
     
     _receiveHandler[eventType] = callback
+    console.log(_receiveHandler, pageName)
   }
   
   let removeReceiveListener = function (eventType, callback) {
     if (typeof(eventType) === 'function' && !callback) {
       callback = eventType
-      eventType = 'default'
+      eventType = '_default'
     }
     
     if (typeof(callback) !== 'function'
