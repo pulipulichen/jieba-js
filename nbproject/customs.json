@@ -7,8 +7,20 @@
     "load_content_to": {
       "context": "input"
     },
+    "v-if": {
+      "context": "div"
+    },
+    "v-on:click": {
+      "context": "div"
+    },
     "copy-from": {
       "context": "button"
+    },
+    "v-model": {
+      "context": "input"
+    },
+    "v-show": {
+      "context": "div"
     }
   }
 }

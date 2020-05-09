@@ -61,14 +61,158 @@
 
       <!-- =============================================================== -->
       
-      <div class="ui grid container"
+      <div class="ui grid configuration-step"
            v-show="step === 1">
-        STEP2
+        <div class="row">
+          <div class="ten wide column">
+            <label class="ui header">Configuration</label>
+          </div>
+          <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
+            <button class="ui mini icon basic button" onclick="$('#input_config_file').click();">
+              <i class="folder open outline icon"></i>
+            </button>
+            <input type="file" class="input-field" 
+                   id="input_config_file" />
+            
+            <button class="ui mini icon basic button"
+                    v-on:click="downloadConfiguration">
+                <i class="save outline icon"></i>
+            </button>
+            <button class="ui mini icon basic button" copy-from="#input">
+              <i class="copy icon"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- ================================= -->
+        
+        <div class="row">
+          <div class="sixteen wide column">
+            <div class="ui form">
+              
+                <div class="two fields">
+                  <div class="field">
+                    
+                    <label>
+                      Segmentation Method
+                    </label>
+                    <div class="inline fields">
+                      <div class="field">
+
+                      </div>
+                      <div class="field" v-on:click="segmentationMethod = 'dictionary'">
+                        <input type="radio" v-model="segmentationMethod" value="dictionary" />
+                        <label>Dictionary</label>
+                      </div>
+                      <div class="field">
+                        <input type="radio" v-model="segmentationMethod" value="n-gram" />
+                      </div>
+                      <div class="field">
+                        <input type="number" v-model="nGramLength" v-on:change="segmentationMethod = 'n-gram'" />
+                      </div>
+                      <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
+                        <label>
+                          - gram
+                        </label>  
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>
+                      <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
+                         target="_blank">
+                        Use Porter Stemmer
+                      </a>
+                    </label>
+                    <div class="inline fields">
+                      <div class="field">
+                        <input 
+                        type="checkbox" 
+                        tabindex="0" 
+                        class="hidden"
+                        id="usePorterStemmer"
+                        v-model="usePorterStemmer">
+                      </div>
+                      <div class="field">
+                        <label for="usePorterStemmer">Enable</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+            </div>
+            
+            <template v-if="segmentationMethod === 'dictionary'">
+              <div class="inline fields">
+                <div class="field">
+                  <label class="ui header">
+                    User Dictionary
+                  </label>
+                </div>
+                <div class="field">
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleUserDictionary"
+                    v-bind:class="{'disabled': (configUserDictionaryExample === configUserDictionary)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <textarea v-model="configUserDictionary"></textarea>
+              </div>
+            </template>
+            <div class="field">
+              <div class="inline fields">
+                <div class="field">
+                  <label class="ui header">
+                    Word Remap
+                  </label>
+                </div>
+                <div class="field">
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleWordRemap"
+                    v-bind:class="{'disabled': (configWordRemapExample === configWordRemap)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                </div>
+              </div>
+              <textarea v-model="configWordRemap"></textarea>
+            </div>
+            <div class="field">
+              <div class="inline fields">
+                <div class="field">
+                  <label class="ui header">
+                    Stop Words
+                  </label>
+                </div>
+                <div class="field">
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleStopWords"
+                    v-bind:class="{'disabled': (configStopWordsExample === configStopWords)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                </div>
+              </div>
+              <textarea v-model="configStopWords"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            
+        
       </div>
       
       <!-- =============================================================== -->
 
-      <div class="ui grid container"
+      <div class="ui grid"
            v-show="step === 2">
         STEP3
       </div>
