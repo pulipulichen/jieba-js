@@ -23,6 +23,8 @@ var app = new Vue({
     this.configUserDictionaryExample = this.configUserDictionary
     this.configWordRemapExample = this.configWordRemap
     this.configStopWordsExample = this.configStopWords
+    
+    //console.log(stemmer("hopefully", true), stemmer("loves", true))
   },
   methods: {
     computedStepClass: function (stepID) {
