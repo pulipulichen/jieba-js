@@ -31,8 +31,8 @@ var app = new Vue({
     usePorterStemmer: true,
     jiebaInited: false,
     processOutputWait: false,
-    displayPanel: 'text',
-    //displayPanel: 'configuration',
+    //displayPanel: 'text',
+    displayPanel: 'configuration',
     persistKey: 'jieba-js.' + location.href,
     configChanged: false
   },
@@ -322,8 +322,36 @@ var app = new Vue({
         'active': (this.step === stepID)
       }
     },
+    s2ab (s) {
+      var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+      var view = new Uint8Array(buf);  //create uint8array as viewer
+      for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+      return buf;    
+    },
     downloadConfiguration () {
-      console.error('@TODO')
+      var wb = XLSX.utils.book_new();
+      
+      wb.SheetNames.push("Segmentation")
+      wb.Sheets["Segmentation"] = XLSX.utils.aoa_to_sheet([
+        ['segmentationMethod', this.segmentationMethod],
+        ['nGramLength', this.nGramLength],
+        ['removeEnglish', this.removeEnglish],
+        ['removeNumber', this.removeNumber],
+        ['usePorterStemmer', this.usePorterStemmer],
+      ])
+      
+      wb.SheetNames.push("UserDictionary")
+      wb.Sheets["UserDictionary"] = XLSX.utils.aoa_to_sheet([['word', 'weight', 'pos']].concat(this.configUserDictionaryArray))
+      
+      wb.SheetNames.push("WordRemap")
+      wb.Sheets["WordRemap"] = XLSX.utils.aoa_to_sheet([['from', 'to']].concat(this.configWordRemapArray.map(({targetWord, replaceWord}) => [targetWord, replaceWord])))
+      
+      wb.SheetNames.push("StopWords")
+      wb.Sheets["StopWords"] = XLSX.utils.aoa_to_sheet([['stopword']].concat(this.configStopWordsArray.map(line => [line])))
+      
+      var wbout = XLSX.write(wb, {bookType:'ods',  type: 'binary'});
+      let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), filename);
     },
     setExampleUserDictionary () {
       if (this.configUserDictionaryExample !== this.configUserDictionary 

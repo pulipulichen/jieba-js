@@ -40,10 +40,12 @@ function PuliPostMessageAPI(options) {
     }
     _isSentReadyMessage = true
     
-    opener.postMessage({
-      eventName: 'ready',
-      url: location.href
-    }, '*')
+    if (opener) {
+      opener.postMessage({
+        eventName: 'ready',
+        url: location.href
+      }, '*')
+    }
     //console.log('ready', pageName)
   }
   
