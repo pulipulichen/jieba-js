@@ -527,7 +527,13 @@ var app = new Vue({
       })
     },
     extractThemes () {
-      console.error('@TODO')
+      let url = 'https://pulipulichen.github.io/lda.js/index.html'
+      //let url = 'http://localhost:8383/d3-cloud/index.html'
+      //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
+      
+      postMessageAPI.send(url, this.outputText, {
+        mode: 'popup'
+      })
     },
     processOutput: async function () {
       this.outputText = ''
