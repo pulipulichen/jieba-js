@@ -4,14 +4,13 @@ let postMessageAPI = PuliPostMessageAPI({
   manuallyReady: true
 })
 
-var app = new Vue({
+var app = {
   el: '#app',
   data: {
     inputFilename: `Raw Text`,
     inputText: `這個布丁 是在無聊的世界中找尋code的1998種不能吃的codes，
 喜愛動漫畫、遊戲、coding，以及ABCDV跟世間脫節的生活步調。`,
-    outputText: `布丁 是 在 無聊的世界 中 找尋樂趣 的 1 種 不能 吃 的 食物
-喜愛 動漫畫 遊戲 coding 以及 跟 世間 脫節 的 生活 步調`,
+    outputText: ``,
     //step: 2,
     segmentationMethod: 'dictionary',
     nGramLength: 2,
@@ -775,4 +774,6 @@ var app = new Vue({
       return output
     },
   }
-})
+}
+
+app = new Vue(app)
