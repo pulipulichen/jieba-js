@@ -529,8 +529,8 @@ var app = {
       })
     },
     extractThemes () {
-      //let url = 'https://pulipulichen.github.io/lda.js/index.html?api=1'
-      let url = 'http://localhost:8383/lda/index.html?api=1'
+      let url = 'https://pulipulichen.github.io/lda.js/index.html?api=1'
+      //let url = 'http://localhost:8383/lda/index.html?api=1'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
       postMessageAPI.send(url, this.outputText, {
