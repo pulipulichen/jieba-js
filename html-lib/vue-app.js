@@ -31,8 +31,8 @@ var app = new Vue({
     usePorterStemmer: true,
     jiebaInited: false,
     processOutputWait: false,
-    //displayPanel: 'text',
-    displayPanel: 'configuration',
+    displayPanel: 'text',
+    //displayPanel: 'configuration',
     persistKey: 'jieba-js.' + location.href,
     configChanged: false
   },
@@ -171,6 +171,44 @@ var app = new Vue({
         }
       }
     },
+    loadConfigFile (evt) {
+      //console.log(1);
+      if(!window.FileReader) return; // Browser is not compatible
+
+      this.processOutputWait = true
+      var reader = new FileReader()
+      let type = evt.target.files[0].type
+      let filename = evt.target.files[0].name
+      
+      if (type !== 'application/vnd.oasis.opendocument.spreadsheet'
+              || filename.endsWith('.ods') === false) {
+        alert('Configuration file is invalid.')
+        this.processOutputWait = false
+        return false
+      }
+
+      reader.onload = async (evt) => {
+        if (evt.target.readyState !== 2) {
+          this.processOutputWait = false
+          return;
+        }
+        if (evt.target.error) {
+          alert('Error while reading file');
+          this.processOutputWait = false
+          return;
+        }
+
+        let result = evt.target.result
+        
+        await this.processUploadConfiguration(result)
+        
+        
+        this.processOutputWait = false
+      }
+
+
+      reader.readAsBinaryString(evt.target.files[0])
+    },
     loadInputFile (evt) {
       //console.log(1);
       if(!window.FileReader) return; // Browser is not compatible
@@ -275,6 +313,32 @@ var app = new Vue({
 
       return result
     },
+    processUploadConfiguration: async function (input) {
+      var workbook = await XLSX.readAsync(input, {type: 'binary'});
+      
+      var result = [];
+      for (let i in workbook.SheetNames) {
+        let sheetName = workbook.SheetNames[i]
+
+        var json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
+        if (sheetName === 'Segmentation') {
+          json.forEach(({key, value}) => {
+            this[key] = value
+          })
+        }
+        else if (sheetName === 'UserDictionary') {
+          this.configUserDictionary = json.map(({word, weight, pos}) => [word, weight, pos].join(',')).join('\n')
+        }
+        else if (sheetName === 'WordRemap') {
+          this.configWordRemap = json.map(({from, to}) => [from, to].join(',')).join('\n')
+        }
+        else if (sheetName === 'StopWords') {
+          this.configStopWords = json.map(({stopword}) => stopword).join('\n')
+        }
+        //result.push(csv.trim())
+      }
+      
+    },
     sleep: async function (ms) {
       if (typeof(ms) !== 'number') {
         ms = 1
@@ -333,6 +397,7 @@ var app = new Vue({
       
       wb.SheetNames.push("Segmentation")
       wb.Sheets["Segmentation"] = XLSX.utils.aoa_to_sheet([
+        ['field', 'value'],
         ['segmentationMethod', this.segmentationMethod],
         ['nGramLength', this.nGramLength],
         ['removeEnglish', this.removeEnglish],

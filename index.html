@@ -26,13 +26,13 @@
     <script src="html-lib/vendors/Porter-Stemmer/PorterStemmer1980.min.js"></script>
     <script src="html-lib/vendors/vue/vue.min.js"></script>
     <script src="html-lib/vendors/date-helper.js"></script>
-    
+
     <script src="html-lib/vendors/js-xlsx/shim.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/suppress_export.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/jszip.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/cpexcel.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/xlsx.js"></script>
-    
+
     <link rel="stylesheet/less" type="text/css" href="html-lib/styles/styles.less" />
     <script>less = {env: 'production'};</script>
     <script src="html-lib/vendors/less/less.min.js"></script>
@@ -60,7 +60,7 @@
               class="input-field"
               ref="inputFileUploadTrigger"
               id="input_file"
-              accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm,.odt"
+              accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm"
               v-on:change="loadInputFile" />
             <button class="ui mini icon basic button" copy-from="#input">
               <i class="copy icon"></i>
@@ -186,12 +186,20 @@
           <div class="ten wide column">
             <label class="ui header">Configuration</label>
           </div>
-          <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-            <button class="ui mini icon basic button" onclick="$('#input_config_file').click();">
+          <div class="six wide column" 
+               style="text-align:right; margin-bottom: 5px;">
+            <button 
+              class="ui mini icon basic button" 
+              v-on:click="$refs.InputConfigFileTrigger.click();">
               <i class="folder open outline icon"></i>
             </button>
-            <input type="file" class="input-field" 
-                   id="input_config_file" />
+            <input 
+              type="file" 
+              class="input-field" 
+              ref="InputConfigFileTrigger"
+              id="input_config_file"
+              accept=".ods"
+              v-on:change="loadConfigFile" />
 
             <button class="ui mini icon basic button"
                     v-on:click="downloadConfiguration">
@@ -241,19 +249,19 @@
 
                   </div>
                 </div>
-                
+
                 <div class="field">
                   <label>
                     Remove
                   </label>
-                  
+
                   <div class="inline fields">
                     <div class="field">
                       <div class="ui checkbox">
                         <input 
                           type="checkbox" 
                           v-model="removeEnglish">
-                          <label>Remove English</label>
+                        <label>Remove English</label>
                       </div>
                     </div>
                     <div class="field">
@@ -261,12 +269,12 @@
                         <input 
                           type="checkbox" 
                           v-model="removeNumber">
-                          <label>Remove Number</label>
+                        <label>Remove Number</label>
                       </div>
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="field"
                      v-bind:class="{'disabled': removeEnglish}">
                   <label>
@@ -276,13 +284,13 @@
                       (Help)
                     </a>
                   </label>
-                  
+
                   <div class="ui disabled checkbox">
                     <input 
                       type="checkbox" 
                       id="usePorterStemmer"
                       v-model="usePorterStemmer">
-                      <label for="usePorterStemmer">Enable</label>
+                    <label for="usePorterStemmer">Enable</label>
                   </div>
                 </div>
               </div>
@@ -347,7 +355,7 @@
                     <i class="file alternate outline icon"></i>
                     full
                   </button>
-                  
+
                   <!--
                   <button 
                     class="ui mini basic button" 
@@ -388,7 +396,7 @@
            v-if="processOutputWait">
         <img src="html-lib/loading.svg" />
       </div>
-      
+
       <textarea 
         ref="outputCopyTextarea" 
         v-model="outputText"
