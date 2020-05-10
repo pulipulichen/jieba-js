@@ -513,7 +513,9 @@ var app = new Vue({
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
       postMessageAPI.send(url, this.outputText, {
-        mode: 'popup'
+        mode: 'popup',
+        newWindow: true,
+        features: 0.8
       })
     },
     analyzeText () {
@@ -523,16 +525,19 @@ var app = new Vue({
       
       postMessageAPI.send(url, this.outputText, {
         mode: 'popup',
-        newWindow: true
+        newWindow: true,
+        features: 0.8
       })
     },
     extractThemes () {
-      let url = 'https://pulipulichen.github.io/lda.js/index.html'
-      //let url = 'http://localhost:8383/d3-cloud/index.html'
+      //let url = 'https://pulipulichen.github.io/lda.js/index.html'
+      let url = 'http://localhost:8383/lda/index.html?api=1'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
       postMessageAPI.send(url, this.outputText, {
-        mode: 'popup'
+        mode: 'popup',
+        newWindow: true,
+        features: 0.8
       })
     },
     processOutput: async function () {
