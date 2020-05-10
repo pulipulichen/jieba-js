@@ -507,7 +507,7 @@ var app = {
       saveAs(blob, _file_name)
     },
     drawWordCloud () {
-      let url = 'https://pulipulichen.github.io/d3-cloud/index.html'
+      let url = 'https://pulipulichen.github.io/d3-cloud/index.html?api=1'
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
@@ -518,7 +518,7 @@ var app = {
       })
     },
     analyzeText () {
-      let url = 'https://pulipulichen.github.io/HTML5-Text-Analyzer/index.html'
+      let url = 'https://pulipulichen.github.io/HTML5-Text-Analyzer/index.html?api=1'
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
       
@@ -529,7 +529,7 @@ var app = {
       })
     },
     extractThemes () {
-      //let url = 'https://pulipulichen.github.io/lda.js/index.html'
+      //let url = 'https://pulipulichen.github.io/lda.js/index.html?api=1'
       let url = 'http://localhost:8383/lda/index.html?api=1'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
