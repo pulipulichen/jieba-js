@@ -1,4 +1,11 @@
+window.PuliPostMessageAPIInited = false
+
 function PuliPostMessageAPI(options) {
+  if (window.PuliPostMessageAPIInited === true) {
+    throw new Error('PuliPostMessageAPI was loaded.')
+  }
+  window.PuliPostMessageAPIInited = true
+  
   let pageName = location.href.slice(location.href.lastIndexOf('/') + 1)
   
   options = options ? options : {}
@@ -147,10 +154,17 @@ function PuliPostMessageAPI(options) {
   }
   
   // ---------------------------
+  let urlRedirect = {}
+  
+  let filterURLRedirect = function (url) {
+    return (typeof(urlRedirect[url]) === 'string') ? urlRedirect[url] : url
+  }
   
   let send = async function (url, data, options) {
     url = new URL(url, document.baseURI).href
+    url = filterURLRedirect(url)
     
+    //console.log('send ==================================')
     await _AddSendWait(url)
     
     options = options ? options : {}
@@ -225,8 +239,6 @@ function PuliPostMessageAPI(options) {
       let features = undefined
       if (options && options.features) {
         features = options.features
-        
-        
       }
       
       if (typeof(features) === 'number' && features <= 1) {
@@ -248,7 +260,17 @@ function PuliPostMessageAPI(options) {
     }
     
     //console.log(eventType)
-    let result = await _sendToReceiver(getReceiver, url, eventType, data)
+    let result 
+    let redirectedURL
+    try {
+      result = await _sendToReceiver(getReceiver, url, eventType, data)
+    }
+    catch (e) {
+      redirectedURL = e
+      autoClose = true
+      //console.log(e)
+      //return await this.send(e, data, options)
+    }
     
     // ---------------
     
@@ -270,32 +292,62 @@ function PuliPostMessageAPI(options) {
       }
     }
     
-    if (typeof(callback) === 'function') {
-      callback(result)
+    if (!redirectedURL) {
+      if (typeof(callback) === 'function') {
+        callback(result)
+      }
+
+      return result
     }
-    
-    return result
+    else {
+      //delete _receiverReadyList[url]
+      //delete _receiverElementList[url]
+      //console.log('redirectURL', url)
+      await sleep(1000)
+      return await send(redirectedURL, data, options)
+    }
   }
   
   // -----------------------
   
-  let _sendToReceiver = async function (getReceiver, url, eventType, data) {
-    await _waitReceiverReady(url)
+  let _sendToReceiver = async function (getReceiver, url, eventType, data, options) {
+    //console.log('_waitReceiverReady', url)
+    let redirectedURL = await _waitReceiverReady(url)
+    //console.log('等到了', redirectedURL)
+    if (typeof(redirectedURL) === 'string') {
+      throw redirectedURL
+    }
     
     let receiver = getReceiver()
     //console.log(receiver)
-    //console.log(location.href, url)
-    receiver.postMessage({
+    //console.log({sender: location.href, receiver: url} )
+    let postMessageData = {
       eventName: 'send',
       eventType: eventType,
       data: data,
       url: location.href
-    }, url)
-    
+    }
+    //console.log('queue', url)
     return new Promise(function (resolve, reject) {
+      //receiver.postMessage(postMessageData, '*')
+      receiver.postMessage(postMessageData, url)
+      
+      //console.log('return queue')
       _pushReceiverReturnQueue(url, function (result) {
+        //console.log('queue callback')
         resolve(result)
       })
+      
+      /*
+      try {
+        receiver.postMessage(postMessageData, url)
+      }
+      catch (e) {
+        console.log('替代方案')
+        receiver.postMessage(postMessageData, '*')
+      }
+       */
+      
     })
     
   }
@@ -325,7 +377,7 @@ function PuliPostMessageAPI(options) {
     let url = event.data.url
     let eventType  = event.data.eventType
     
-    //console.log(eventName, data, location.href)
+    //console.log(eventName, data, url, pageName)
     
     //let origin = event.origin
     let source = event.source
@@ -346,7 +398,7 @@ function PuliPostMessageAPI(options) {
   }
   
   let _returnEventHandler = function (url, data) {
-    //console.log(_receiverReturnQueue)
+    //console.log('_returnEventHandler')
     if (Array.isArray(_receiverReturnQueue[url]) === false) {
       return false
     }
@@ -389,11 +441,34 @@ function PuliPostMessageAPI(options) {
   }
   
   let _readyEventHandler = function (origin) {
-    _receiverReadyList[origin] = true
-    //console.log(_receiverWaitList[origin], origin, location.href)
+    
+    // 如果沒有對應上的，那是不是要自動變更啊？
+    //console.log(_receiverWaitList[origin], origin, pageName)
     if (typeof(_receiverWaitList[origin]) === 'function') {
+      _receiverReadyList[origin] = true
       _receiverWaitList[origin]()
       delete _receiverWaitList[origin]
+    }
+    else {
+      // 搜尋一個還沒呼叫的網址
+      for (let o in _receiverWaitList) {
+        //console.log('還沒呼叫，有待更名', o)
+        
+        //_receiverReadyList[o] = true
+        //urlRedirect[o] = origin
+        
+        // 正常呼叫
+        let waitCallback = _receiverWaitList[o]
+        //_receiverWaitList[origin] = _receiverWaitList[o]
+        //_receiverReadyList[o] = true
+        urlRedirect[o] = origin
+        
+        
+        //_receiverWaitList[o]
+        delete _receiverWaitList[o]
+        waitCallback(origin)
+        return false
+      }
     }
   }
   
@@ -413,8 +488,13 @@ function PuliPostMessageAPI(options) {
     }
     
     return new Promise(function (resolve, reject) {
-      _receiverWaitList[url] = function () {
-        resolve(true)
+      _receiverWaitList[url] = function (redirectedURL) {
+        if (redirectedURL) {
+          resolve(redirectedURL)
+        }
+        else {
+          resolve(true)
+        }
       }
       //console.log(_receiverReadyList[url], _receiverWaitList[url], url)
     })
