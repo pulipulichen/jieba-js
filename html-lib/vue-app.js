@@ -9,7 +9,7 @@ var app = {
   data: {
     inputFilename: `Raw Text`,
     inputText: `這個布丁 是在無聊的世界中找尋code的1998種不能吃的codes，
-喜愛動漫畫、遊戲、coding，以及ABCDV跟世間脫節的生活步調。`,
+喜愛動漫畫、遊戲、Coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: ``,
     //step: 2,
     segmentationMethod: 'dictionary',
@@ -28,6 +28,7 @@ var app = {
     removeEnglish: false,
     removeNumber: false,
     usePorterStemmer: true,
+    useLowerCase: true,
     jiebaInited: false,
     processOutputWait: false,
     displayPanel: 'text',
@@ -128,6 +129,9 @@ var app = {
     removeNumber () {
       this.persist()
     },
+    useLowerCase () {
+      this.persist()
+    },
   },
   methods: {
     setupAPI () {
@@ -158,6 +162,7 @@ var app = {
         usePorterStemmer: this.usePorterStemmer,
         removeEnglish: this.removeEnglish,
         removeNumber: this.removeNumber,
+        useLowerCase: this.useLowerCase
       }
       localStorage.setItem(key, JSON.stringify(data))
     },
@@ -602,6 +607,10 @@ var app = {
           if (this.usePorterStemmer) {
             _result = _result.map(word => {
               if (this.isEnglishNumberWord(word)) {
+                if (this.useLowerCase === true) {
+                  word = word.toLowerCase()
+                }
+                
                 word = stemmer(word, false)
               }
               return word

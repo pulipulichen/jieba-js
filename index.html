@@ -278,19 +278,32 @@
                 <div class="field"
                      v-bind:class="{'disabled': removeEnglish}">
                   <label>
-                    Use Porter Stemmer
-                    <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
-                       target="_blank">
-                      (Help)
-                    </a>
+                    English Process
+                    
                   </label>
 
-                  <div class="ui disabled checkbox">
+                  <div class="ui checkbox">
                     <input 
                       type="checkbox" 
                       id="usePorterStemmer"
                       v-model="usePorterStemmer">
-                    <label for="usePorterStemmer">Enable</label>
+                    <label for="usePorterStemmer">
+                      Use Porter Stemmer
+                      <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
+                         target="_blank">
+                        (Help)
+                      </a>
+                    </label>
+                  </div>
+                  
+                  <div class="ui checkbox">
+                    <input 
+                      type="checkbox" 
+                      id="useLowerCase"
+                      v-model="useLowerCase">
+                    <label for="useLowerCase">
+                      Lower Case
+                    </label>
                   </div>
                 </div>
               </div>
