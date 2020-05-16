@@ -45,9 +45,17 @@
 
       <div class="ui grid text-panel"
            v-if="displayPanel === 'text'">
-        <div class="row">
+        <div class="row filename">
           <div class="ten wide column">
-            <label class="ui header">Input Raw Text</label>
+            <div class="inline fields">
+              <label>
+                Filename
+              </label>
+              <input 
+                type="text" 
+                v-model="inputFilename"
+                class="input-filename"/>
+            </div>
           </div>
           <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
             <button 
@@ -67,20 +75,13 @@
             </button>
           </div>
         </div>
-        <div class="row">
+        <div class="row input-header">
           <div class="sixteen wide column">
-            <div class="inline fields">
-              <label>
-                Filename
-              </label>
-              <input 
-                type="text" 
-                v-model="inputFilename"
-                class="input-filename"/>
-            </div>
+            <label class="ui header">Input Raw Text</label>
+            
           </div>
         </div>
-        <div class="row">
+        <div class="row input-row">
           <div class="sixteen wide column">
             <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
             <textarea 
@@ -104,12 +105,12 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row output-header">
           <div class="sixteen wide column">
             <label class="ui header">Output Segmentation Result</label>
           </div>
         </div>
-        <div class="row">
+        <div class="row output-row">
           <div class="sixteen wide column">
             <textarea 
               name="output" 
@@ -120,9 +121,9 @@
               ></textarea>
           </div>
         </div>
-        <div class="row">
+        <div class="row file-button-row">
           <div class="column">
-            <div class="ui top attached fluid buttons"
+            <div class="ui bottom attached fluid buttons"
                  v-bind:class="{'disabled': outputButtonDisabled }">
               <button
                 type="button"
@@ -148,6 +149,26 @@
                 <i class="table icon"></i>
                 Save as sheet
               </button>
+            </div>
+          </div>
+        </div>
+        <div class="row header-remove-row">
+          <div class="column">  
+            <div class="field">
+              <div class="ui checkbox">
+                <input 
+                  type="checkbox" 
+                  v-model="doRemoveHeader">
+                <label>Remove first line (header)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row api-buttons-row">
+          <div class="column">
+            <div class="ui top attached fluid buttons"
+                 v-bind:class="{'disabled': outputButtonDisabled }">
+              
               <button
                 type="button"
                 class="ui button"

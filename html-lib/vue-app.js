@@ -12,7 +12,8 @@ var app = {
 喜愛動漫畫、遊戲、Coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: ``,
     //step: 2,
-    segmentationMethod: 'dictionary',
+    //segmentationMethod: 'dictionary',
+    segmentationMethod: 'n-gram',
     nGramLength: 2,
     configUserDictionary: `找尋樂趣,9999999,n
 無聊的世界,9999999,n`,
@@ -34,7 +35,8 @@ var app = {
     displayPanel: 'text',
     //displayPanel: 'configuration',
     persistKey: 'jieba-js.' + location.href,
-    configChanged: false
+    configChanged: false,
+    doRemoveHeader: false,
   },
   computed: {
     configWordRemapArray () {
@@ -81,6 +83,13 @@ var app = {
       const currentURL = new URL(location.href)
       for(let [key, value] of currentURL.searchParams.entries()) {
         output[key] = value
+      }
+      return output
+    },
+    outputTextForAPI () {
+      let output = this.outputText.trim()
+      if (this.doRemoveHeader && output.indexOf('\n') > -1) {
+        output = output.slice(output.indexOf('\n') + 1)
       }
       return output
     }
@@ -516,7 +525,7 @@ var app = {
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
-      postMessageAPI.send(url, this.outputText, {
+      postMessageAPI.send(url, this.outputTextForAPI, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
@@ -527,7 +536,7 @@ var app = {
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
       
-      postMessageAPI.send(url, this.outputText, {
+      postMessageAPI.send(url, this.outputTextForAPI, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
@@ -538,7 +547,7 @@ var app = {
       //let url = 'http://localhost:8383/lda/index.html?api=1'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       
-      postMessageAPI.send(url, this.outputText, {
+      postMessageAPI.send(url, this.outputTextForAPI, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
@@ -658,6 +667,12 @@ var app = {
             this.outputText = _result_array.join('\n')
             this.processOutputWait = false
             this.configChanged = false
+            
+            if (_result_array.length > 1 
+                    && _result_array[0].length < 20) {
+              this.doRemoveHeader = true
+            }
+            
             //console.log('斷詞完成了')
             resolve(this.outputText)
           }
