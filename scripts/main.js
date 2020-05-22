@@ -1,3 +1,4 @@
+/* global resume_jieba_cut */
 
 jieba_parsing = function(dictionary, _callback) {
     var trie = {}, // to be initialized
