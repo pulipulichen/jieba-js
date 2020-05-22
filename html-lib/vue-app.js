@@ -114,6 +114,9 @@ var app = {
     }
   },
   watch: {
+    configChanged() {
+      this.configChanged = true
+    },
     segmentationMethod () {
       this.persist()
     },
@@ -654,9 +657,13 @@ var app = {
                       || (line.startsWith("'") && line.endsWith("'"))) {
                 line = line.slice(1, -1).trim()
               }
-              call_jieba_cut(line, _custom_dict, function (_result) {
-                next(_result, i)
-              });
+              setTimeout(() => {
+                //console.log('start', i, ((i / _text_array.length) * 100) )
+                call_jieba_cut(line, _custom_dict, function (_result) {
+                  //console.log('end', i, )
+                  next(_result, i)
+                });
+              }, 0)
             } else {
               let _result = this.processNGram(_text_array[i])
               next(_result, i)

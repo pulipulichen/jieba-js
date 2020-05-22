@@ -1,3 +1,5 @@
+/* global jieba_cut, PREDIFINED_DICTIONARY */
+
 // <script data-main="scripts/main" src="scripts/require.js"></script>
 
 var _JIEBA_CUT_QUEUE = [];
@@ -98,6 +100,30 @@ resume_jieba_cut = function () {
     }
     
     _JIEBA_CUT_QUEUE = []
+    
+    var next = function (i) {
+      i++
+      setTimeout(function () {
+        loop(i)
+      }, 10)
+    }
+    
+    var loop = function (i) {
+      if (i < _JIEBA_CUT_QUEUE.length) {
+        var _text = _JIEBA_CUT_QUEUE[_i].text;
+        var _callback = _JIEBA_CUT_QUEUE[_i].callback;
+        console.log(i)
+        call_jieba_cut(_text, function (result) {
+          _callback(result)
+          next(i)
+        })
+      }
+      else {
+        _JIEBA_CUT_QUEUE = []
+      }
+    }
+    
+    loop(0)
 };
 
 // ------------------------------------------------------
