@@ -8,7 +8,7 @@ var app = {
   el: '#app',
   data: {
     inputFilename: `Raw Text`,
-    inputText: `這個布丁 是在無聊的世界中找尋code的1998種不能吃的codes，
+    inputText: `這個<strong>布丁</strong> 是在無聊的世界中找尋code的1998種不能吃的codes，
 喜愛動漫畫、遊戲、Coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: ``,
     //step: 2,
@@ -28,6 +28,7 @@ var app = {
     fullStopWords: null,
     removeEnglish: false,
     removeNumber: false,
+    removeHTML: true,
     usePorterStemmer: true,
     useLowerCase: true,
     jiebaInited: false,
@@ -141,6 +142,9 @@ var app = {
     removeNumber () {
       this.persist()
     },
+    removeHTML () {
+      this.persist()
+    },
     useLowerCase () {
       this.persist()
     },
@@ -174,7 +178,8 @@ var app = {
         usePorterStemmer: this.usePorterStemmer,
         removeEnglish: this.removeEnglish,
         removeNumber: this.removeNumber,
-        useLowerCase: this.useLowerCase
+        removeHTML: this.removeHTML,
+        useLowerCase: this.useLowerCase,
       }
       localStorage.setItem(key, JSON.stringify(data))
     },
@@ -233,7 +238,7 @@ var app = {
       var reader = new FileReader();
       let filename = evt.target.files[0].name
       let type = evt.target.files[0].type
-      console.log(type)
+      //console.log(type)
       if (filename.indexOf('.') > -1) {
         filename = filename.slice(0, filename.lastIndexOf('.'))
       }
@@ -651,8 +656,13 @@ var app = {
         let loop = (i) => {
           //console.log('loop', i)
           if (i < _text_array.length) {
+            let line = _text_array[i]
+            
+            if (this.removeHTML === true) {
+              line = this.stripHTMLTag(line)
+            }
+            
             if (rule === 'dictionary') {
-              let line = _text_array[i]
               if ((line.startsWith('"') && line.endsWith('"'))
                       || (line.startsWith("'") && line.endsWith("'"))) {
                 line = line.slice(1, -1).trim()
@@ -665,7 +675,7 @@ var app = {
                 });
               }, 0)
             } else {
-              let _result = this.processNGram(_text_array[i])
+              let _result = this.processNGram(line)
               next(_result, i)
             }
           } else {
@@ -697,6 +707,14 @@ var app = {
     filterStopWords (result) {
       //console.log(result)
       return result.filter(word => (this.configStopWordsArray.indexOf(word) === -1))
+    },
+    /**
+     * @author https://stackoverflow.com/a/5002161/6645399
+     * @param {type} str
+     * @returns {string}
+     */
+    stripHTMLTag (str) {
+      return str.replace(/<\/?[^>]+(>|$)/g, " ")
     },
     processNGram (text) {
       text = text.trim()
