@@ -5,8 +5,8 @@ var appData = {
 喜愛動漫畫、遊戲、Coding，以及ABCDV跟世間脫節的生活步調。`,
     outputText: ``,
     //step: 2,
-    //segmentationMethod: 'dictionary',
-    segmentationMethod: 'n-gram',
+    segmentationMethod: 'dictionary',
+    //segmentationMethod: 'n-gram',
     nGramLength: 2,
     configUserDictionary: `找尋樂趣,9999999,n
 無聊的世界,9999999,n`,
