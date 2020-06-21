@@ -1,6 +1,7 @@
 var appData = {
   inputFilename: `Raw Text`,
-  inputText: `message
+  inputText: `
+message
 這個<strong>布丁</strong> 是在無聊的世界中找尋code的1998種不能吃的codes，
 喜愛動漫畫、遊戲、Coding，以及ABCDV跟世間脫節的生活步調。`,
   outputText: ``,

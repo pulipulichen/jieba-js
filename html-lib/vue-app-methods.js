@@ -453,12 +453,24 @@ var appMethods = {
 
 
     let firstLine = ''
-    if (_text.indexOf('\n') > 0) {
-      firstLine = _text.slice(0, _text.indexOf('\n'))
-      if (firstLine.length < 20) {
+    let trimText = _text.trim()
+    
+    if (trimText.indexOf('\n') > 0) {
+      //let t = _text.trim()
+      //firstLine = trimText.slice(0, trimText.indexOf('\n'))
+      //console.log(firstLine.length, firstLine, trimText.indexOf('\n'))
+      if (trimText.indexOf('\n') > 0 && trimText.indexOf('\n') < 20) {
         this.doRemoveHeader = true
       }
+      else {
+        this.doRemoveHeader = false
+      }
     }
+    else {
+      this.doRemoveHeader = false
+    }
+    
+    console.log(this.doRemoveHeader)
 
     if (this.removeEnglish) {
       _text = this.filterEnglish(_text)
