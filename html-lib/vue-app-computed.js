@@ -17,15 +17,25 @@ var appComputed = {
       var _config = this.configUserDictionary.trim().split("\n")
       var _output = [];
       for (var _l in _config) {
-        if (_config[_l].indexOf(',') === -1) {
-          continue
+        //if (_config[_l].indexOf(',') === -1) {
+        //  continue
+        //}
+        let _line = _config[_l]
+        if (_line.indexOf(',') > -1) {
+          _line = _line.split(",");
+          _output.push([
+            _line[0].trim(),
+            parseInt(_line[1]),
+            _line[2]
+          ]);
         }
-        var _line = _config[_l].split(",");
-        _output.push([
-          _line[0].trim(),
-          parseInt(_line[1]),
-          _line[2]
-        ]);
+        else {
+          _output.push([
+            _line.trim(),
+            999999,
+            'x'
+          ]);
+        }
       }
       //console.log(_output)
       return _output;
