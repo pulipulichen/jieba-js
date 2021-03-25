@@ -61,6 +61,41 @@ var appComputed = {
       if (this.doRemoveHeader && output.indexOf('\n') > -1) {
         output = output.slice(output.indexOf('\n') + 1)
       }
+      
+      if (this.onlyFirstColumn) {
+        output = output.split('\n').map(line => {
+          let pos = line.indexOf(this.columnSeparator)
+          if (pos > -1) {
+            line = line.slice(0, pos)
+          }
+          return line
+        }).join('\n')
+      }
       return output
+    },
+    inputTextTrim () {
+      return this.inputText.trim()
+    },
+    inputTextTrimLines () {
+      return this.inputTextTrim.split('\n')
+    },
+    isOneLine () {
+      return (this.inputTextTrimLines.length === 1)
+    },
+    firstLine () {
+      let line = this.inputTextTrimLines[0]
+      
+      if (this.onlyFirstColumn) {
+        let pos = line.indexOf(this.columnSeparator)
+        if (pos === -1) {
+          return line
+        }
+        else {
+          return line.slice(0, pos)
+        }
+      }
+      else {
+        return line
+      }
     }
   }

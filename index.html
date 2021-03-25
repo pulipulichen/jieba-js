@@ -78,17 +78,37 @@
           </div>
         </div>
         <div class="row input-header">
-          <div class="eight wide column">
+          <div class="four wide column">
             <label class="ui header">Input</label>
           </div>
-          <div class="eight wide column">
-            <div class="field input-options">
-              <div class="ui checkbox">
-                <input 
-                  id="DoSkipHeader"
-                  type="checkbox" 
-                  v-model="doRemoveHeader">
-                <label for="DoSkipHeader">Skip first line (header)</label>
+          <div class="twelve wide column">
+            <div class="inline fields input-options">
+              <div class="field">
+                <div class="ui checkbox">
+                  <input 
+                    id="DoSkipHeader"
+                    type="checkbox" 
+                    v-model="doRemoveHeader">
+                  <label for="DoSkipHeader">Skip first line (header)</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input 
+                    id="OnlyFirstColumn"
+                    type="checkbox" 
+                    v-model="onlyFirstColumn">
+                  <label for="OnlyFirstColumn">Only first column</label>
+                </div>
+              </div>
+              <div class="field" v-if="onlyFirstColumn">
+                <label for="ColumnSeparator">Column Separator</label>
+                <div class="ui mini icon input">
+                    <input 
+                      id="ColumnSeparator"
+                      type="text" 
+                      v-model="columnSeparator">
+                </div>
               </div>
             </div>
           </div>
@@ -291,25 +311,28 @@
                     <div class="field">
                       <div class="ui checkbox">
                         <input 
+                          id="RemoveEnglish"
                           type="checkbox" 
                           v-model="removeEnglish">
-                        <label>Remove English</label>
+                        <label for="RemoveEnglish">Remove English</label>
                       </div>
                     </div>
                     <div class="field">
                       <div class="ui checkbox">
                         <input 
+                          id="RemoveNumber"
                           type="checkbox" 
                           v-model="removeNumber">
-                        <label>Remove Number</label>
+                        <label for="RemoveNumber">Remove Number</label>
                       </div>
                     </div>
                     <div class="field">
                       <div class="ui checkbox">
                         <input 
                           type="checkbox" 
+                          id="RemoveHTML"
                           v-model="removeHTML">
-                        <label>Remove HTML</label>
+                        <label for="RemoveHTML">Remove HTML</label>
                       </div>
                     </div>
                   </div>

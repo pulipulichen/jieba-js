@@ -24,7 +24,7 @@ var appMount = async function () {
     }
     
     setTimeout(() => {
-      this.initSkipHeader()
+      this.initInputOptions()
       this.processOutput()
     }, 0)
   }

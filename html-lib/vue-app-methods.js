@@ -124,7 +124,7 @@ var appMethods = {
       this.$refs.inputFileUploadTrigger.value = ''
       this.processOutputWait = false
       
-      this.initSkipHeader()
+      this.initInputOptions()
     }
 
     if (type === 'application/vnd.oasis.opendocument.spreadsheet'
@@ -450,49 +450,81 @@ var appMethods = {
       return this.outputText
     }
   },
-  initSkipHeader () {
+  initInputOptions () {
     
-    let trimText = this.inputText.trim()
+    let initColumnSeparatorResult = this.initColumnSeparator()
+    this.onlyFirstColumn = initColumnSeparatorResult
     
-    if (trimText.indexOf('\n') > 0) {
-      //let t = _text.trim()
-      //firstLine = trimText.slice(0, trimText.indexOf('\n'))
-      //console.log(firstLine.length, firstLine, trimText.indexOf('\n'))
-      if (trimText.indexOf('\n') > 0 && trimText.indexOf('\n') < 20) {
-        this.doRemoveHeader = true
-      }
-      else {
-        this.doRemoveHeader = false
-      }
+    //let trimText = this.inputText.trim()
+    
+    if (this.isOneLine === true) {
+      this.doRemoveHeader = false
+      return true
+    }
+    
+    //let t = _text.trim()
+    //firstLine = trimText.slice(0, trimText.indexOf('\n'))
+    //console.log(firstLine.length, firstLine, trimText.indexOf('\n'))
+    if (this.firstLine.length < 20) {
+      this.doRemoveHeader = true
     }
     else {
       this.doRemoveHeader = false
     }
   },
+  initColumnSeparator () {
+    let candidates = [',', '\t']
+    
+    let result = {}
+    candidates.forEach(c => {
+      result[c] = true
+    })
+    let falseCounter = 0
+    
+    for (let i = this.inputTextTrimLines.length - 1; i > -1; i--) {
+      let line = this.inputTextTrimLines[i]
+      
+      candidates.forEach(c => {
+        if (result[c] === false) {
+          return false
+        }
+        
+        //console.log(c, line, line.split(c).length)
+        if (line.split(c).length !== 2) {
+          result[c] = false
+          falseCounter++
+        }
+      })
+      
+      if (falseCounter === candidates.length) {
+        this.columnSeparator = ''
+        return false
+      }
+    }
+    
+    //console.log(result)
+    for (let c in result) {
+      if (result[c] === true) {
+        this.columnSeparator = c
+        return true
+      }
+    }
+    this.columnSeparator = ''
+    return false
+  },
   processOutputInited: async function () {
     this.processOutputWait = true
     var _text = this.inputText.trim()
-
+    //console.log(_text)
 
     //let firstLine = ''
     
     //console.log(this.doRemoveHeader)
 
-    if (this.removeEnglish) {
-      _text = this.filterEnglish(_text)
-    }
-    if (this.removeNumber) {
-      _text = this.filterNumber(_text)
-    }
-    _text = this.filterWordRemap(_text)
-
     //console.log(_text)
     //return
 
     let rule = this.segmentationMethod
-    if (rule === 'n-gram') {
-      _text = this.filterStopWordsFromText(_text)
-    }
     //console.log(this.parseSingleCharacter(_text))
 
     var _custom_dict = this.configUserDictionaryArray
@@ -501,7 +533,7 @@ var appMethods = {
     var _result_array = []
     return new Promise((resolve, reject) => {
       //console.log('start promise')
-      let next = (_result, i) => {
+      let next = (_result, others, i) => {
         if (i === 0 && this.doRemoveHeader === true) {
           _result_array.push(_result.join(''))
           i++
@@ -540,6 +572,7 @@ var appMethods = {
           _result = _result.slice(2)
         }
         _result = _result.trim()
+        _result = _result + others
 
         _result_array.push(_result)
         i++
@@ -551,13 +584,33 @@ var appMethods = {
         if (i < _text_array.length) {
           let line = _text_array[i]
 
+          if (i === 0 && this.doRemoveHeader === true) {
+            return next([line], false, i)
+          } 
+          
+          let others = ''
+          if (this.onlyFirstColumn) {
+            let sepPos = line.indexOf(this.columnSeparator)
+            //console.log(line, this.columnSeparator, sepPos)
+            if (sepPos > 0) {
+              others = line.slice(sepPos)
+              line = line.slice(0, sepPos)
+            }
+          }
+          
           if (this.removeHTML === true) {
             line = this.stripHTMLTag(line)
           }
+          
+          if (this.removeEnglish) {
+            line = this.filterEnglish(line)
+          }
+          if (this.removeNumber) {
+            line = this.filterNumber(line)
+          }
+          line = this.filterWordRemap(line)
 
-          if (i === 0 && this.doRemoveHeader === true) {
-            next([line], i)
-          } else if (rule === 'dictionary') {
+          if (rule === 'dictionary') {
             if ((line.startsWith('"') && line.endsWith('"'))
                     || (line.startsWith("'") && line.endsWith("'"))) {
               line = line.slice(1, -1).trim()
@@ -566,12 +619,15 @@ var appMethods = {
               //console.log('start', i, ((i / _text_array.length) * 100) )
               call_jieba_cut(line, _custom_dict, function (_result) {
                 //console.log('end', i, )
-                next(_result, i)
+                next(_result, others, i)
               });
             }, 0)
           } else {
+            if (rule === 'n-gram') {
+              line = this.filterStopWordsFromText(line)
+            }
             let _result = this.processNGram(line)
-            next(_result, i)
+            next(_result, others, i)
           }
         } else {
           // 完成
