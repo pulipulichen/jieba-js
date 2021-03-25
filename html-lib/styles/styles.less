@@ -15,9 +15,24 @@ input.input-field[type='file'] {
 .text-panel {
   .input-textarea,
   .output-textarea {
-    height: calc((100vh - 23rem) / 2) !important;
+    height: calc((100vh - 21.5rem) / 2) !important;
     max-height: 100vh !important;
     min-height: 0 !important;
+  }
+  
+  .input-textarea-container,
+  .output-textarea-container {
+    height: calc((100vh - 21.5rem) / 2) !important;
+    max-height: 100vh !important;
+    min-height: 0 !important;
+  }
+  
+  .output-textarea-container {
+    margin-bottom: 1rem !important;
+  }
+  
+  .action-buttons {
+    margin-bottom: -0.5rem !important;
   }
 
   .buttons {
@@ -27,6 +42,15 @@ input.input-field[type='file'] {
   
   .input-filename {
     width: calc(100vw - 10rem);
+  }
+  
+  #hot-display-license-info {
+    position: fixed !important;
+    top: -100vh !important;
+  }
+  
+  .input-options {
+    text-align: right;
   }
 }
 
@@ -121,4 +145,9 @@ label {
 .row.output-row,
 .row.header-remove-row {
   padding-top: 0 !important;
+}
+
+.input-format {
+  flex-direction: row-reverse !important;
+  align-items: flex-end !important;
 }

@@ -37,9 +37,11 @@
     <script>less = {env: 'production'};</script>
     <script src="html-lib/vendors/less/less.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+    
   </head>
   <body>
-
 
     <form onsubmit="return false;" class="ui form" id="app">
 
@@ -76,20 +78,36 @@
           </div>
         </div>
         <div class="row input-header">
-          <div class="sixteen wide column">
-            <label class="ui header">Input Raw Text</label>
-            
+          <div class="eight wide column">
+            <label class="ui header">Input</label>
+          </div>
+          <div class="eight wide column">
+            <div class="field input-options">
+              <div class="ui checkbox">
+                <input 
+                  id="DoSkipHeader"
+                  type="checkbox" 
+                  v-model="doRemoveHeader">
+                <label for="DoSkipHeader">Skip first line (header)</label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row input-row">
-          <div class="sixteen wide column">
-            <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-            <textarea 
-              name="input" 
-              id="input" 
-              class="ui raised fluid segment input-textarea"
-              v-model="inputText"
-              ></textarea>
+          <div class="sixteen wide column input-textarea-container">
+            <template v-if="inputFormat === 'text'">
+
+              <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
+              <textarea 
+                name="input" 
+                id="input" 
+                class="ui raised fluid segment input-textarea"
+                v-model="inputText"
+                ></textarea>
+            </template>
+            <template v-if="inputFormat === 'table'">
+              <div ref="InputTable"></div>
+            </template>
           </div>
         </div>
 
@@ -111,17 +129,22 @@
           </div>
         </div>
         <div class="row output-row">
-          <div class="sixteen wide column">
-            <textarea 
-              name="output" 
-              id="output" 
-              class="ui raised segment output-textarea" 
-              data-storage="false"
-              v-model="outputText"
-              ></textarea>
+          <div class="sixteen wide column output-textarea-container">
+            <template v-if="inputFormat === 'text'">
+              <textarea 
+                name="output" 
+                id="output" 
+                class="ui raised segment output-textarea" 
+                data-storage="false"
+                v-model="outputText"
+                ></textarea>
+            </template>
+            <template v-if="inputFormat === 'table'">
+              <div ref="outputTable"></div>
+            </template>
           </div>
         </div>
-        <div class="row file-button-row">
+        <div class="row file-button-row action-buttons">
           <div class="column">
             <div class="ui bottom attached fluid buttons"
                  v-bind:class="{'disabled': outputButtonDisabled }">
@@ -149,18 +172,6 @@
                 <i class="table icon"></i>
                 Save as sheet
               </button>
-            </div>
-          </div>
-        </div>
-        <div class="row header-remove-row">
-          <div class="column">  
-            <div class="field">
-              <div class="ui checkbox">
-                <input 
-                  type="checkbox" 
-                  v-model="doRemoveHeader">
-                <label>Remove first line (header)</label>
-              </div>
             </div>
           </div>
         </div>

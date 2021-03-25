@@ -32,4 +32,7 @@ var appWatch = {
     useLowerCase () {
       this.persist()
     },
+    inputFormat () {
+      this.persist()
+    }
   }

@@ -30,6 +30,7 @@ var appMethods = {
       removeNumber: this.removeNumber,
       removeHTML: this.removeHTML,
       useLowerCase: this.useLowerCase,
+      inputFormat: this.inputFormat,
     }
     localStorage.setItem(key, JSON.stringify(data))
   },
@@ -122,6 +123,8 @@ var appMethods = {
       }
       this.$refs.inputFileUploadTrigger.value = ''
       this.processOutputWait = false
+      
+      this.initSkipHeader()
     }
 
     if (type === 'application/vnd.oasis.opendocument.spreadsheet'
@@ -447,13 +450,9 @@ var appMethods = {
       return this.outputText
     }
   },
-  processOutputInited: async function () {
-    this.processOutputWait = true
-    var _text = this.inputText.trim()
-
-
-    let firstLine = ''
-    let trimText = _text.trim()
+  initSkipHeader () {
+    
+    let trimText = this.inputText.trim()
     
     if (trimText.indexOf('\n') > 0) {
       //let t = _text.trim()
@@ -469,8 +468,15 @@ var appMethods = {
     else {
       this.doRemoveHeader = false
     }
+  },
+  processOutputInited: async function () {
+    this.processOutputWait = true
+    var _text = this.inputText.trim()
+
+
+    //let firstLine = ''
     
-    console.log(this.doRemoveHeader)
+    //console.log(this.doRemoveHeader)
 
     if (this.removeEnglish) {
       _text = this.filterEnglish(_text)
@@ -706,4 +712,22 @@ var appMethods = {
     })
     return output
   },
+  initTabls () {
+    var data = [
+  ['', 'Ford', 'Tesla', 'Toyota', 'Honda'],
+  ['2017', 10, 11, 12, 13],
+  ['2018', 20, 11, 14, 13],
+  ['2019', 30, 15, 12, 13]
+];
+
+    new Handsontable(this.$refs.InputTable, {
+      data: this.inputTable.splice(1),
+      colHeaders: this.inputTable[0],
+      rowHeaders: true,
+      filters: true,
+      dropdownMenu: true,
+      minSpareRows: 1,
+      contextMenu: true
+    });
+  }
 }

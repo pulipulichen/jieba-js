@@ -13,9 +13,18 @@ var appMount = async function () {
   postMessageAPI.ready()
   await this.loadFullStopWordsOnMount()
 
+//  if (this.inputFormat === 'table') {
+//    this.initTabls()
+//  }
+
   //console.log(this.searchParams.api)
   if (!this.searchParams.api) {
+    if (this.debug.startSegmentationOnLoad === false) {
+      return false
+    }
+    
     setTimeout(() => {
+      this.initSkipHeader()
       this.processOutput()
     }, 0)
   }
