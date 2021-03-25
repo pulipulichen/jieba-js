@@ -1,4 +1,6 @@
 var appData = {
+  version: '20210324-2204',
+  
   inputFilename: `Raw Text`,
   inputText: `
 message\tclass
