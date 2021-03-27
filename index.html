@@ -184,6 +184,7 @@
                 <i class="file alternate outline icon"></i>
                 Save as text
               </button>
+              <!--
               <button
                 type="button"
                 class="ui button"
@@ -191,6 +192,15 @@
                 v-bind:class="{'disabled': outputButtonDisabled }">
                 <i class="table icon"></i>
                 Save as sheet
+              </button>
+              -->
+              <button
+                type="button"
+                class="ui button"
+                v-on:click="saveAsBagOfWords"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="book icon"></i>
+                Save as Bag-of-words Model
               </button>
             </div>
           </div>
@@ -223,6 +233,15 @@
                 v-bind:class="{'disabled': outputButtonDisabled }">
                 <i class="lightbulb outline icon"></i>
                 Topic modeling
+              </button>
+              <button
+                v-if="onlyFirstColumn"
+                type="button"
+                class="ui button"
+                v-on:click="classifyText"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="sitemap icon"></i>
+                Classify Text
               </button>
             </div>
           </div>

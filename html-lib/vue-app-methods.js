@@ -371,6 +371,54 @@ var appMethods = {
   saveAsSheet() {
     console.error('@TODO')
   },
+  saveAsBagOfWords: async function () {
+    let data = await this.getClassifyText()
+    
+    var wb = XLSX.utils.book_new();
+
+    let sheetName = "bag-of-words"
+    wb.SheetNames.push(sheetName)
+    wb.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(data)
+    
+    var wbout = XLSX.write(wb, {bookType: 'ods', type: 'binary'});
+    
+    let appendFilename = '_seg' + (new Date()).mmddhhmm()
+    var filename = this.inputFilename + appendFilename + ".ods"
+    
+    saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+    
+    /*
+    let ext = 'csv'
+    let appendFilename = '_seg' + (new Date()).mmddhhmm()
+
+    var _file_name = this.inputFilename + appendFilename + "." + ext
+    var _file_content = ''
+    for (let len = data.length, i = len; i > 0; i--) {
+      let index = (len - i)
+      data[index] = data[index].join(',')
+      if (i % 10 === 5) {
+        await this.sleep(0)
+      }
+    }
+    _file_content = data.join('\n')
+    
+    if (_file_content === "") {
+      return;
+    }
+
+    var _character_encoding = "utf-8";
+
+    let mime = 'plain'
+    if (ext === 'csv') {
+      mime = 'csv'
+    }
+
+    // ------------
+
+    var blob = new Blob([_file_content], {type: "text/html;charset=" + _character_encoding})
+    saveAs(blob, _file_name)
+    */
+  },
   saveFile(ext) {
     let appendFilename = '_seg' + (new Date()).mmddhhmm()
 
@@ -425,8 +473,129 @@ var appMethods = {
       features: 0.8
     })
   },
+  classifyText: async function() {
+    //let url = 'http://localhost:8383/HTML-Simple-Classifier/index.html?api=1'
+    //let url = 'http://localhost:8383/d3-cloud/index.html'
+    //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
+    let url = 'https://pulipulichen.github.io/HTML-Simple-Classifier/index.html?api=1'
+    this.processOutputWait = true
+    let rawData = await this.getClassifyText()
+    //console.log(rawData)
+    
+    postMessageAPI.send(url, {rawData}, {
+      mode: 'popup',
+      newWindow: true,
+      features: 0.8
+    })
+    this.processOutputWait = false
+  },
+  getClassifyText: async function () {
+    if (this.outputTextBagOfWords !== null) {
+      return this.outputTextBagOfWords
+    }
+    
+    let outputText = this.outputText
+    let lines = outputText.split('\n')
+    
+    let className = 'class'
+    if (this.doRemoveHeader === true) {
+      let headerLine = lines.shift()
+      className = headerLine.slice(headerLine.indexOf(this.columnSeparator) + 1)
+    }
+    
+    // ---------------------------
+    
+    let bags = []
+    let classList = []
+    let words = {}
+    
+    console.log('getClassifyText', 'bags')
+    
+    for (let len = lines.length, i = len; i > 0; i--) {
+      let line = lines[(len - i)]
+      let lineClass = line.slice(line.indexOf(this.columnSeparator) + 1)
+      classList.push(lineClass)
+      
+      let message = line.slice(0, line.indexOf(this.columnSeparator))
+      let messageWords = message.split(' ')
+      
+      let bag = {}
+      for (let wordsLen = messageWords.length, j = wordsLen; j > 0; j--) {
+        let word = messageWords[(wordsLen - j)]
+        if (typeof words[word] === 'undefined') {
+          let pos = Object.keys(words).length
+          words[word] = pos
+        }
+        
+        if (!bag[word]) {
+          bag[word] = 0
+        }
+        bag[word]++
+        
+        if (j % 10 === 5) {
+          await this.sleep(0)
+        }
+      }
+      
+      bags.push(bag)
+      
+      if (i % 10 === 5) {
+        console.log('getClassifyText', 'bags', ((len - i) / len))
+        await this.sleep(0)
+      }
+    }
+    
+//    console.log(bags)
+//    console.log(words)
+    
+    // ---------------------------
+    
+    console.log('getClassifyText', 'rawData', 'header')
+    
+    let rawData = []
+    
+    let headers = Object.keys(words)
+    let headersLength = headers.length
+    let sortedHeaders = Array(headersLength)
+    for (let len = headersLength, i = len; i > 0; i--) {
+      let word = headers[(len - i)]
+      let headerPos = words[word]
+      sortedHeaders[headerPos] = word
+    }
+    
+    sortedHeaders.push(className)
+    rawData.push(sortedHeaders)
+    
+    // ----------------------------
+    
+    console.log('getClassifyText', 'rawData', 'bags')
+    
+    for (let len = bags.length, i = len; i > 0; i--) {
+      let rowIndex = (len - i)
+      let bag = bags[rowIndex]
+      
+      let row = Array(headersLength).fill(0)
+      Object.keys(bag).forEach(word => {
+        let index = words[word]
+        row[index] = bag[word]
+      })
+      
+      row.push(classList[rowIndex])
+      rawData.push(row)
+      
+      if (i % 10 === 5) {
+        console.log('getClassifyText', 'rawData', ((len - i) / len))
+        await this.sleep(0)
+      }
+    }
+    
+    this.outputTextBagOfWords = rawData
+    
+    return rawData
+  },
   processOutput: async function () {
     this.outputText = ''
+    this.outputTextBagOfWords = null
     if (this.jiebaInited === false
             && this.segmentationMethod === 'dictionary') {
       //console.log('要讀取了嗎？')
