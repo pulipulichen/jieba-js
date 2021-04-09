@@ -14,6 +14,7 @@ message\tclass
   inputFormat: 'text', // text || table
   outputText: ``,
   outputTextBagOfWords: null,
+  outputClasses: [],
   //step: 2,
   segmentationMethod: 'dictionary',
   //segmentationMethod: 'n-gram',

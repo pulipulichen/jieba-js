@@ -371,8 +371,25 @@ var appMethods = {
   saveAsSheet() {
     console.error('@TODO')
   },
+  downloadBase64File(contentBase64, mime, fileName) {
+      const linkSource = `data:${mime};base64,${contentBase64}`;
+      const downloadLink = document.createElement('a');
+      document.body.appendChild(downloadLink);
+
+      downloadLink.href = linkSource;
+      downloadLink.target = '_self';
+      downloadLink.download = fileName;
+      downloadLink.click(); 
+  },
   saveAsBagOfWords: async function () {
     let data = await this.getClassifyText()
+//    data = [
+//      ['a', 'b'],
+//      [1, 2],
+//    ]
+//    console.log(data)
+    let appendFilename = '_seg' + (new Date()).mmddhhmm()
+    var filename = this.inputFilename + appendFilename + ".csv"
     
     var wb = XLSX.utils.book_new();
 
@@ -380,12 +397,9 @@ var appMethods = {
     wb.SheetNames.push(sheetName)
     wb.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(data)
     
-    var wbout = XLSX.write(wb, {bookType: 'ods', type: 'binary'});
+    var wbout = XLSX.write(wb, {bookType: 'csv', type: 'base64'});
     
-    let appendFilename = '_seg' + (new Date()).mmddhhmm()
-    var filename = this.inputFilename + appendFilename + ".ods"
-    
-    saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+    this.downloadBase64File(wbout, 'text/css', filename);
     
     /*
     let ext = 'csv'
@@ -467,7 +481,10 @@ var appMethods = {
     //let url = 'http://localhost:8383/lda/index.html?api=1'
     //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
 
-    postMessageAPI.send(url, this.outputTextForAPI, {
+    postMessageAPI.send(url, {
+      inputText: this.outputTextForAPI,
+      configTopicNumber: this.outputClasses.length,
+    }, {
       mode: 'popup',
       newWindow: true,
       features: 0.8
@@ -509,7 +526,7 @@ var appMethods = {
     let classList = []
     let words = {}
     
-    console.log('getClassifyText', 'bags')
+    //console.log('getClassifyText', 'bags')
     
     for (let len = lines.length, i = len; i > 0; i--) {
       let line = lines[(len - i)]
@@ -540,7 +557,7 @@ var appMethods = {
       bags.push(bag)
       
       if (i % 10 === 5) {
-        console.log('getClassifyText', 'bags', ((len - i) / len))
+        //console.log('getClassifyText', 'bags', ((len - i) / len))
         await this.sleep(0)
       }
     }
@@ -550,7 +567,7 @@ var appMethods = {
     
     // ---------------------------
     
-    console.log('getClassifyText', 'rawData', 'header')
+    //console.log('getClassifyText', 'rawData', 'header')
     
     let rawData = []
     
@@ -568,7 +585,7 @@ var appMethods = {
     
     // ----------------------------
     
-    console.log('getClassifyText', 'rawData', 'bags')
+    //console.log('getClassifyText', 'rawData', 'bags')
     
     for (let len = bags.length, i = len; i > 0; i--) {
       let rowIndex = (len - i)
@@ -584,10 +601,22 @@ var appMethods = {
       rawData.push(row)
       
       if (i % 10 === 5) {
-        console.log('getClassifyText', 'rawData', ((len - i) / len))
+        //console.log('getClassifyText', 'rawData', ((len - i) / len))
         await this.sleep(0)
       }
     }
+    
+    
+    // ----------------------
+    // 清理一個乾淨的資料
+//    let temp = []
+//    for (let len = rawData.length, i = len; i > 0; i--) {
+//      temp.push(rawData[(len - i)])
+//    }
+//    rawData = temp
+    
+    // ----------------------
+    
     
     this.outputTextBagOfWords = rawData
     
@@ -595,6 +624,7 @@ var appMethods = {
   },
   processOutput: async function () {
     this.outputText = ''
+    this.outputClasses = []
     this.outputTextBagOfWords = null
     if (this.jiebaInited === false
             && this.segmentationMethod === 'dictionary') {
@@ -703,6 +733,13 @@ var appMethods = {
     return new Promise((resolve, reject) => {
       //console.log('start promise')
       let next = (_result, others, i) => {
+        if (typeof(others) === 'string') {
+          let otherClass = others.trim()
+          if (otherClass !== '' && this.outputClasses.indexOf(otherClass) === -1) {
+            this.outputClasses.push(otherClass)
+          }
+        }
+        
         if (i === 0 && this.doRemoveHeader === true) {
           _result_array.push(_result.join(''))
           i++
@@ -804,7 +841,7 @@ var appMethods = {
           this.outputText = _result_array.join('\n')
           this.processOutputWait = false
           this.configChanged = false
-
+          //console.log(this.outputClasses)
 
           //console.log('斷詞完成了')
           resolve(this.outputText)
