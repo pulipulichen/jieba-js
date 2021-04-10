@@ -382,6 +382,8 @@ var appMethods = {
       downloadLink.click(); 
   },
   saveAsBagOfWords: async function () {
+    this.processOutputWait = true
+    await this.sleep(0)
     let data = await this.getClassifyText()
 //    data = [
 //      ['a', 'b'],
@@ -396,11 +398,13 @@ var appMethods = {
     let sheetName = "bag-of-words"
     wb.SheetNames.push(sheetName)
     wb.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(data)
-    
+    await this.sleep(0)
     var wbout = XLSX.write(wb, {bookType: 'csv', type: 'base64'});
+    await this.sleep(0)
     
+    this.processOutputWait = false
     this.downloadBase64File(wbout, 'text/css', filename);
-    
+    //await this.sleep(0)
     /*
     let ext = 'csv'
     let appendFilename = '_seg' + (new Date()).mmddhhmm()
