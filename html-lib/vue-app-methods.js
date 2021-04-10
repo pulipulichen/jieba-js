@@ -531,6 +531,10 @@ var appMethods = {
     for (let len = lines.length, i = len; i > 0; i--) {
       let line = lines[(len - i)]
       let lineClass = line.slice(line.indexOf(this.columnSeparator) + 1)
+      if (this.selectClasses.indexOf(lineClass.trim()) === -1) {
+        continue
+      }
+      
       classList.push(lineClass)
       
       let message = line.slice(0, line.indexOf(this.columnSeparator))
@@ -841,6 +845,8 @@ var appMethods = {
           this.outputText = _result_array.join('\n')
           this.processOutputWait = false
           this.configChanged = false
+          
+          this.selectClasses = this.selectClasses.slice(0,0).concat(this.outputClasses)
           //console.log(this.outputClasses)
 
           //console.log('斷詞完成了')

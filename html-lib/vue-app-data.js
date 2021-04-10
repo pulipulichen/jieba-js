@@ -15,6 +15,7 @@ message\tclass
   outputText: ``,
   outputTextBagOfWords: null,
   outputClasses: [],
+  selectClasses: [],
   //step: 2,
   segmentationMethod: 'dictionary',
   //segmentationMethod: 'n-gram',

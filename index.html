@@ -164,6 +164,7 @@
             </template>
           </div>
         </div>
+        <div class="buttons-panel">
         <div class="row file-button-row action-buttons">
           <div class="column">
             <div class="ui bottom attached fluid buttons"
@@ -202,6 +203,36 @@
                 <i class="book icon"></i>
                 Save as Bag-of-words Model
               </button>
+            </div>
+          </div>
+        </div>
+        <div class="checkbox-row " v-if="outputClasses.length > 0">
+          <div class="checkbox-row-container fields">
+            <div class="inline field">
+
+            <label>
+              Class filter: 
+            </label>
+            <a
+                    class="ui mini button"
+                    v-on:click="selectClasses = outputClasses"
+                    v-if="selectClasses.length < outputClasses.length">
+              Select all
+            </a>
+            <a class="ui mini button"
+                    v-on:click="selectClasses = []"
+                    v-if="selectClasses.length == outputClasses.length">
+              Deselect all
+            </a>
+            </div>
+              <div class="field" v-for="c in outputClasses">
+                <div class="ui checkbox">
+                  <input type="checkbox" 
+                         v-model="selectClasses" 
+                         v-bind:value="c"
+                         v-bind:id="'class-'+c">
+                  <label v-bind:for="'class-'+c">{{ c }}</label>
+                </div>
             </div>
           </div>
         </div>
@@ -247,7 +278,7 @@
           </div>
         </div>
       </div>
-
+      </div>
       <!-- =============================================================== -->
 
       <div class="ui grid configuration-panel"

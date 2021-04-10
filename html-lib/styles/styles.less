@@ -15,14 +15,14 @@ input.input-field[type='file'] {
 .text-panel {
   .input-textarea,
   .output-textarea {
-    height: calc((100vh - 22rem) / 2) !important;
+    height: calc((100vh - 24rem) / 2) !important;
     max-height: 100vh !important;
     min-height: 0 !important;
   }
   
   .input-textarea-container,
   .output-textarea-container {
-    height: calc((100vh - 22rem) / 2) !important;
+    height: calc((100vh - 24rem) / 2) !important;
     max-height: 100vh !important;
     min-height: 0 !important;
   }
@@ -32,7 +32,13 @@ input.input-field[type='file'] {
   }
   
   .action-buttons {
-    margin-bottom: -0.5rem !important;
+    //margin-bottom: -0.5rem !important;
+  }
+  
+  .buttons-panel {
+    padding: 0 !important;
+    width: 100%;
+    margin-top: 1rem;
   }
 
   .buttons {
@@ -158,4 +164,21 @@ label {
 .input-format {
   flex-direction: row-reverse !important;
   align-items: flex-end !important;
+}
+
+.checkbox-row {
+  margin: -1rem auto 1.5rem auto !important
+    ;
+  max-width: 100vw;
+  overflow: auto;
+  
+  .checkbox-row-container.fields {
+    width: fit-content;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    
+    label {
+      cursor: pointer;
+    }
+  }
 }

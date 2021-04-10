@@ -63,13 +63,22 @@ var appComputed = {
       }
       
       if (this.onlyFirstColumn) {
-        output = output.split('\n').map(line => {
+        let tempOutput = []
+        let lines = output.split('\n')
+        for (let len = lines.length, i = len; i > 0; i--) {
+          let line = lines[(len - i)]
           let pos = line.indexOf(this.columnSeparator)
           if (pos > -1) {
+            let c = line.slice(pos).trim()
+            if (this.selectClasses.indexOf(c) === -1) {
+              continue
+            }
             line = line.slice(0, pos)
           }
-          return line
-        }).join('\n')
+          tempOutput.push(line)
+        }
+        
+        output = tempOutput.join('\n')
       }
       return output
     },
