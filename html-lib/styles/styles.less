@@ -15,14 +15,14 @@ input.input-field[type='file'] {
 .text-panel {
   .input-textarea,
   .output-textarea {
-    height: calc((100vh - 24rem) / 2) !important;
+    height: calc((100vh - 27rem) / 2) !important;
     max-height: 100vh !important;
     min-height: 0 !important;
   }
   
   .input-textarea-container,
   .output-textarea-container {
-    height: calc((100vh - 24rem) / 2) !important;
+    height: calc((100vh - 27rem) / 2) !important;
     max-height: 100vh !important;
     min-height: 0 !important;
   }
@@ -58,6 +58,10 @@ input.input-field[type='file'] {
   .input-options {
     justify-content: flex-end !important;
     margin: 0 !important;
+    
+    overflow: auto;
+    max-width: 100%;
+    max-height: 1.5rem;
     
     input[type="text"] {
       width: 2rem !important;
@@ -141,7 +145,7 @@ label {
 }
 
 .menu-padding {
-  height: 2rem;
+  height: 3.5rem;
 }
 
 .row.filename,

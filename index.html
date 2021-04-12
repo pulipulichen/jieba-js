@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>jieba-js demo</title>
+    <title>Simple Text Analyzer</title>
     <link rel="icon" type="image/png" href="icon.png" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,13 +43,30 @@
   </head>
   <body>
 
+      
+      <!-- =============================================================== -->
     <form onsubmit="return false;" class="ui form" id="app">
-
+      <div class="ui inverted two item top fixed menu">
+        <a class="item"
+           v-bind:class="{'active': (displayPanel === 'text')}"
+           v-on:click="displayPanel = 'text'">
+          <i class="file alternate icon"></i>
+          Text
+        </a>
+        <a class="item"
+           v-bind:class="{'active': (displayPanel === 'configuration')}"
+           v-on:click="displayPanel = 'configuration'">
+          <i class="cogs icon"></i>
+          Configuration
+        </a>
+      </div>
+       <div class="menu-padding"></div>
+       
       <div class="ui grid text-panel"
            v-if="displayPanel === 'text'">
         <div class="row filename">
           <div class="ten wide column">
-            <div class="inline fields">
+            <div class="field">
               <label>
                 Filename
               </label>
@@ -61,9 +78,11 @@
           </div>
           <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
             <button 
+              type="button"
               class="ui mini icon basic button" 
               v-on:click="$refs.inputFileUploadTrigger.click()">
               <i class="folder open outline icon"></i>
+              Open
             </button>
             <input 
               type="file" 
@@ -72,8 +91,11 @@
               id="input_file"
               accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm"
               v-on:change="loadInputFile" />
-            <button class="ui mini icon basic button" copy-from="#input">
+            <button class="ui mini icon basic button" 
+                    type="button"
+                    copy-from="#input">
               <i class="copy icon"></i>
+              Copy
             </button>
           </div>
         </div>
@@ -138,7 +160,7 @@
               class="ui fluid button"
               v-on:click="processOutput"
               v-bind:class="{'green': configChanged }">
-              START SEGMENTATION
+              Start Text Preprocessing
             </button>
           </div>
         </div>
@@ -503,22 +525,7 @@
 
       <!-- =============================================================== -->
 
-      <!-- =============================================================== -->
-      <div class="menu-padding"></div>
-      <div class="ui inverted two item bottom fixed menu">
-        <a class="item"
-           v-bind:class="{'active': (displayPanel === 'text')}"
-           v-on:click="displayPanel = 'text'">
-          <i class="file alternate icon"></i>
-          Text
-        </a>
-        <a class="item"
-           v-bind:class="{'active': (displayPanel === 'configuration')}"
-           v-on:click="displayPanel = 'configuration'">
-          <i class="cogs icon"></i>
-          Configuration
-        </a>
-      </div>
+     
 
       <div class="loading-modal" 
            v-if="processOutputWait">

@@ -171,7 +171,7 @@ var appMethods = {
       let sheetName = workbook.SheetNames[i]
 
       var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], {
-        FS: ' ',
+        FS: '\t',
         blankrows: false
       });
 
@@ -381,8 +381,25 @@ var appMethods = {
       downloadLink.download = fileName;
       downloadLink.click(); 
   },
+  downloadStringFile(content, mime, fileName) {
+    
+    
+      var blob = new Blob([content], {type: mime});
+//      if(window.navigator.msSaveOrOpenBlob) {
+//          window.navigator.msSaveBlob(blob, filename);
+//      }
+//      else{
+        var elem = window.document.createElement('a');
+        elem.href = window.URL.createObjectURL(blob);
+        elem.download = fileName;        
+        document.body.appendChild(elem);
+        elem.click();        
+        document.body.removeChild(elem);
+//      }
+  },
   saveAsBagOfWords: async function () {
     this.processOutputWait = true
+    console.log('saveAsBagOfWords', 1)
     await this.sleep(0)
     let data = await this.getClassifyText()
 //    data = [
@@ -390,20 +407,29 @@ var appMethods = {
 //      [1, 2],
 //    ]
 //    console.log(data)
+
+    console.log('saveAsBagOfWords', 2)
     let appendFilename = '_seg' + (new Date()).mmddhhmm()
     var filename = this.inputFilename + appendFilename + ".csv"
-    
-    var wb = XLSX.utils.book_new();
-
+//    
+//    var wb = XLSX.utils.book_new();
+//    console.log('saveAsBagOfWords', 3, data)
+    /*
     let sheetName = "bag-of-words"
     wb.SheetNames.push(sheetName)
     wb.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(data)
+    console.log('saveAsBagOfWords', 4)
     await this.sleep(0)
     var wbout = XLSX.write(wb, {bookType: 'csv', type: 'base64'});
     await this.sleep(0)
-    
+    console.log('saveAsBagOfWords', 5)
     this.processOutputWait = false
-    this.downloadBase64File(wbout, 'text/css', filename);
+    */
+    let dataString = data.map(line => line.join(',')).join('\n')
+    console.log('saveAsBagOfWords', 3, dataString.length)
+    //return false
+    this.downloadStringFile(dataString, 'text/csv', filename);
+    this.processOutputWait = false
     //await this.sleep(0)
     /*
     let ext = 'csv'
