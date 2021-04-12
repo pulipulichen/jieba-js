@@ -511,9 +511,14 @@ var appMethods = {
     //let url = 'http://localhost:8383/lda/index.html?api=1'
     //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
 
+    let configTopicNumber = undefined
+    if (this.selectClasses.length > 1) {
+      configTopicNumber = this.selectClasses
+    }
+
     postMessageAPI.send(url, {
       inputText: this.outputTextForAPI,
-      configTopicNumber: this.outputClasses.length,
+      configTopicNumber: configTopicNumber,
     }, {
       mode: 'popup',
       newWindow: true,
