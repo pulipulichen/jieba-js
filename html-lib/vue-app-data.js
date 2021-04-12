@@ -27,10 +27,7 @@ message\tclass
   configWordRemapExample: '',
   configStopWordsFile: `./stop_words.txt`,
   //configStopWordsFile: null,  // 預設不載入
-  configStopWords: `這個
-，
-、
-。`,
+  configStopWords: null,
   configStopWordsExample: '',
   fullStopWords: null,
   removeEnglish: false,
