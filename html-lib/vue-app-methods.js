@@ -793,7 +793,10 @@ var appMethods = {
                 word = word.toLowerCase()
               }
 
-              word = stemmer(word, false)
+              let afterWord = stemmer(word, false)
+              if (word !== afterWord) {
+                word = afterWord + '-'
+              }
             }
             return word
           })
