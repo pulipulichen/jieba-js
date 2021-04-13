@@ -578,6 +578,9 @@ var appMethods = {
       let bag = {}
       for (let wordsLen = messageWords.length, j = wordsLen; j > 0; j--) {
         let word = messageWords[(wordsLen - j)]
+        if (word.startsWith('_') === false) {
+          word = '_' + word
+        }
         if (typeof words[word] === 'undefined') {
           let pos = Object.keys(words).length
           words[word] = pos
@@ -798,6 +801,8 @@ var appMethods = {
                 word = word.toLowerCase()
               }
 
+              
+
               let afterWord = stemmer(word, false)
               if (word !== afterWord) {
                 word = afterWord + '-'
@@ -903,7 +908,13 @@ var appMethods = {
   },
   filterStopWords(result) {
     //console.log(result)
-    return result.filter(word => (this.configStopWordsArray.indexOf(word) === -1))
+    return result.filter(word => {
+      if (this.isEnglishNumberWord(word)) {
+        word = word.toLowerCase()
+      }
+      
+      return (this.configStopWordsArray.indexOf(word) === -1)
+    })
   },
   /**
    * @author https://stackoverflow.com/a/5002161/6645399
