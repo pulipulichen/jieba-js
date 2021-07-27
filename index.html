@@ -80,6 +80,13 @@
             <button 
               type="button"
               class="ui mini icon basic button" 
+              v-on:click="loadExample">
+              <i class="folder open outline icon"></i>
+              Example
+            </button>
+            <button 
+              type="button"
+              class="ui mini icon basic button" 
               v-on:click="$refs.inputFileUploadTrigger.click()">
               <i class="folder open outline icon"></i>
               Open

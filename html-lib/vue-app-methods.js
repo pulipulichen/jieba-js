@@ -75,12 +75,23 @@ var appMethods = {
 
       await this.processUploadConfiguration(result)
 
-
       this.processOutputWait = false
     }
 
 
     reader.readAsBinaryString(evt.target.files[0])
+  },
+  loadExample () {
+    /*
+    $.get('./demo/master-thesis-abstract.csv', (result) => {
+      this.inputFilename = 'master-thesis-abstract'
+      this.inputText = result
+      this.processOutputWait = false
+      
+      this.initInputOptions()
+    })
+    */
+    window.open('./demo/master-thesis-abstract.csv', '_blank')
   },
   loadInputFile(evt) {
     //console.log(1);
