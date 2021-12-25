@@ -12,7 +12,9 @@ var appMethods = {
         }
       }
       console.log('開始準備處理')
-      return await this.processOutput()
+      let result = await this.processOutput()
+      console.log(result)
+      return result
     })
     //console.log('設定好了')
   },
@@ -682,23 +684,35 @@ var appMethods = {
     if (this.jiebaInited === false
             && this.segmentationMethod === 'dictionary') {
       //console.log('要讀取了嗎？')
+      let loaded = false
+      
       return new Promise((resolve) => {
         //console.log('要讀取了嗎？')
         let _this = this
+        
         $.getScript('require-jieba-js.js', function () {
-          //console.log('OK')
+          
+          
           (async () => {
+            
+            if (loaded === true) {
+              return false
+            }
+            loaded = true
 
             _this.jiebaInited = true
-            //console.log('jieba-js讀取完成，開始斷詞')
+            console.trace('jieba-js讀取完成，開始斷詞')
             await _this.processOutputInited()
+            console.log('jieba-js讀取完成，完成斷詞', _this.outputText)
             resolve(_this.outputText)
           })()
         })
       })
 
     } else {
+      console.log('jieba-js已經初始化，開始斷詞')
       await this.processOutputInited()
+      console.log('jieba-js已經初始化，完成斷詞')
       return this.outputText
     }
   },
