@@ -3,7 +3,7 @@
 var appMethods = {
   setupAPI() {
     postMessageAPI.addReceiveListener(async (data) => {
-      //console.log('收到資料了', data)
+      console.log('收到資料了', data)
       if (typeof (data) === 'string') {
         this.inputText = data
       } else {
@@ -11,7 +11,7 @@ var appMethods = {
           this[key] = data[key]
         }
       }
-
+      console.log('開始準備處理')
       return await this.processOutput()
     })
     //console.log('設定好了')
