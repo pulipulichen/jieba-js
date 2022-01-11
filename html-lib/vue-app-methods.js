@@ -878,6 +878,7 @@ var appMethods = {
           
           if (this.removeHTML === true) {
             line = this.stripHTMLTag(line)
+            //console.log(line)
           }
           
           if (this.removeEnglish) {
@@ -900,11 +901,20 @@ var appMethods = {
                 next(_result, others, i)
               });
             }, 0)
-          } else {
-            if (rule === 'n-gram') {
-              line = this.filterStopWordsFromText(line)
+          } else if (rule === 'n-gram') {
+            /*
+            console.log(line)
+            //  line = this.filterStopWordsFromText(line)
+              console.log(line)
             }
+            */
             let _result = this.processNGram(line)
+            
+            _result = _result.filter(r => {
+              return (this.configStopWordsArray.indexOf(r) === -1)
+            })
+            
+            console.log(_result)
             next(_result, others, i)
           }
         } else {
@@ -947,7 +957,13 @@ var appMethods = {
    * @returns {string}
    */
   stripHTMLTag(str) {
-    return str.replace(/<\/?[^>]+(>|$)/g, " ")
+    str = str.replace(/<\/?[^>]+(>|$)/g, " ")
+    
+    while (str.indexOf('  ') > -1) {
+      str = str.replace(/  /g, " ")
+    }
+    
+    return str
   },
   processNGram(text) {
     text = text.trim()
