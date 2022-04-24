@@ -7,10 +7,15 @@ let postMessageAPI = PuliPostMessageAPI({
 var app = {
   el: '#app',
   data: appData,
+  components: appComponents,
   computed: appComputed,
   mounted: appMount,
   watch: appWatch,
-  methods: appMethods
+  methods: {
+    ...appMethods,
+    ...appMethodsInit,
+    ...appMethodsUpload
+  }
 }
 
 app = new Vue(app)

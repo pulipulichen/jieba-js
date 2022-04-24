@@ -27,8 +27,15 @@ input.input-field[type='file'] {
     min-height: 0 !important;
   }
   
-  .output-textarea-container {
-    margin-bottom: 1rem !important;
+  .output-textarea-container,
+  #outputWordVector {
+    margin-bottom: 2rem !important;
+  }
+
+  textarea {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
   }
   
   .action-buttons {
@@ -185,4 +192,9 @@ label {
       cursor: pointer;
     }
   }
+}
+
+.class-filter {
+  margin-bottom: -2rem;
+  margin-top: -1rem;
 }

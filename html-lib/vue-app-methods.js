@@ -1,160 +1,6 @@
 /* global postMessageAPI, XLSX */
 
 var appMethods = {
-  setupAPI() {
-    postMessageAPI.addReceiveListener(async (data) => {
-      console.log('收到資料了', data)
-      if (typeof (data) === 'string') {
-        this.inputText = data
-      } else {
-        for (let key in data) {
-          this[key] = data[key]
-        }
-      }
-      console.log('開始準備處理')
-      let result = await this.processOutput()
-      console.log(result)
-      return result
-    })
-    //console.log('設定好了')
-  },
-  persist() {
-    this.configChanged = true
-    let key = this.persistKey
-    let data = {
-      segmentationMethod: this.segmentationMethod,
-      nGramLength: this.nGramLength,
-      configUserDictionary: this.configUserDictionary,
-      configWordRemap: this.configWordRemap,
-      configStopWords: this.configStopWords,
-      usePorterStemmer: this.usePorterStemmer,
-      removeEnglish: this.removeEnglish,
-      removeNumber: this.removeNumber,
-      removeHTML: this.removeHTML,
-      useLowerCase: this.useLowerCase,
-      inputFormat: this.inputFormat,
-    }
-    localStorage.setItem(key, JSON.stringify(data))
-  },
-  loadPersistedData() {
-    let dataString = localStorage.getItem(this.persistKey)
-    if (dataString) {
-      let data = JSON.parse(dataString)
-      for (let key in data) {
-        this[key] = data[key]
-      }
-    }
-  },
-  loadConfigFile(evt) {
-    //console.log(1);
-    if (!window.FileReader)
-      return; // Browser is not compatible
-
-    this.processOutputWait = true
-    var reader = new FileReader()
-    let type = evt.target.files[0].type
-    let filename = evt.target.files[0].name
-
-    if (type !== 'application/vnd.oasis.opendocument.spreadsheet'
-            || filename.endsWith('.ods') === false) {
-      alert('Configuration file is invalid.')
-      this.processOutputWait = false
-      return false
-    }
-
-    reader.onload = async (evt) => {
-      if (evt.target.readyState !== 2) {
-        this.processOutputWait = false
-        return;
-      }
-      if (evt.target.error) {
-        alert('Error while reading file');
-        this.processOutputWait = false
-        return;
-      }
-
-      let result = evt.target.result
-
-      await this.processUploadConfiguration(result)
-
-      this.processOutputWait = false
-    }
-
-
-    reader.readAsBinaryString(evt.target.files[0])
-  },
-  loadExample () {
-    /*
-    $.get('./demo/master-thesis-abstract.csv', (result) => {
-      this.inputFilename = 'master-thesis-abstract'
-      this.inputText = result
-      this.processOutputWait = false
-      
-      this.initInputOptions()
-    })
-    */
-    window.open('./demo/master-thesis-abstract.csv', '_blank')
-  },
-  loadInputFile(evt) {
-    //console.log(1);
-    if (!window.FileReader)
-      return; // Browser is not compatible
-
-    this.processOutputWait = true
-    var reader = new FileReader();
-    let filename = evt.target.files[0].name
-    let type = evt.target.files[0].type
-    //console.log(type)
-    if (filename.indexOf('.') > -1) {
-      filename = filename.slice(0, filename.lastIndexOf('.'))
-    }
-    this.inputFilename = filename
-
-    reader.onload = async (evt) => {
-      if (evt.target.readyState !== 2) {
-        this.processOutputWait = false
-        return;
-      }
-      if (evt.target.error) {
-        alert('Error while reading file');
-        this.processOutputWait = false
-        return;
-      }
-
-      let result = evt.target.result
-      if (type === 'application/vnd.oasis.opendocument.spreadsheet'
-              || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-        this.inputText = await this.processUploadTypeSheet(result)
-      } else if (type === 'application/vnd.oasis.opendocument.text') {
-        this.inputText = await this.processUploadTypeODT(result)
-      } else if (type === 'text/html') {
-        this.inputText = this.processUploadTypeHTML(result)
-      } else if (type === 'text/csv') {
-        this.inputText = await this.processUploadTypeCSV(result)
-      } else {
-        this.inputText = result
-      }
-      this.$refs.inputFileUploadTrigger.value = ''
-      this.processOutputWait = false
-      
-      this.initInputOptions()
-    }
-
-    if (type === 'application/vnd.oasis.opendocument.spreadsheet'
-            || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      let size = evt.target.files[0].size
-      console.log('size', size)
-      if (size > 25000000) {
-        window.alert('ODS/XLSX檔案大小請低於2.5MB。')
-        this.processOutputWait = false
-        return false
-      }
-
-      reader.readAsBinaryString(evt.target.files[0])
-    } else {
-      reader.readAsText(evt.target.files[0])
-    }
-  },
   processUploadTypeHTML(html) {
     if (html.indexOf('<article') > -1) {
       html = html.slice(html.indexOf('<article'), html.lastIndexOf('</article>') + 1)
@@ -274,11 +120,18 @@ var appMethods = {
       view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
     return buf;
   },
+  aoa_to_sheet (data) {
+    let ws = XLSX.utils.aoa_to_sheet(data)
+    ws['!cols'] = []
+    ws['!rows'] = []
+    ws['!fullref'] = ws['!ref']
+    return ws
+  },
   downloadConfiguration() {
     var wb = XLSX.utils.book_new();
 
     wb.SheetNames.push("Segmentation")
-    wb.Sheets["Segmentation"] = XLSX.utils.aoa_to_sheet([
+    wb.Sheets["Segmentation"] = this.aoa_to_sheet([
       ['field', 'value'],
       ['segmentationMethod', this.segmentationMethod],
       ['nGramLength', this.nGramLength],
@@ -288,13 +141,13 @@ var appMethods = {
     ])
 
     wb.SheetNames.push("UserDictionary")
-    wb.Sheets["UserDictionary"] = XLSX.utils.aoa_to_sheet([['word', 'weight', 'pos']].concat(this.configUserDictionaryArray))
+    wb.Sheets["UserDictionary"] = this.aoa_to_sheet([['word', 'weight', 'pos']].concat(this.configUserDictionaryArray))
 
     wb.SheetNames.push("WordRemap")
-    wb.Sheets["WordRemap"] = XLSX.utils.aoa_to_sheet([['from', 'to']].concat(this.configWordRemapArray.map(({targetWord, replaceWord}) => [targetWord, replaceWord])))
+    wb.Sheets["WordRemap"] = this.aoa_to_sheet([['from', 'to']].concat(this.configWordRemapArray.map(({targetWord, replaceWord}) => [targetWord, replaceWord])))
 
     wb.SheetNames.push("StopWords")
-    wb.Sheets["StopWords"] = XLSX.utils.aoa_to_sheet([['stopword']].concat(this.configStopWordsArray.map(line => [line])))
+    wb.Sheets["StopWords"] = this.aoa_to_sheet([['stopword']].concat(this.configStopWordsArray.map(line => [line])))
 
     var wbout = XLSX.write(wb, {bookType: 'ods', type: 'binary'});
     let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
@@ -378,6 +231,10 @@ var appMethods = {
     this.$refs.outputCopyTextarea.select()
     document.execCommand("Copy")
   },
+  copyOutputWordVector() {
+    this.$refs.outputCopyTextarea.select()
+    document.execCommand("Copy")
+  },
   saveAsText() {
     this.saveFile('txt')
   },
@@ -410,20 +267,21 @@ var appMethods = {
         document.body.removeChild(elem);
 //      }
   },
-  saveAsBagOfWords: async function () {
+  saveAsWordVector: async function () {
     this.processOutputWait = true
     console.log('saveAsBagOfWords', 1)
     await this.sleep(0)
     let data = await this.getClassifyText()
+    console.log('saveAsBagOfWords', 2)
 //    data = [
 //      ['a', 'b'],
 //      [1, 2],
 //    ]
 //    console.log(data)
 
-    console.log('saveAsBagOfWords', 2)
+    //console.log('saveAsBagOfWords', 2)
     let appendFilename = '_seg' + (new Date()).mmddhhmm()
-    var filename = this.inputFilename + appendFilename + ".csv"
+    var filename = this.inputFilename + appendFilename + ".ods"
 //    
 //    var wb = XLSX.utils.book_new();
 //    console.log('saveAsBagOfWords', 3, data)
@@ -438,10 +296,27 @@ var appMethods = {
     console.log('saveAsBagOfWords', 5)
     this.processOutputWait = false
     */
+
+    /*
     let dataString = data.map(line => line.join(',')).join('\n')
     console.log('saveAsBagOfWords', 3, dataString.length)
     //return false
     this.downloadStringFile(dataString, 'text/csv', filename);
+    */
+    var wb = XLSX.utils.book_new();
+
+    wb.SheetNames.push("data")
+
+    let ws = this.aoa_to_sheet(data)
+    //console.log(ws)
+    wb.Sheets["data"] = ws
+
+    //var wbout = XLSX.write(wb, {bookType: 'ods', bookSST: true, type: 'base64'});
+    //let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+    //saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+
+    XLSX.writeFile(wb, filename);
+
     this.processOutputWait = false
     //await this.sleep(0)
     /*
@@ -555,8 +430,9 @@ var appMethods = {
     this.processOutputWait = false
   },
   getClassifyText: async function () {
-    if (this.outputTextBagOfWords !== null) {
-      return this.outputTextBagOfWords
+    console.log(this.outputTextWordVector, typeof(this.outputTextWordVector))
+    if (this.outputTextWordVector !== null) {
+      return this.outputTextWordVector
     }
     
     let outputText = this.outputText
@@ -602,7 +478,14 @@ var appMethods = {
         if (!bag[word]) {
           bag[word] = 0
         }
-        bag[word]++
+
+        if (this.wordVectorModel === 'TermFrequency') {
+          bag[word]++
+        }
+        else if (this.wordVectorModel === 'BagOfWords') {
+          bag[word] = 1
+        }
+        
         
         if (j % 10 === 5) {
           await this.sleep(0)
@@ -672,15 +555,15 @@ var appMethods = {
     
     // ----------------------
     
-    
-    this.outputTextBagOfWords = rawData
+    console.log(rawData)
+    this.outputTextWordVector = rawData
     
     return rawData
   },
   processOutput: async function () {
     this.outputText = ''
     this.outputClasses = []
-    this.outputTextBagOfWords = null
+    this.outputTextWordVector = null
     if (this.jiebaInited === false
             && this.segmentationMethod === 'dictionary') {
       //console.log('要讀取了嗎？')
@@ -701,18 +584,18 @@ var appMethods = {
             loaded = true
 
             _this.jiebaInited = true
-            console.trace('jieba-js讀取完成，開始斷詞')
+            //console.trace('jieba-js讀取完成，開始斷詞')
             await _this.processOutputInited()
-            console.log('jieba-js讀取完成，完成斷詞', _this.outputText)
+            //console.log('jieba-js讀取完成，完成斷詞', _this.outputText)
             resolve(_this.outputText)
           })()
         })
       })
 
     } else {
-      console.log('jieba-js已經初始化，開始斷詞')
+      //console.log('jieba-js已經初始化，開始斷詞')
       await this.processOutputInited()
-      console.log('jieba-js已經初始化，完成斷詞')
+      //console.log('jieba-js已經初始化，完成斷詞')
       return this.outputText
     }
   },

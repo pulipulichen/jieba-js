@@ -27,40 +27,36 @@
     <script src="html-lib/vendors/vue/vue.min.js"></script>
     <script src="html-lib/vendors/date-helper.js"></script>
 
-    <script src="html-lib/vendors/js-xlsx/shim.js"></script>
+    <script src="html-lib/vendors/vue/httpVueLoader.js"></script>
+    <script src="html-lib/vendors/vue/httpVueLoaderLess.js"></script>
+    
+    <script src="html-lib/vendors/js-xlsx/shim.min.js"></script>
+    <script src="html-lib/vendors/js-xlsx/Blob.js"></script>
+    <script src="html-lib/vendors/js-xlsx/xlsx.full.min.js"></script>
+    <!--
     <script src="html-lib/vendors/js-xlsx/full/suppress_export.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/jszip.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/cpexcel.js"></script>
     <script src="html-lib/vendors/js-xlsx/full/xlsx.js"></script>
-
+    -->
     <link rel="stylesheet/less" type="text/css" href="html-lib/styles/styles.less" />
     <script>less = {env: 'production'};</script>
     <script src="html-lib/vendors/less/less.min.js"></script>
 
+    <!--
     <script src="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
-    
+    -->
   </head>
   <body>
 
-      
-      <!-- =============================================================== -->
+
+
+    <!-- =============================================================== -->
     <form onsubmit="return false;" class="ui form" id="app">
-      <div class="ui inverted two item top fixed menu">
-        <a class="item"
-           v-bind:class="{'active': (displayPanel === 'text')}"
-           v-on:click="displayPanel = 'text'">
-          <i class="file alternate icon"></i>
-          Text
-        </a>
-        <a class="item"
-           v-bind:class="{'active': (displayPanel === 'configuration')}"
-           v-on:click="displayPanel = 'configuration'">
-          <i class="cogs icon"></i>
-          Configuration
-        </a>
-      </div>
-       <div class="menu-padding"></div>
+      <panel-menu 
+        v-bind:config="config"
+        ></panel-menu>
        
       <div class="ui grid text-panel"
            v-if="displayPanel === 'text'">
@@ -173,68 +169,110 @@
         </div>
 
         <div class="row output-header">
-          <div class="sixteen wide column">
-            <label class="ui header">Output Segmentation Result</label>
-          </div>
-        </div>
-        <div class="row output-row">
-          <div class="sixteen wide column output-textarea-container">
-            <template v-if="inputFormat === 'text'">
-              <textarea 
-                name="output" 
-                id="output" 
-                class="ui raised segment output-textarea" 
-                data-storage="false"
-                v-model="outputText"
-                ></textarea>
-            </template>
-            <template v-if="inputFormat === 'table'">
-              <div ref="outputTable"></div>
-            </template>
-          </div>
-        </div>
-        <div class="buttons-panel">
-        <div class="row file-button-row action-buttons">
-          <div class="column">
-            <div class="ui bottom attached fluid buttons"
-                 v-bind:class="{'disabled': outputButtonDisabled }">
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="copyOutput"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="copy icon"></i>
-                Copy
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="saveAsText"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="file alternate outline icon"></i>
-                Save as text
-              </button>
-              <!--
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="saveAsSheet"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="table icon"></i>
-                Save as sheet
-              </button>
-              -->
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="saveAsBagOfWords"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="book icon"></i>
-                Save as Bag-of-words Model
-              </button>
+
+          <div class="eight wide column">
+            <div class="sixteen wide column">
+              <label class="ui header">Output Segmentation Result</label>
+            </div>
+
+            <div class="sixteen wide column output-textarea-container">
+              <template v-if="inputFormat === 'text'">
+                <textarea 
+                  name="output" 
+                  id="output" 
+                  class="ui raised segment output-textarea" 
+                  data-storage="false"
+                  v-model="outputText"
+                  ></textarea>
+              </template>
+              <template v-if="inputFormat === 'table'">
+                <div ref="outputTable"></div>
+              </template>
+            </div>
+            <div class="buttons-panel">
+              <div class="row file-button-row action-buttons">
+                <div class="column">
+                  <div class="ui bottom attached fluid buttons"
+                       v-bind:class="{'disabled': outputButtonDisabled }">
+                    <button
+                      type="button"
+                      class="ui button"
+                      v-on:click="copyOutput"
+                      v-bind:class="{'disabled': outputButtonDisabled }">
+                      <i class="copy icon"></i>
+                      Copy
+                    </button>
+                    <button
+                      type="button"
+                      class="ui button"
+                      v-on:click="saveAsText"
+                      v-bind:class="{'disabled': outputButtonDisabled }">
+                      <i class="file alternate outline icon"></i>
+                      Save as text
+                    </button>
+                    <!--
+                    <button
+                      type="button"
+                      class="ui button"
+                      v-on:click="saveAsSheet"
+                      v-bind:class="{'disabled': outputButtonDisabled }">
+                      <i class="table icon"></i>
+                      Save as sheet
+                    </button>
+                    -->
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          <div class="eight wide column">
+
+            <template v-if="!outputTextWordVector">
+              <button
+                type="button"
+                class="ui fluid button"
+                v-on:click="saveAsWordVector"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="book icon"></i>
+                Save Model
+              </button>
+            </template>
+            <template v-if="outputTextWordVector">
+              <div class="sixteen wide column">
+                <label class="ui header">Word Vector Model</label>
+              </div>
+              <textarea 
+                name="outputWordVector" 
+                id="outputWordVector" 
+                class="ui raised segment output-textarea" 
+                data-storage="false"
+                v-model="outputTextWordVectorString"
+                ></textarea>
+              <div class="ui fluid buttons">
+                <button
+                  type="button"
+                  class="ui button"
+                  v-on:click="copyOutputWordVector"
+                  v-bind:class="{'disabled': outputButtonDisabled }">
+                  <i class="copy icon"></i>
+                  Copy
+                </button>
+                <button
+                  type="button"
+                  class="ui button"
+                  v-on:click="saveAsWordVector"
+                  v-bind:class="{'disabled': outputButtonDisabled }">
+                  <i class="book icon"></i>
+                  Save  Model
+                </button>
+              </div>
+            </template>
+
+
+          </div>
         </div>
+        
+        <div class="row class-filter">
         <div class="checkbox-row " v-if="outputClasses.length > 0">
           <div class="checkbox-row-container fields">
             <div class="inline field">
@@ -264,6 +302,7 @@
                 </div>
             </div>
           </div>
+        </div>
         </div>
         <div class="row api-buttons-row">
           <div class="column">
@@ -347,7 +386,7 @@
           <div class="sixteen wide column">
             <div class="ui form">
 
-              <div class="three fields">
+              <div class="four fields">
                 <div class="field">
 
                   <label>
@@ -450,6 +489,23 @@
                     </label>
                   </div>
                 </div>
+
+                <div class="field">
+                  <label>
+                    Word Vector Model
+                  </label>
+
+                  <div class="inline fields">
+                    <div class="field" v-on:click="wordVectorModel = 'BagOfWords'">
+                      <input type="radio" v-model="wordVectorModel" value="BagOfWords" />
+                      <label>Bag of Words</label>
+                    </div>
+                    <div class="field" v-on:click="wordVectorModel = 'dictionary'">
+                      <input type="radio" v-model="wordVectorModel" value="TermFrequency" />
+                      <label>Term Frequency</label>
+                    </div>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -536,7 +592,7 @@
 
       <div class="loading-modal" 
            v-if="processOutputWait">
-        <img src="html-lib/loading.svg" />
+        <img src="html-lib/assets/loading.svg" />
       </div>
 
       <textarea 
@@ -555,11 +611,18 @@
     <script src="html-lib/form-persist.js"></script>
     
     
+    <script src="html-lib/config/config-development.js"></script>
+    <script src="html-lib/config/config-session.js"></script>
+    <script src="html-lib/config/config-state.js"></script>
     <script src="html-lib/vue-app-data.js"></script>
+
     <script src="html-lib/vue-app-mounted.js"></script>
+    <script src="html-lib/vue-app-components.js"></script>
     <script src="html-lib/vue-app-computed.js"></script>
     <script src="html-lib/vue-app-watch.js"></script>
     <script src="html-lib/vue-app-methods.js"></script>
+    <script src="html-lib/vue-app-methods-init.js"></script>
+    <script src="html-lib/vue-app-methods-upload.js"></script>
     
     <script src="html-lib/vue-app.js"></script>
 

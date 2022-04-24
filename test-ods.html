@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Text Analyzer</title>
+    <link rel="icon" type="image/png" href="icon.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="text/javascript" src="//cdn.sheetjs.com/xlsx-latest/package/dist/shim.min.js"></script>
+    <script type="text/javascript" src="//cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<!--
+    <script src="html-lib/vendors/js-xlsx/full/suppress_export.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/jszip.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/cpexcel.js"></script>
+    <script src="html-lib/vendors/js-xlsx/full/xlsx.js"></script>
+  -->
+    
+    <script type="text/javascript" src="//unpkg.com/blob.js@1.0.1/Blob.js"></script>
+    <script type="text/javascript" src="//unpkg.com/file-saver@1.3.3/FileSaver.js"></script>
+  </head>
+  <body>
+
+    <table id="data-table"><tbody><tr><td id="data-table-A1"><span contenteditable="true">This</span></td><td id="data-table-B1"><span contenteditable="true">is</span></td><td id="data-table-C1"><span contenteditable="true">a</span></td><td id="data-table-D1"><span contenteditable="true">Test</span></td></tr><tr><td id="data-table-A2"><span contenteditable="true">வணக்கம்</span></td><td id="data-table-B2"><span contenteditable="true">สวัสดี</span></td><td id="data-table-C2"><span contenteditable="true">你好</span></td><td id="data-table-D2"><span contenteditable="true">가지마</span></td></tr><tr><td id="data-table-A3"><span contenteditable="true">1</span></td><td id="data-table-B3"><span contenteditable="true">2</span></td><td id="data-table-C3"><span contenteditable="true">3</span></td><td id="data-table-D3"><span contenteditable="true">4</span></td></tr><tr><td id="data-table-A4"><span contenteditable="true">Click</span></td><td id="data-table-B4"><span contenteditable="true">to</span></td><td id="data-table-C4"><span contenteditable="true">edit</span></td><td id="data-table-D4"><span contenteditable="true">cells</span></td></tr></tbody></table>
+
+    <script>
+
+
+function doit(type, fn, dl = true) {
+	let data = [
+    ['a,bc', 'b'],
+    ['1', '2'],
+    ['3', '4'],
+  ]
+
+  var wb = XLSX.utils.book_new();
+
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = []
+  ws['!rows'] = []
+  ws['!fullref'] = ws['!ref']
+
+  //var elt = document.getElementById('data-table');
+  //var worksheet = XLSX.utils.table_to_sheet(elt);
+
+
+  console.log(ws)
+  XLSX.utils.book_append_sheet(wb, ws, 'data');
+  //XLSX.utils.sheet_add_aoa(worksheet, data, { origin: -1 });
+
+  //XLSX.utils.book_append_sheet(workbook, worksheet, sheet_name);
+
+  //wb.SheetNames.push("data")
+  //wb.Sheets["data"] = XLSX.utils.aoa_to_sheet(data)
+
+	//var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+	return dl ?
+		XLSX.write(wb, {bookType:type, bookSST:true, type: 'string'}) :
+		XLSX.writeFile(wb, fn || ('s.' + (type || 'xlsx')));
+}
+
+
+    </script>
+
+    <button type="button" onclick="console.log(doit('csv'))">ODS</button>
+  </body>
+</html>

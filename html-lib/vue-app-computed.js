@@ -106,5 +106,22 @@ var appComputed = {
       else {
         return line
       }
+    },
+    outputTextWordVectorString () {
+      var wb = XLSX.utils.book_new();
+
+      wb.SheetNames.push("data")
+
+      let ws = this.aoa_to_sheet(this.outputTextWordVector)
+      //console.log(ws)
+      wb.Sheets["data"] = ws
+
+      //var wbout = XLSX.write(wb, {bookType: 'ods', bookSST: true, type: 'base64'});
+      //let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      //saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+
+      let csv = XLSX.write(wb, {bookType:'csv', bookSST:true, type: 'string'})
+      console.log(csv)
+      return csv
     }
   }

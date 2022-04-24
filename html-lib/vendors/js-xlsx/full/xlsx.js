@@ -3770,6 +3770,7 @@ function sheet_add_aoa(_ws, data, opts) {
 		range.e.r = Math.max(range.e.r, _range.e.r);
 		if(_R == -1) range.e.r = _R = _range.e.r + 1;
 	}
+
 	for(var R = 0; R != data.length; ++R) {
 		if(!data[R]) continue;
 		if(!Array.isArray(data[R])) throw new Error("aoa_to_sheet expects an array of arrays");
@@ -3806,6 +3807,18 @@ function sheet_add_aoa(_ws, data, opts) {
 		}
 	}
 	if(range.s.c < 10000000) ws['!ref'] = encode_range(range);
+
+
+	if (!ws['!cols']) {
+		ws['!cols'] = []
+	}
+	if (!ws['!rows']) {
+		ws['!rows'] = []
+	}
+	if (!ws['!fullref']) {
+		ws['!fullref'] = ws['!ref']
+	}
+
 	return ws;
 }
 function aoa_to_sheet(data, opts) { return sheet_add_aoa(null, data, opts); }
