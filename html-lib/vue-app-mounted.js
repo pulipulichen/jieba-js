@@ -1,17 +1,16 @@
 /* global postMessageAPI */
 
 var appMount = async function () {
+  this.config.computed = this.$refs.ComputedManager
+
   this.setupAPI()
 
-  this.configUserDictionaryExample = this.configUserDictionary
-  this.configWordRemapExample = this.configWordRemap
-  this.configStopWordsExample = this.configStopWords
+
 
   //console.log(stemmer("hopefully", true), stemmer("loves", true))
 
   this.loadPersistedData()
   postMessageAPI.ready()
-  await this.loadFullStopWordsOnMount()
 
 //  if (this.inputFormat === 'table') {
 //    this.initTabls()
@@ -19,13 +18,15 @@ var appMount = async function () {
 
   //console.log(this.searchParams.api)
   if (!this.searchParams.api) {
-    if (this.debug.startSegmentationOnLoad === false) {
+    if (this.config.development.debug.startSegmentationOnLoad === false) {
       return false
     }
     
     setTimeout(() => {
-      this.initInputOptions()
-      this.processOutput()
-    }, 0)
+      //this.initInputOptions()
+      //this.processOutput()
+      console.log(this.$refs.TextPanel)
+      this.$refs.TextPanel.initProcessOutput()
+    }, 100)
   }
 }

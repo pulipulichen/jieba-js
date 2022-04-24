@@ -1,0 +1,201 @@
+<div class="ConfigurationPanel ui grid configuration-panel"
+  v-bind:class="{'n-gram': (config.session.segmentationMethod === 'n-gram')}">
+  <div class="row">
+    <div class="ten wide column">
+      <label class="ui header">
+        Configuration ({{ config.development.version }})
+      </label>
+    </div>
+    <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
+      <button class="ui mini icon basic button" v-on:click="$refs.InputConfigFileTrigger.click();">
+        <i class="folder open outline icon"></i>
+      </button>
+      <input type="file" class="input-field" ref="InputConfigFileTrigger" id="input_config_file" accept=".ods"
+        v-on:change="loadConfigFile" />
+
+      <button class="ui mini icon basic button" v-on:click="downloadConfiguration">
+        <i class="save outline icon"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================= -->
+
+  <div class="row">
+    <div class="sixteen wide column">
+      <div class="ui form">
+
+        <div class="four fields">
+          <div class="field">
+
+            <label>
+              Segmentation Method
+            </label>
+            <div class="inline fields">
+              <div class="field">
+
+              </div>
+              <div class="field" v-on:click="config.session.segmentationMethod = 'dictionary'">
+                <input type="radio" v-model="config.session.segmentationMethod" value="dictionary" />
+                <label>Dictionary</label>
+              </div>
+              <div class="field">
+                <input type="radio" v-model="config.session.segmentationMethod" value="n-gram" />
+              </div>
+              <div class="field">
+                <input type="number" v-model="config.session.nGramLength" class="n-gram-number"
+                  v-on:change="config.session.segmentationMethod = 'n-gram'" />
+              </div>
+              <div class="field clickable" v-on:click="config.session.segmentationMethod = 'n-gram'">
+                <label>
+                  - gram
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              Remove
+            </label>
+
+            <div class="inline fields">
+              <div class="field">
+                <div class="ui checkbox">
+                  <input id="RemoveEnglish" type="checkbox" v-model="config.session.removeEnglish">
+                  <label for="RemoveEnglish">Remove English</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input id="RemoveNumber" type="checkbox" v-model="config.session.removeNumber">
+                  <label for="RemoveNumber">Remove Number</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" id="RemoveHTML" v-model="config.session.removeHTML">
+                  <label for="RemoveHTML">Remove HTML</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" v-bind:class="{'disabled': config.session.removeEnglish}">
+            <label>
+              English Process
+
+            </label>
+
+            <div class="ui checkbox">
+              <input type="checkbox" id="usePorterStemmer" v-model="config.session.usePorterStemmer">
+              <label for="usePorterStemmer">
+                Use Porter Stemmer
+                <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" target="_blank">
+                  (Help)
+                </a>
+              </label>
+            </div>
+
+            <div class="ui checkbox">
+              <input type="checkbox" id="useLowerCase" v-model="config.session.useLowerCase">
+              <label for="useLowerCase">
+                Lower Case
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              Word Vector Model
+            </label>
+
+            <div class="inline fields">
+              <div class="field" v-on:click="config.session.wordVectorModel = 'BagOfWords'">
+                <input type="radio" v-model="config.session.wordVectorModel" value="BagOfWords" />
+                <label>Bag of Words</label>
+              </div>
+              <div class="field" v-on:click="config.session.wordVectorModel = 'dictionary'">
+                <input type="radio" v-model="config.session.wordVectorModel" value="TermFrequency" />
+                <label>Term Frequency</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <template v-if="config.session.segmentationMethod === 'dictionary'">
+        <div class="inline fields">
+          <div class="field">
+            <label class="ui header">
+              User Dictionary
+            </label>
+          </div>
+          <!--
+                <div class="field">
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleUserDictionary"
+                    v-bind:class="{'disabled': (configUserDictionaryExample === configUserDictionary)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                </div>
+                -->
+        </div>
+        <div class="field">
+          <textarea v-model="config.session.configUserDictionary"></textarea>
+        </div>
+      </template>
+      <div class="field">
+        <div class="inline fields">
+          <div class="field">
+            <label class="ui header">
+              Word Remap
+            </label>
+          </div>
+          <!--
+                <div class="field">
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleWordRemap"
+                    v-bind:class="{'disabled': (configWordRemapExample === configWordRemap)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                </div>
+                -->
+        </div>
+        <textarea v-model="config.session.configWordRemap"></textarea>
+      </div>
+      <div class="field">
+        <div class="inline fields">
+          <div class="field">
+            <label class="ui header">
+              Stop Words
+            </label>
+          </div>
+          <div class="field">
+            <button class="ui mini basic button" v-on:click="loadFullStopWords">
+              <i class="file alternate outline icon"></i>
+              full
+            </button>
+
+            <!--
+                  <button 
+                    class="ui mini basic button" 
+                    v-on:click="setExampleStopWords"
+                    v-bind:class="{'disabled': (configStopWordsExample === configStopWords)}">
+                    <i class="file alternate outline icon"></i>
+                    example
+                  </button>
+                  -->
+          </div>
+        </div>
+        <textarea v-model="config.session.configStopWords"></textarea>
+      </div>
+    </div>
+  </div>
+</div>

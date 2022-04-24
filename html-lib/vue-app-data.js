@@ -9,5 +9,6 @@ var appData = {
     state: {
         ...configState
     },
+    computed: {}
   }
 }

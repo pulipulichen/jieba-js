@@ -13,8 +13,8 @@ var app = {
   watch: appWatch,
   methods: {
     ...appMethods,
-    ...appMethodsInit,
-    ...appMethodsUpload
+    //...appMethodsInit,
+    //...appMethodsUpload
   }
 }
 

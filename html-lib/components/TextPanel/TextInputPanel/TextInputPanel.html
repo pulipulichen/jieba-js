@@ -1,0 +1,67 @@
+<div class="TextInputPanel">
+  <div class="row filename">
+    <div class="ten wide column">
+      <div class="field">
+        <label>
+          Filename
+        </label>
+        <input type="text" v-model="config.session.inputFilename" class="input-filename" />
+      </div>
+    </div>
+    <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
+      <button type="button" class="ui mini icon basic button" v-on:click="$refs.UploadManager.loadExample">
+        <i class="folder open outline icon"></i>
+        Example
+      </button>
+      <button type="button" class="ui mini icon basic button" v-on:click="$refs.inputFileUploadTrigger.click()">
+        <i class="folder open outline icon"></i>
+        Open
+      </button>
+      <input type="file" class="input-field" ref="inputFileUploadTrigger" id="input_file"
+        accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm" v-on:change="$refs.UploadManager.loadInputFile" />
+      <button class="ui mini icon basic button" type="button" copy-from="#input">
+        <i class="copy icon"></i>
+        Copy
+      </button>
+    </div>
+  </div>
+  <div class="row input-header">
+    <div class="four wide column">
+      <label class="ui header">Input</label>
+    </div>
+    <div class="twelve wide column">
+      <div class="inline fields input-options">
+        <div class="field">
+          <div class="ui checkbox">
+            <input id="DoSkipHeader" type="checkbox" v-model="config.session.doRemoveHeader">
+            <label for="DoSkipHeader">Skip first line (header)</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input id="OnlyFirstColumn" type="checkbox" v-model="config.session.onlyFirstColumn">
+            <label for="OnlyFirstColumn">Only first column</label>
+          </div>
+        </div>
+        <div class="field" v-if="onlyFirstColumn">
+          <label for="ColumnSeparator">Column Separator</label>
+          <div class="ui mini icon input">
+            <input id="ColumnSeparator" type="text" v-model="config.session.columnSeparator">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row input-row">
+    <div class="sixteen wide column input-textarea-container">
+      <template v-if="config.session.inputFormat === 'text'">
+
+        <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
+        <textarea name="input" id="input" class="ui raised fluid segment input-textarea" v-model="config.session.inputText"></textarea>
+      </template>
+      <template v-if="config.session.inputFormat === 'table'">
+        <div ref="InputTable"></div>
+      </template>
+    </div>
+  </div>
+</div>

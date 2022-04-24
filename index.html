@@ -27,9 +27,6 @@
     <script src="html-lib/vendors/vue/vue.min.js"></script>
     <script src="html-lib/vendors/date-helper.js"></script>
 
-    <script src="html-lib/vendors/vue/httpVueLoader.js"></script>
-    <script src="html-lib/vendors/vue/httpVueLoaderLess.js"></script>
-    
     <script src="html-lib/vendors/js-xlsx/shim.min.js"></script>
     <script src="html-lib/vendors/js-xlsx/Blob.js"></script>
     <script src="html-lib/vendors/js-xlsx/xlsx.full.min.js"></script>
@@ -43,6 +40,9 @@
     <script>less = {env: 'production'};</script>
     <script src="html-lib/vendors/less/less.min.js"></script>
 
+    <script src="html-lib/vendors/vue/httpVueLoader.js"></script>
+    <script src="html-lib/vendors/vue/httpVueLoaderLess.js"></script>
+    
     <!--
     <script src="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
@@ -54,550 +54,40 @@
 
     <!-- =============================================================== -->
     <form onsubmit="return false;" class="ui form" id="app">
-      <panel-menu 
+      <PanelMenu
         v-bind:config="config"
-        ></panel-menu>
+        ref="PanelMenu"
+        ></PanelMenu>
        
-      <div class="ui grid text-panel"
-           v-if="displayPanel === 'text'">
-        <div class="row filename">
-          <div class="ten wide column">
-            <div class="field">
-              <label>
-                Filename
-              </label>
-              <input 
-                type="text" 
-                v-model="inputFilename"
-                class="input-filename"/>
-            </div>
-          </div>
-          <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
-            <button 
-              type="button"
-              class="ui mini icon basic button" 
-              v-on:click="loadExample">
-              <i class="folder open outline icon"></i>
-              Example
-            </button>
-            <button 
-              type="button"
-              class="ui mini icon basic button" 
-              v-on:click="$refs.inputFileUploadTrigger.click()">
-              <i class="folder open outline icon"></i>
-              Open
-            </button>
-            <input 
-              type="file" 
-              class="input-field"
-              ref="inputFileUploadTrigger"
-              id="input_file"
-              accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm"
-              v-on:change="loadInputFile" />
-            <button class="ui mini icon basic button" 
-                    type="button"
-                    copy-from="#input">
-              <i class="copy icon"></i>
-              Copy
-            </button>
-          </div>
-        </div>
-        <div class="row input-header">
-          <div class="four wide column">
-            <label class="ui header">Input</label>
-          </div>
-          <div class="twelve wide column">
-            <div class="inline fields input-options">
-              <div class="field">
-                <div class="ui checkbox">
-                  <input 
-                    id="DoSkipHeader"
-                    type="checkbox" 
-                    v-model="doRemoveHeader">
-                  <label for="DoSkipHeader">Skip first line (header)</label>
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui checkbox">
-                  <input 
-                    id="OnlyFirstColumn"
-                    type="checkbox" 
-                    v-model="onlyFirstColumn">
-                  <label for="OnlyFirstColumn">Only first column</label>
-                </div>
-              </div>
-              <div class="field" v-if="onlyFirstColumn">
-                <label for="ColumnSeparator">Column Separator</label>
-                <div class="ui mini icon input">
-                    <input 
-                      id="ColumnSeparator"
-                      type="text" 
-                      v-model="columnSeparator">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row input-row">
-          <div class="sixteen wide column input-textarea-container">
-            <template v-if="inputFormat === 'text'">
+      <TextPanel
+        v-bind:config="config"
+        v-if="config.session.displayPanel === 'text'"
+        ref="TextPanel"
+        ></TextPanel>
 
-              <!-- http://blog.fukuball.com/ru-he-shi-yong-jieba-jie-ba-zhong-wen-fen-ci-cheng-shi/ -->
-              <textarea 
-                name="input" 
-                id="input" 
-                class="ui raised fluid segment input-textarea"
-                v-model="inputText"
-                ></textarea>
-            </template>
-            <template v-if="inputFormat === 'table'">
-              <div ref="InputTable"></div>
-            </template>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="sixteen wide column">
-            <button 
-              type="button"
-              class="ui fluid button"
-              v-on:click="processOutput"
-              v-bind:class="{'green': configChanged }">
-              Start Text Preprocessing
-            </button>
-          </div>
-        </div>
-
-        <div class="row output-header">
-
-          <div class="eight wide column">
-            <div class="sixteen wide column">
-              <label class="ui header">Output Segmentation Result</label>
-            </div>
-
-            <div class="sixteen wide column output-textarea-container">
-              <template v-if="inputFormat === 'text'">
-                <textarea 
-                  name="output" 
-                  id="output" 
-                  class="ui raised segment output-textarea" 
-                  data-storage="false"
-                  v-model="outputText"
-                  ></textarea>
-              </template>
-              <template v-if="inputFormat === 'table'">
-                <div ref="outputTable"></div>
-              </template>
-            </div>
-            <div class="buttons-panel">
-              <div class="row file-button-row action-buttons">
-                <div class="column">
-                  <div class="ui bottom attached fluid buttons"
-                       v-bind:class="{'disabled': outputButtonDisabled }">
-                    <button
-                      type="button"
-                      class="ui button"
-                      v-on:click="copyOutput"
-                      v-bind:class="{'disabled': outputButtonDisabled }">
-                      <i class="copy icon"></i>
-                      Copy
-                    </button>
-                    <button
-                      type="button"
-                      class="ui button"
-                      v-on:click="saveAsText"
-                      v-bind:class="{'disabled': outputButtonDisabled }">
-                      <i class="file alternate outline icon"></i>
-                      Save as text
-                    </button>
-                    <!--
-                    <button
-                      type="button"
-                      class="ui button"
-                      v-on:click="saveAsSheet"
-                      v-bind:class="{'disabled': outputButtonDisabled }">
-                      <i class="table icon"></i>
-                      Save as sheet
-                    </button>
-                    -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="eight wide column">
-
-            <template v-if="!outputTextWordVector">
-              <button
-                type="button"
-                class="ui fluid button"
-                v-on:click="saveAsWordVector"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="book icon"></i>
-                Save Model
-              </button>
-            </template>
-            <template v-if="outputTextWordVector">
-              <div class="sixteen wide column">
-                <label class="ui header">Word Vector Model</label>
-              </div>
-              <textarea 
-                name="outputWordVector" 
-                id="outputWordVector" 
-                class="ui raised segment output-textarea" 
-                data-storage="false"
-                v-model="outputTextWordVectorString"
-                ></textarea>
-              <div class="ui fluid buttons">
-                <button
-                  type="button"
-                  class="ui button"
-                  v-on:click="copyOutputWordVector"
-                  v-bind:class="{'disabled': outputButtonDisabled }">
-                  <i class="copy icon"></i>
-                  Copy
-                </button>
-                <button
-                  type="button"
-                  class="ui button"
-                  v-on:click="saveAsWordVector"
-                  v-bind:class="{'disabled': outputButtonDisabled }">
-                  <i class="book icon"></i>
-                  Save  Model
-                </button>
-              </div>
-            </template>
-
-
-          </div>
-        </div>
-        
-        <div class="row class-filter">
-        <div class="checkbox-row " v-if="outputClasses.length > 0">
-          <div class="checkbox-row-container fields">
-            <div class="inline field">
-
-            <label>
-              Class filter: 
-            </label>
-            <a
-                    class="ui mini button"
-                    v-on:click="selectClasses = outputClasses"
-                    v-if="selectClasses.length < outputClasses.length">
-              Select all
-            </a>
-            <a class="ui mini button"
-                    v-on:click="selectClasses = []"
-                    v-if="selectClasses.length == outputClasses.length">
-              Deselect all
-            </a>
-            </div>
-              <div class="field" v-for="c in outputClasses">
-                <div class="ui checkbox">
-                  <input type="checkbox" 
-                         v-model="selectClasses" 
-                         v-bind:value="c"
-                         v-bind:id="'class-'+c">
-                  <label v-bind:for="'class-'+c">{{ c }}</label>
-                </div>
-            </div>
-          </div>
-        </div>
-        </div>
-        <div class="row api-buttons-row">
-          <div class="column">
-            <div class="ui top attached fluid buttons"
-                 v-bind:class="{'disabled': outputButtonDisabled }">
-              
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="drawWordCloud"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="cloud icon"></i>
-                Draw word cloud
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="analyzeText"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="crosshairs icon"></i>
-                Analyze text
-              </button>
-              <button
-                type="button"
-                class="ui button"
-                v-on:click="extractThemes"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="lightbulb outline icon"></i>
-                Topic modeling
-              </button>
-              <button
-                v-if="onlyFirstColumn"
-                type="button"
-                class="ui button"
-                v-on:click="classifyText"
-                v-bind:class="{'disabled': outputButtonDisabled }">
-                <i class="sitemap icon"></i>
-                Classify Text
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
-      <!-- =============================================================== -->
-
-      <div class="ui grid configuration-panel"
-           v-if="displayPanel === 'configuration'"
-           v-bind:class="{'n-gram': (segmentationMethod === 'n-gram')}">
-        <div class="row">
-          <div class="ten wide column">
-            <label class="ui header">
-              Configuration ({{ version }})
-            </label>
-          </div>
-          <div class="six wide column" 
-               style="text-align:right; margin-bottom: 5px;">
-            <button 
-              class="ui mini icon basic button" 
-              v-on:click="$refs.InputConfigFileTrigger.click();">
-              <i class="folder open outline icon"></i>
-            </button>
-            <input 
-              type="file" 
-              class="input-field" 
-              ref="InputConfigFileTrigger"
-              id="input_config_file"
-              accept=".ods"
-              v-on:change="loadConfigFile" />
-
-            <button class="ui mini icon basic button"
-                    v-on:click="downloadConfiguration">
-              <i class="save outline icon"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ================================= -->
-
-        <div class="row">
-          <div class="sixteen wide column">
-            <div class="ui form">
-
-              <div class="four fields">
-                <div class="field">
-
-                  <label>
-                    Segmentation Method
-                  </label>
-                  <div class="inline fields">
-                    <div class="field">
-
-                    </div>
-                    <div class="field" v-on:click="segmentationMethod = 'dictionary'">
-                      <input type="radio" v-model="segmentationMethod" value="dictionary" />
-                      <label>Dictionary</label>
-                    </div>
-                    <div class="field">
-                      <input 
-                        type="radio" 
-                        v-model="segmentationMethod" 
-                        value="n-gram" />
-                    </div>
-                    <div class="field">
-                      <input 
-                        type="number" 
-                        v-model="nGramLength" 
-                        class="n-gram-number"
-                        v-on:change="segmentationMethod = 'n-gram'" />
-                    </div>
-                    <div class="field clickable" v-on:click="segmentationMethod = 'n-gram'">
-                      <label>
-                        - gram
-                      </label>  
-                    </div>
-
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label>
-                    Remove
-                  </label>
-
-                  <div class="inline fields">
-                    <div class="field">
-                      <div class="ui checkbox">
-                        <input 
-                          id="RemoveEnglish"
-                          type="checkbox" 
-                          v-model="removeEnglish">
-                        <label for="RemoveEnglish">Remove English</label>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <div class="ui checkbox">
-                        <input 
-                          id="RemoveNumber"
-                          type="checkbox" 
-                          v-model="removeNumber">
-                        <label for="RemoveNumber">Remove Number</label>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <div class="ui checkbox">
-                        <input 
-                          type="checkbox" 
-                          id="RemoveHTML"
-                          v-model="removeHTML">
-                        <label for="RemoveHTML">Remove HTML</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="field"
-                     v-bind:class="{'disabled': removeEnglish}">
-                  <label>
-                    English Process
-                    
-                  </label>
-
-                  <div class="ui checkbox">
-                    <input 
-                      type="checkbox" 
-                      id="usePorterStemmer"
-                      v-model="usePorterStemmer">
-                    <label for="usePorterStemmer">
-                      Use Porter Stemmer
-                      <a href="https://github.com/kristopolous/Porter-Stemmer/blob/master/README.md" 
-                         target="_blank">
-                        (Help)
-                      </a>
-                    </label>
-                  </div>
-                  
-                  <div class="ui checkbox">
-                    <input 
-                      type="checkbox" 
-                      id="useLowerCase"
-                      v-model="useLowerCase">
-                    <label for="useLowerCase">
-                      Lower Case
-                    </label>
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label>
-                    Word Vector Model
-                  </label>
-
-                  <div class="inline fields">
-                    <div class="field" v-on:click="wordVectorModel = 'BagOfWords'">
-                      <input type="radio" v-model="wordVectorModel" value="BagOfWords" />
-                      <label>Bag of Words</label>
-                    </div>
-                    <div class="field" v-on:click="wordVectorModel = 'dictionary'">
-                      <input type="radio" v-model="wordVectorModel" value="TermFrequency" />
-                      <label>Term Frequency</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <template v-if="segmentationMethod === 'dictionary'">
-              <div class="inline fields">
-                <div class="field">
-                  <label class="ui header">
-                    User Dictionary
-                  </label>
-                </div>
-                <!--
-                <div class="field">
-                  <button 
-                    class="ui mini basic button" 
-                    v-on:click="setExampleUserDictionary"
-                    v-bind:class="{'disabled': (configUserDictionaryExample === configUserDictionary)}">
-                    <i class="file alternate outline icon"></i>
-                    example
-                  </button>
-                </div>
-                -->
-              </div>
-              <div class="field">
-                <textarea v-model="configUserDictionary"></textarea>
-              </div>
-            </template>
-            <div class="field">
-              <div class="inline fields">
-                <div class="field">
-                  <label class="ui header">
-                    Word Remap
-                  </label>
-                </div>
-                <!--
-                <div class="field">
-                  <button 
-                    class="ui mini basic button" 
-                    v-on:click="setExampleWordRemap"
-                    v-bind:class="{'disabled': (configWordRemapExample === configWordRemap)}">
-                    <i class="file alternate outline icon"></i>
-                    example
-                  </button>
-                </div>
-                -->
-              </div>
-              <textarea v-model="configWordRemap"></textarea>
-            </div>
-            <div class="field">
-              <div class="inline fields">
-                <div class="field">
-                  <label class="ui header">
-                    Stop Words
-                  </label>
-                </div>
-                <div class="field">
-                  <button 
-                    class="ui mini basic button" 
-                    v-on:click="loadFullStopWords">
-                    <i class="file alternate outline icon"></i>
-                    full
-                  </button>
-
-                  <!--
-                  <button 
-                    class="ui mini basic button" 
-                    v-on:click="setExampleStopWords"
-                    v-bind:class="{'disabled': (configStopWordsExample === configStopWords)}">
-                    <i class="file alternate outline icon"></i>
-                    example
-                  </button>
-                  -->
-                </div>
-              </div>
-              <textarea v-model="configStopWords"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ConfigurationPanel
+        v-bind:config="config"
+        v-if="config.session.displayPanel === 'configuration'"
+        ref="ConfigurationPanel"
+        ></ConfigurationPanel>
 
       <!-- =============================================================== -->
 
-     
+      <ComputedManager
+        v-bind:config="config"
+        ref="ComputedManager"
+        ></ComputedManager>
+
+      <!-- =============================================================== -->
 
       <div class="loading-modal" 
-           v-if="processOutputWait">
+           v-if="config.state.processOutputWait">
         <img src="html-lib/assets/loading.svg" />
       </div>
 
       <textarea 
         ref="outputCopyTextarea" 
-        v-model="outputText"
+        v-model="config.state.outputText"
         class="output-copy-textarea"
         ></textarea>
 
@@ -614,15 +104,21 @@
     <script src="html-lib/config/config-development.js"></script>
     <script src="html-lib/config/config-session.js"></script>
     <script src="html-lib/config/config-state.js"></script>
+
+    <script src="html-lib/utils/utilsString.js"></script>
+    <script src="html-lib/utils/utilsAsync.js"></script>
+    <script src="html-lib/utils/utilsSheet.js"></script>
+    <script src="html-lib/utils/utils.js"></script>
+
     <script src="html-lib/vue-app-data.js"></script>
 
     <script src="html-lib/vue-app-mounted.js"></script>
     <script src="html-lib/vue-app-components.js"></script>
     <script src="html-lib/vue-app-computed.js"></script>
     <script src="html-lib/vue-app-watch.js"></script>
+
+
     <script src="html-lib/vue-app-methods.js"></script>
-    <script src="html-lib/vue-app-methods-init.js"></script>
-    <script src="html-lib/vue-app-methods-upload.js"></script>
     
     <script src="html-lib/vue-app.js"></script>
 

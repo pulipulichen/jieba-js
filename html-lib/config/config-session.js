@@ -16,9 +16,8 @@ message\tclass
   nGramLength: 2,
   configUserDictionary: `找尋樂趣,9999999,n
 無聊的世界,9999999,n`,
-  configUserDictionaryExample: '',
   configWordRemap: `食物,甜點`,
-  configWordRemapExample: '',
+  configStopWords: null,
 
   removeEnglish: false,
   removeNumber: false,

@@ -5,7 +5,8 @@ var configState = {
   outputClasses: [],
   selectClasses: [],
 
-  configStopWords: null,
+  configUserDictionaryExample: '',
+  configWordRemapExample: '',
   configStopWordsExample: '',
   fullStopWords: null,
 

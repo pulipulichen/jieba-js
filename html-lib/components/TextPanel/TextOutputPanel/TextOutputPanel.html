@@ -1,0 +1,81 @@
+<div class="TextOutputPanel">
+  <div class="row output-header">
+
+    <div class="eight wide column">
+      <div class="sixteen wide column">
+        <label class="ui header">Output Segmentation Result</label>
+      </div>
+
+      <div class="sixteen wide column output-textarea-container">
+        <template v-if="config.session.inputFormat === 'text'">
+          <textarea name="output" id="output" class="ui raised segment output-textarea" data-storage="false"
+            v-model="config.state.outputText"></textarea>
+        </template>
+        <template v-if="config.session.inputFormat === 'table'">
+          <div ref="outputTable"></div>
+        </template>
+      </div>
+      <div class="buttons-panel">
+        <div class="row file-button-row action-buttons">
+          <div class="column">
+            <div class="ui bottom attached fluid buttons" v-bind:class="{'disabled': outputButtonDisabled }">
+              <button type="button" class="ui button" v-on:click="copyOutput"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="copy icon"></i>
+                Copy
+              </button>
+              <button type="button" class="ui button" v-on:click="saveAsText"
+                v-bind:class="{'disabled': outputButtonDisabled }">
+                <i class="file alternate outline icon"></i>
+                Save as text
+              </button>
+              <!--
+                    <button
+                      type="button"
+                      class="ui button"
+                      v-on:click="saveAsSheet"
+                      v-bind:class="{'disabled': outputButtonDisabled }">
+                      <i class="table icon"></i>
+                      Save as sheet
+                    </button>
+                    -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="eight wide column">
+
+      <template v-if="!outputTextWordVector">
+        <button type="button" class="ui fluid button" v-on:click="saveAsWordVector"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="book icon"></i>
+          Save Model
+        </button>
+      </template>
+      <template v-if="outputTextWordVector">
+        <div class="sixteen wide column">
+          <label class="ui header">Word Vector Model</label>
+        </div>
+        <textarea name="outputWordVector" id="outputWordVector" class="ui raised segment output-textarea"
+          data-storage="false" v-model="outputTextWordVectorString"></textarea>
+        <div class="ui fluid buttons">
+          <button type="button" class="ui button" v-on:click="copyOutputWordVector"
+            v-bind:class="{'disabled': outputButtonDisabled }">
+            <i class="copy icon"></i>
+            Copy
+          </button>
+          <button type="button" class="ui button" v-on:click="saveAsWordVector"
+            v-bind:class="{'disabled': outputButtonDisabled }">
+            <i class="book icon"></i>
+            Save Model
+          </button>
+        </div>
+      </template>
+
+
+    </div>
+  </div>
+
+  <TextOutputExportPanel :config="config" ref="TextOutputExportPanel"></TextOutputExportPanel>
+</div>
