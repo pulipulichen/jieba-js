@@ -1,0 +1,13 @@
+{
+  "name": "Jieba JS",
+  "short_name": "JiebaJS",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Jieba JS",
+  "icons": [{
+    "src": "dist/images/icon.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }]
+}

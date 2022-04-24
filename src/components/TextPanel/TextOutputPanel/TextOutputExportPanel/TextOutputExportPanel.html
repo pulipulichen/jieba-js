@@ -1,0 +1,55 @@
+<div class="TextOutputExportPanel">
+  <div class="row class-filter">
+    <div class="checkbox-row " v-if="config.state.outputClasses.length > 0">
+      <div class="checkbox-row-container fields">
+        <div class="inline field">
+
+          <label>
+            Class filter:
+          </label>
+          <a class="ui mini button" v-on:click="config.state.selectClasses = config.state.outputClasses"
+            v-if="config.state.selectClasses.length < config.state.outputClasses.length">
+            Select all
+          </a>
+          <a class="ui mini button" v-on:click="config.state.selectClasses = []" 
+            v-if="config.state.selectClasses.length == config.state.outputClasses.length">
+            Deselect all
+          </a>
+        </div>
+        <div class="field" v-for="c in config.state.outputClasses">
+          <div class="ui checkbox">
+            <input type="checkbox" v-model="config.state.selectClasses" v-bind:value="c" v-bind:id="'class-'+c">
+            <label v-bind:for="'class-'+c">{{ c }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row api-buttons-row">
+    <div class="column">
+      <div class="ui top attached fluid buttons" v-bind:class="{'disabled': outputButtonDisabled }">
+
+        <button type="button" class="ui button" v-on:click="drawWordCloud"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="cloud icon"></i>
+          Draw word cloud
+        </button>
+        <button type="button" class="ui button" v-on:click="analyzeText"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="crosshairs icon"></i>
+          Analyze text
+        </button>
+        <button type="button" class="ui button" v-on:click="extractThemes"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="lightbulb outline icon"></i>
+          Topic modeling
+        </button>
+        <button v-if="config.session.onlyFirstColumn" type="button" class="ui button" v-on:click="classifyText"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="sitemap icon"></i>
+          Classify Text
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

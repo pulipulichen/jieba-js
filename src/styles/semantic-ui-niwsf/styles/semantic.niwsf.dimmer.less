@@ -1,0 +1,166 @@
+
+.non-invasive-web-style-framework .dimmable:not(body) {
+  position: relative;
+}
+.non-invasive-web-style-framework .ui.dimmer {
+display: none;
+position: absolute;
+top: 0em !important;
+left: 0em !important;
+width: 100%;
+height: 100%;
+text-align: center;
+vertical-align: middle;
+padding: 1em;
+background-color: rgba(0, 0, 0, 0.85);
+opacity: 0;
+line-height: 1;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;
+-webkit-animation-duration: 0.5s;
+animation-duration: 0.5s;
+-webkit-transition: background-color 0.5s linear;
+transition: background-color 0.5s linear;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+flex-direction: column;
+-webkit-box-align: center;
+-ms-flex-align: center;
+align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+justify-content: center;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+will-change: opacity;
+z-index: 1000;
+}
+.non-invasive-web-style-framework .ui.dimmer > .content {
+-webkit-user-select: text;
+-moz-user-select: text;
+-ms-user-select: text;
+user-select: text;
+color: #FFFFFF;
+}
+.non-invasive-web-style-framework .ui.segment > .ui.dimmer {
+border-radius: inherit !important;
+}
+.non-invasive-web-style-framework .ui.dimmer:not(.inverted)::-webkit-scrollbar-track {
+background: rgba(255, 255, 255, 0.1);
+}
+.non-invasive-web-style-framework .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb {
+background: rgba(255, 255, 255, 0.25);
+}
+.non-invasive-web-style-framework .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
+background: rgba(255, 255, 255, 0.15);
+}
+.non-invasive-web-style-framework .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
+background: rgba(255, 255, 255, 0.35);
+}
+.non-invasive-web-style-framework .animating.dimmable:not(body),
+.non-invasive-web-style-framework .dimmed.dimmable:not(body) {
+overflow: hidden;
+}
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.animating.dimmer,
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.visible.dimmer,
+.non-invasive-web-style-framework .ui.active.dimmer {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+opacity: 1;
+}
+.non-invasive-web-style-framework .ui.disabled.dimmer {
+width: 0 !important;
+height: 0 !important;
+}
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.animating.legacy.dimmer,
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.visible.legacy.dimmer,
+.non-invasive-web-style-framework .ui.active.legacy.dimmer {
+display: block;
+}
+.non-invasive-web-style-framework .ui[class*="top aligned"].dimmer {
+-webkit-box-pack: start;
+-ms-flex-pack: start;
+justify-content: flex-start;
+}
+.non-invasive-web-style-framework .ui[class*="bottom aligned"].dimmer {
+-webkit-box-pack: end;
+-ms-flex-pack: end;
+justify-content: flex-end;
+}
+.non-invasive-web-style-framework .ui.page.dimmer {
+position: fixed;
+-webkit-transform-style: '';
+transform-style: '';
+-webkit-perspective: 2000px;
+perspective: 2000px;
+-webkit-transform-origin: center center;
+transform-origin: center center;
+}
+.non-invasive-web-style-framework body.animating.in.dimmable,
+.non-invasive-web-style-framework body.dimmed.dimmable {
+overflow: hidden;
+}
+.non-invasive-web-style-framework body.dimmable > .dimmer {
+position: fixed;
+}
+.non-invasive-web-style-framework .blurring.dimmable > :not(.dimmer) {
+-webkit-filter: blur(0px) grayscale(0);
+filter: blur(0px) grayscale(0);
+-webkit-transition: 800ms -webkit-filter ease;
+transition: 800ms -webkit-filter ease;
+transition: 800ms filter ease;
+transition: 800ms filter ease, 800ms -webkit-filter ease;
+}
+.non-invasive-web-style-framework .blurring.dimmed.dimmable > :not(.dimmer) {
+-webkit-filter: blur(5px) grayscale(0.7);
+filter: blur(5px) grayscale(0.7);
+}
+.non-invasive-web-style-framework .blurring.dimmable > .dimmer {
+background-color: rgba(0, 0, 0, 0.6);
+}
+.non-invasive-web-style-framework .blurring.dimmable > .inverted.dimmer {
+background-color: rgba(255, 255, 255, 0.6);
+}
+.non-invasive-web-style-framework .ui.dimmer > .top.aligned.content > * {
+vertical-align: top;
+}
+.non-invasive-web-style-framework .ui.dimmer > .bottom.aligned.content > * {
+vertical-align: bottom;
+}
+.non-invasive-web-style-framework .ui.inverted.dimmer {
+background-color: rgba(255, 255, 255, 0.85);
+}
+.non-invasive-web-style-framework .ui.inverted.dimmer > .content > * {
+color: #FFFFFF;
+}
+.non-invasive-web-style-framework .ui.simple.dimmer {
+display: block;
+overflow: hidden;
+opacity: 1;
+width: 0%;
+height: 0%;
+z-index: -100;
+background-color: rgba(0, 0, 0, 0);
+}
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.simple.dimmer {
+overflow: visible;
+opacity: 1;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.85);
+z-index: 1;
+}
+.non-invasive-web-style-framework .ui.simple.inverted.dimmer {
+background-color: rgba(255, 255, 255, 0);
+}
+.non-invasive-web-style-framework .dimmed.dimmable > .ui.simple.inverted.dimmer {
+background-color: rgba(255, 255, 255, 0.85);
+}
+
+.non-invasive-web-style-framework-scroll-disable.page-loader .ui.dimmer {
+  cursor: wait;
+}

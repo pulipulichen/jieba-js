@@ -1,0 +1,521 @@
+
+.non-invasive-web-style-framework .ui.statistic {
+display: -webkit-inline-box;
+display: -ms-inline-flexbox;
+display: inline-flex;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+flex-direction: column;
+margin: 1em 0em;
+max-width: auto;
+}
+.non-invasive-web-style-framework .ui.statistic + .ui.statistic {
+margin: 0em 0em 0em 1.5em;
+}
+.non-invasive-web-style-framework .ui.statistic:first-child {
+margin-top: 0em;
+}
+.non-invasive-web-style-framework .ui.statistic:last-child {
+margin-bottom: 0em;
+}
+.non-invasive-web-style-framework .ui.statistics {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: start;
+-ms-flex-align: start;
+align-items: flex-start;
+-ms-flex-wrap: wrap;
+flex-wrap: wrap;
+}
+.non-invasive-web-style-framework .ui.statistics > .statistic {
+display: -webkit-inline-box;
+display: -ms-inline-flexbox;
+display: inline-flex;
+-webkit-box-flex: 0;
+-ms-flex: 0 1 auto;
+flex: 0 1 auto;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+flex-direction: column;
+margin: 0em 1.5em 1em;
+max-width: auto;
+}
+.non-invasive-web-style-framework .ui.statistics {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+margin: 1em -1.5em -1em;
+}
+.non-invasive-web-style-framework .ui.statistics:after {
+display: block;
+content: ' ';
+height: 0px;
+clear: both;
+overflow: hidden;
+visibility: hidden;
+}
+.non-invasive-web-style-framework .ui.statistics:first-child {
+margin-top: 0em;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistic > .value {
+font-family: 'Noto Sans CJK TC Light', 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+font-size: 4rem;
+font-weight: normal;
+line-height: 1em;
+color: #1B1C1D;
+text-transform: uppercase;
+text-align: center;
+}
+
+// 20190517 修正左右沒有對齊的問題
+.non-invasive-web-style-framework .ui.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistic > .value {
+    padding-right: 0.5rem;
+}
+
+.non-invasive-web-style-framework .ui.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistic > .label {
+  font-family: 'Noto Sans CJK TC Light', 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.87);
+  text-transform: uppercase;
+  text-align: center;
+  background-color: transparent;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .label ~ .value,
+.non-invasive-web-style-framework .ui.statistic > .label ~ .value {
+margin-top: 0rem;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .value ~ .label,
+.non-invasive-web-style-framework .ui.statistic > .value ~ .label {
+margin-top: 0rem;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .value .icon,
+.non-invasive-web-style-framework .ui.statistic > .value .icon {
+opacity: 1;
+width: auto;
+margin: 0em;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.statistic > .text.value {
+  line-height: 1em;
+  min-height: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.non-invasive-web-style-framework .ui.statistics .statistic > .text.value + .label,
+.non-invasive-web-style-framework .ui.statistic > .text.value + .label {
+text-align: center;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .value img,
+.non-invasive-web-style-framework .ui.statistic > .value img {
+max-height: 3rem;
+vertical-align: baseline;
+}
+.non-invasive-web-style-framework .ui.ten.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.ten.statistics .statistic {
+min-width: 10%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.nine.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.nine.statistics .statistic {
+min-width: 11.11111111%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.eight.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.eight.statistics .statistic {
+min-width: 12.5%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.seven.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.seven.statistics .statistic {
+min-width: 14.28571429%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.six.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.six.statistics .statistic {
+min-width: 16.66666667%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.five.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.five.statistics .statistic {
+min-width: 20%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.four.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.four.statistics .statistic {
+min-width: 25%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.three.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.three.statistics .statistic {
+min-width: 33.33333333%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.two.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.two.statistics .statistic {
+min-width: 50%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.one.statistics {
+margin: 0em 0em -1em;
+}
+.non-invasive-web-style-framework .ui.one.statistics .statistic {
+min-width: 100%;
+margin: 0em 0em 1em;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistic {
+-webkit-box-orient: horizontal;
+-webkit-box-direction: normal;
+-ms-flex-direction: row;
+flex-direction: row;
+-webkit-box-align: center;
+-ms-flex-align: center;
+align-items: center;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistics {
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+flex-direction: column;
+margin: 0em;
+max-width: none;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistics .statistic {
+-webkit-box-orient: horizontal;
+-webkit-box-direction: normal;
+-ms-flex-direction: row;
+flex-direction: row;
+-webkit-box-align: center;
+-ms-flex-align: center;
+align-items: center;
+max-width: none;
+margin: 1em 0em;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistic > .text.value,
+.non-invasive-web-style-framework .ui.horizontal.statistics > .statistic > .text.value {
+min-height: 0em !important;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistics .statistic > .value .icon,
+.non-invasive-web-style-framework .ui.horizontal.statistic > .value .icon {
+width: 1.18em;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.horizontal.statistic > .value {
+display: inline-block;
+vertical-align: middle;
+}
+
+.non-invasive-web-style-framework .ui.horizontal.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.horizontal.statistic > .label {
+display: inline-block;
+vertical-align: middle;
+margin: 0em 0em 0em 0.75em;
+}
+.non-invasive-web-style-framework .ui.red.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .red.statistic > .value,
+.non-invasive-web-style-framework .ui.red.statistic > .value,
+.non-invasive-web-style-framework .ui.red.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .red.statistic > .label,
+.non-invasive-web-style-framework .ui.red.statistic > .label {
+color: #DB2828;
+}
+.non-invasive-web-style-framework .ui.orange.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .orange.statistic > .value,
+.non-invasive-web-style-framework .ui.orange.statistic > .value,
+.non-invasive-web-style-framework .ui.orange.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .orange.statistic > .label,
+.non-invasive-web-style-framework .ui.orange.statistic > .label {
+color: #F2711C;
+}
+.non-invasive-web-style-framework .ui.yellow.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .yellow.statistic > .value,
+.non-invasive-web-style-framework .ui.yellow.statistic > .value,
+.non-invasive-web-style-framework .ui.yellow.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .yellow.statistic > .label,
+.non-invasive-web-style-framework .ui.yellow.statistic > .label {
+color: #FBBD08;
+}
+.non-invasive-web-style-framework .ui.olive.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .olive.statistic > .value,
+.non-invasive-web-style-framework .ui.olive.statistic > .value,
+.non-invasive-web-style-framework .ui.olive.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .olive.statistic > .label,
+.non-invasive-web-style-framework .ui.olive.statistic > .label {
+color: #B5CC18;
+}
+.non-invasive-web-style-framework .ui.green.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .green.statistic > .value,
+.non-invasive-web-style-framework .ui.green.statistic > .value,
+.non-invasive-web-style-framework .ui.green.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .green.statistic > .label,
+.non-invasive-web-style-framework .ui.green.statistic > .label {
+color: #21BA45;
+}
+.non-invasive-web-style-framework .ui.teal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .teal.statistic > .value,
+.non-invasive-web-style-framework .ui.teal.statistic > .value,
+.non-invasive-web-style-framework .ui.teal.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .teal.statistic > .label,
+.non-invasive-web-style-framework .ui.teal.statistic > .label {
+color: #00B5AD;
+}
+.non-invasive-web-style-framework .ui.blue.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .blue.statistic > .value,
+.non-invasive-web-style-framework .ui.blue.statistic > .value,
+.non-invasive-web-style-framework .ui.blue.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .blue.statistic > .label,
+.non-invasive-web-style-framework .ui.blue.statistic > .label {
+color: #2185D0;
+}
+.non-invasive-web-style-framework .ui.violet.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .violet.statistic > .value,
+.non-invasive-web-style-framework .ui.violet.statistic > .value,
+.non-invasive-web-style-framework .ui.violet.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .violet.statistic > .label,
+.non-invasive-web-style-framework .ui.violet.statistic > .label {
+color: #6435C9;
+}
+.non-invasive-web-style-framework .ui.purple.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .purple.statistic > .value,
+.non-invasive-web-style-framework .ui.purple.statistic > .value,
+.non-invasive-web-style-framework .ui.purple.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .purple.statistic > .label,
+.non-invasive-web-style-framework .ui.purple.statistic > .label {
+color: #A333C8;
+}
+.non-invasive-web-style-framework .ui.pink.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .pink.statistic > .value,
+.non-invasive-web-style-framework .ui.pink.statistic > .value,
+.non-invasive-web-style-framework .ui.pink.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .pink.statistic > .label,
+.non-invasive-web-style-framework .ui.pink.statistic > .label {
+color: #E03997;
+}
+.non-invasive-web-style-framework .ui.brown.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .brown.statistic > .value,
+.non-invasive-web-style-framework .ui.brown.statistic > .value,
+.non-invasive-web-style-framework .ui.brown.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .brown.statistic > .label,
+.non-invasive-web-style-framework .ui.brown.statistic > .label {
+color: #A5673F;
+}
+.non-invasive-web-style-framework .ui.grey.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .grey.statistic > .value,
+.non-invasive-web-style-framework .ui.grey.statistic > .value,
+.non-invasive-web-style-framework .ui.grey.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .grey.statistic > .label,
+.non-invasive-web-style-framework .ui.grey.statistic > .label {
+color: #767676;
+}
+.non-invasive-web-style-framework .ui.inverted.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.statistic .value {
+color: #FFFFFF;
+}
+.non-invasive-web-style-framework .ui.inverted.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.statistic .label {
+color: rgba(255, 255, 255, 0.9);
+}
+.non-invasive-web-style-framework .ui.inverted.red.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.red.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.red.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.red.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.red.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.red.statistic > .label {
+color: #FF695E;
+}
+.non-invasive-web-style-framework .ui.inverted.orange.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.orange.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.orange.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.orange.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.orange.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.orange.statistic > .label {
+color: #FF851B;
+}
+.non-invasive-web-style-framework .ui.inverted.yellow.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.yellow.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.yellow.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.yellow.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.yellow.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.yellow.statistic > .label {
+color: #FFE21F;
+}
+.non-invasive-web-style-framework .ui.inverted.olive.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.olive.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.olive.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.olive.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.olive.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.olive.statistic > .label {
+color: #D9E778;
+}
+.non-invasive-web-style-framework .ui.inverted.green.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.green.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.green.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.green.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.green.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.green.statistic > .label {
+color: #2ECC40;
+}
+.non-invasive-web-style-framework .ui.inverted.teal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.teal.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.teal.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.teal.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.teal.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.teal.statistic > .label {
+color: #6DFFFF;
+}
+.non-invasive-web-style-framework .ui.inverted.blue.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.blue.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.blue.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.blue.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.blue.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.blue.statistic > .label {
+color: #54C8FF;
+}
+.non-invasive-web-style-framework .ui.inverted.violet.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.violet.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.violet.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.violet.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.violet.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.violet.statistic > .label {
+color: #A291FB;
+}
+.non-invasive-web-style-framework .ui.inverted.purple.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.purple.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.purple.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.purple.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.purple.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.purple.statistic > .label {
+color: #DC73FF;
+}
+.non-invasive-web-style-framework .ui.inverted.pink.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.pink.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.pink.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.pink.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.pink.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.pink.statistic > .label {
+color: #FF8EDF;
+}
+.non-invasive-web-style-framework .ui.inverted.brown.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.brown.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.brown.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.brown.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.brown.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.brown.statistic > .label {
+color: #D67C1C;
+}
+.non-invasive-web-style-framework .ui.inverted.grey.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistics .inverted.grey.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.grey.statistic > .value,
+.non-invasive-web-style-framework .ui.inverted.grey.statistics .statistic > .label,
+.non-invasive-web-style-framework .ui.statistics .inverted.grey.statistic > .label,
+.non-invasive-web-style-framework .ui.inverted.grey.statistic > .label {
+color: #DCDDDE;
+}
+.non-invasive-web-style-framework .ui[class*="left floated"].statistic {
+float: left;
+margin: 0em 2em 1em 0em;
+}
+.non-invasive-web-style-framework .ui[class*="right floated"].statistic {
+float: right;
+margin: 0em 0em 1em 2em;
+}
+.non-invasive-web-style-framework .ui.floated.statistic:last-child {
+margin-bottom: 0em;
+}
+.non-invasive-web-style-framework .ui.mini.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.mini.statistic > .value {
+font-size: 1.5rem !important;
+}
+.non-invasive-web-style-framework .ui.mini.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.mini.horizontal.statistic > .value {
+font-size: 1.5rem !important;
+}
+.non-invasive-web-style-framework .ui.mini.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.mini.statistic > .text.value {
+font-size: 1rem !important;
+}
+.non-invasive-web-style-framework .ui.tiny.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.tiny.statistic > .value {
+font-size: 2rem !important;
+}
+.non-invasive-web-style-framework .ui.tiny.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.tiny.horizontal.statistic > .value {
+font-size: 2rem !important;
+}
+.non-invasive-web-style-framework .ui.tiny.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.tiny.statistic > .text.value {
+font-size: 1rem !important;
+}
+.non-invasive-web-style-framework .ui.small.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.small.statistic > .value {
+font-size: 3rem !important;
+}
+.non-invasive-web-style-framework .ui.small.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.small.horizontal.statistic > .value {
+font-size: 2rem !important;
+}
+.non-invasive-web-style-framework .ui.small.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.small.statistic > .text.value {
+font-size: 1rem !important;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.statistic > .value {
+font-size: 4rem !important;
+}
+.non-invasive-web-style-framework .ui.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.horizontal.statistic > .value {
+font-size: 3rem !important;
+}
+.non-invasive-web-style-framework .ui.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.statistic > .text.value {
+font-size: 2rem !important;
+}
+.non-invasive-web-style-framework .ui.large.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.large.statistic > .value {
+font-size: 5rem !important;
+}
+.non-invasive-web-style-framework .ui.large.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.large.horizontal.statistic > .value {
+font-size: 4rem !important;
+}
+.non-invasive-web-style-framework .ui.large.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.large.statistic > .text.value {
+font-size: 2.5rem !important;
+}
+.non-invasive-web-style-framework .ui.huge.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.huge.statistic > .value {
+font-size: 6rem !important;
+}
+.non-invasive-web-style-framework .ui.huge.horizontal.statistics .statistic > .value,
+.non-invasive-web-style-framework .ui.huge.horizontal.statistic > .value {
+font-size: 5rem !important;
+}
+.non-invasive-web-style-framework .ui.huge.statistics .statistic > .text.value,
+.non-invasive-web-style-framework .ui.huge.statistic > .text.value {
+font-size: 2.5rem !important;
+}

@@ -1,0 +1,54 @@
+
+.non-invasive-web-style-framework .transition {
+-webkit-animation-iteration-count: 1;
+animation-iteration-count: 1;
+-webkit-animation-duration: 300ms;
+animation-duration: 300ms;
+-webkit-animation-timing-function: ease;
+animation-timing-function: ease;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;
+}
+.non-invasive-web-style-framework .animating.transition {
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
+visibility: visible !important;
+}
+.non-invasive-web-style-framework .loading.transition {
+position: absolute;
+top: -99999px;
+left: -99999px;
+}
+.non-invasive-web-style-framework .hidden.transition {
+display: none;
+visibility: hidden;
+}
+.non-invasive-web-style-framework .visible.transition {
+display: block !important;
+visibility: visible !important;
+}
+.non-invasive-web-style-framework .disabled.transition {
+-webkit-animation-play-state: paused;
+animation-play-state: paused;
+}
+.non-invasive-web-style-framework .looping.transition {
+-webkit-animation-iteration-count: infinite;
+animation-iteration-count: infinite;
+}
+.non-invasive-web-style-framework .transition.browse {
+-webkit-animation-duration: 500ms;
+animation-duration: 500ms;
+}
+.non-invasive-web-style-framework .transition.browse.in {
+-webkit-animation-name: browseIn;
+animation-name: browseIn;
+}
+.non-invasive-web-style-framework .transition.browse.out,
+.non-invasive-web-style-framework .transition.browse.left.out {
+-webkit-animation-name: browseOutLeft;
+animation-name: browseOutLeft;
+}
+.non-invasive-web-style-framework .transition.browse.right.out {
+-webkit-animation-name: browseOutRight;
+animation-name: browseOutRight;
+}

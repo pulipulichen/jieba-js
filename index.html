@@ -2,126 +2,13 @@
 <html>
   <head>
     <title>Simple Text Analyzer</title>
-    <link rel="icon" type="image/png" href="icon.png" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--
-    <link rel="stylesheet" href="html-lib/style.css" />
-    -->
-
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="dist/images/icon.png" />
     <script src="jquery.js"></script>
-    <!--
-    <script src="require-jieba-js.js"></script>
-    -->
-
-    <link rel="stylesheet" href="html-lib/vendors/semantic-ui/semantic.min.css" />
-    <script src="html-lib/vendors/semantic-ui/semantic.min.js"></script>
-    <!-- <script src="html-lib/Garlic.js/garlic.js"></script> -->
-    <script src="html-lib/input-file-loader.js"></script>
-    <script src="html-lib/vendors/FileSaver.js"></script>
-    <script src="html-lib/vendors/clipboard/clipboard.min.js"></script>
-    <script src="html-lib/vendors/clipboard/puli-util.clipboard.js"></script>
-    <script src="html-lib/vendors/puli-post-message-api/puli-post-message-api.js"></script>
-    <script src="html-lib/vendors/Porter-Stemmer/PorterStemmer1980.min.js"></script>
-    <script src="html-lib/vendors/vue/vue.min.js"></script>
-    <script src="html-lib/vendors/date-helper.js"></script>
-
-    <script src="html-lib/vendors/js-xlsx/shim.min.js"></script>
-    <script src="html-lib/vendors/js-xlsx/Blob.js"></script>
-    <script src="html-lib/vendors/js-xlsx/xlsx.full.min.js"></script>
-    <!--
-    <script src="html-lib/vendors/js-xlsx/full/suppress_export.js"></script>
-    <script src="html-lib/vendors/js-xlsx/full/jszip.js"></script>
-    <script src="html-lib/vendors/js-xlsx/full/cpexcel.js"></script>
-    <script src="html-lib/vendors/js-xlsx/full/xlsx.js"></script>
-    -->
-    <link rel="stylesheet/less" type="text/css" href="html-lib/styles/styles.less" />
-    <script>less = {env: 'production'};</script>
-    <script src="html-lib/vendors/less/less.min.js"></script>
-
-    <script src="html-lib/vendors/vue/httpVueLoader.js"></script>
-    <script src="html-lib/vendors/vue/httpVueLoaderLess.js"></script>
-    
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/handsontable@8.3.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
-    -->
   </head>
   <body>
-
-
-
-    <!-- =============================================================== -->
-    <form onsubmit="return false;" class="ui form" id="app">
-      <PanelMenu
-        v-bind:config="config"
-        ref="PanelMenu"
-        ></PanelMenu>
-       
-      <TextPanel
-        v-bind:config="config"
-        v-if="config.session.displayPanel === 'text'"
-        ref="TextPanel"
-        ></TextPanel>
-
-      <ConfigurationPanel
-        v-bind:config="config"
-        v-if="config.session.displayPanel === 'configuration'"
-        ref="ConfigurationPanel"
-        ></ConfigurationPanel>
-
-      <!-- =============================================================== -->
-
-      <ComputedManager
-        v-bind:config="config"
-        ref="ComputedManager"
-        ></ComputedManager>
-
-      <!-- =============================================================== -->
-
-      <div class="loading-modal" 
-           v-if="config.state.processOutputWait">
-        <img src="html-lib/assets/loading.svg" />
-      </div>
-
-      <textarea 
-        ref="outputCopyTextarea" 
-        v-model="config.state.outputText"
-        class="output-copy-textarea"
-        ></textarea>
-
-      <!-- =============================================================== -->
-
-    </form>
-
-    <!-- ========================================== -->
-
-    <script src="html-lib/script.js"></script>
-    <script src="html-lib/form-persist.js"></script>
-    
-    
-    <script src="html-lib/config/config-development.js"></script>
-    <script src="html-lib/config/config-session.js"></script>
-    <script src="html-lib/config/config-state.js"></script>
-
-    <script src="html-lib/utils/utilsString.js"></script>
-    <script src="html-lib/utils/utilsAsync.js"></script>
-    <script src="html-lib/utils/utilsSheet.js"></script>
-    <script src="html-lib/utils/utils.js"></script>
-
-    <script src="html-lib/vue-app-data.js"></script>
-
-    <script src="html-lib/vue-app-mounted.js"></script>
-    <script src="html-lib/vue-app-components.js"></script>
-    <script src="html-lib/vue-app-computed.js"></script>
-    <script src="html-lib/vue-app-watch.js"></script>
-
-
-    <script src="html-lib/vue-app-methods.js"></script>
-    
-    <script src="html-lib/vue-app.js"></script>
-
-    <script src="html-lib/ga.js"></script>
+    <script src="dist/index.js"></script>
   </body>
 </html>

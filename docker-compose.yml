@@ -1,0 +1,19 @@
+# docker-Specify the compose version
+version: "3"
+
+services:
+  app:
+    #Build a Dockerfile in the same directory
+    build: .
+    #Give the container a name(Any)
+    #container_name: bloedi
+    #You can keep the container running.
+    tty: true
+    #Mount the files in the directory to the app directory in the container
+    volumes: 
+      - ./config:/app/config
+      - ./dist:/app/dist
+      - ./src:/app/src
+    #Mount port 1000 on the container side to port 8080 on the host side.
+    #ports:
+    #  - "8080:8080"

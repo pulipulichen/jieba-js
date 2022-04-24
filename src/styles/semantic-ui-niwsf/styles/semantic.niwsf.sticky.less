@@ -1,0 +1,33 @@
+.non-invasive-web-style-framework .ui.sticky {
+position: static;
+-webkit-transition: none;
+transition: none;
+z-index: 800;
+}
+.non-invasive-web-style-framework .ui.sticky.bound {
+position: absolute;
+left: auto;
+right: auto;
+}
+.non-invasive-web-style-framework .ui.sticky.fixed {
+position: fixed;
+left: auto;
+right: auto;
+}
+.non-invasive-web-style-framework .ui.sticky.bound.top,
+.non-invasive-web-style-framework .ui.sticky.fixed.top {
+top: 0px;
+bottom: auto;
+}
+.non-invasive-web-style-framework .ui.sticky.bound.bottom,
+.non-invasive-web-style-framework .ui.sticky.fixed.bottom {
+top: auto;
+bottom: 0px;
+}
+.non-invasive-web-style-framework .ui.native.sticky {
+position: -webkit-sticky;
+position: -moz-sticky;
+position: -ms-sticky;
+position: -o-sticky;
+position: sticky;
+}

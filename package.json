@@ -1,0 +1,81 @@
+{
+  "name": "jieba-js",
+  "version": "1.0.0",
+  "description": "DEMO: https://pulipulichen.github.io/jieba-js/",
+  "main": "index.js",
+  "scripts": {
+    "w1.webpack-build-development": "webpack --mode development --config ./config/webpack.config.js ",
+    "w2.webpack-watch-development": "webpack --watch --mode development --display errors-only --config ./config/webpack.config.js ",
+    "w3.webpack-watch-build-production": "webpack --watch --mode production --display errors-only --config ./config/webpack.config.js ",
+    "w4.webpack-build-production": "webpack --mode production --config ./config/webpack.config.js ",
+    "d0.build": "bash ./docker-compose/docker-compose-build.sh",
+    "d1.webpack-build-development": "bash ./docker-compose/d1.webpack-build-development.sh",
+    "d2.webpack-watch-development": "bash ./docker-compose/d2.webpack-watch-development.sh",
+    "d3.webpack-watch-build-production": "bash ./docker-compose/d3.webpack-watch-build-production.sh",
+    "d4.webpack-build-production": "bash ./docker-compose/d4.webpack-build-production.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://pulipuli.chen@gmail.com@github.com/pulipulichen/jieba-js.git"
+  },
+  "keywords": [
+    "PWA"
+  ],
+  "author": "Pulipuli Chen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pulipulichen/jieba-js/issues"
+  },
+  "homepage": "https://github.com/pulipulichen/jieba-js#readme",
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.6.2",
+    "@babel/polyfill": "7.6.0",
+    "@babel/preset-env": "7.5.5",
+    "@babel/runtime": "7.6.3",
+    "@kazupon/vue-i18n-loader": "0.4.1",
+    "@vue/component-compiler-utils": "3.0.0",
+    "babel-core": "6.26.3",
+    "babel-loader": "8.0.6",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "concurrently": "5.0.0",
+    "css-loader": "3.2.0",
+    "cssnano": "4.1.10",
+    "dotenv": "8.1.0",
+    "file-loader": "4.2.0",
+    "file-saver": "2.0.5",
+    "fs-extra": "8.1.0",
+    "graceful-fs": "4.2.2",
+    "html-loader": "0.5.5",
+    "less": "3.10.3",
+    "less-loader": "5.0.0",
+    "postcss-loader": "3.0.0",
+    "style-loader": "1.0.0",
+    "uglifyjs-webpack-plugin": "2.2.0",
+    "vue": "2.6.10",
+    "vue-fragment": "1.5.1",
+    "vue-i18n": "8.14.0",
+    "vue-loader": "15.7.1",
+    "vue-router": "3.1.3",
+    "vue-style-loader": "4.1.2",
+    "vue-template-compiler": "2.6.10",
+    "webpack": "4.39.2",
+    "webpack-cli": "3.3.9",
+    "xlsx": "0.18.5",
+    "stemmer": "2.0.0"
+  },
+  "dependencies": {
+    "axios": "0.20.0",
+    "dom-to-image": "2.6.0",
+    "jquery": "3.5.1",
+    "sortablejs": "1.12.0",
+    "toastr": "2.1.4",
+    "toastr2": "3.0.0-alpha.15",
+    "vuedraggable": "2.24.2",
+    "webpack-bundle-analyzer": "3.9.0"
+  }
+}

@@ -46,19 +46,19 @@
     </div>
     <div class="eight wide column">
 
-      <template v-if="!outputTextWordVector">
+      <template v-if="!config.state.outputTextWordVector">
         <button type="button" class="ui fluid button" v-on:click="saveAsWordVector"
           v-bind:class="{'disabled': outputButtonDisabled }">
           <i class="book icon"></i>
           Save Model
         </button>
       </template>
-      <template v-if="outputTextWordVector">
+      <template v-if="config.state.outputTextWordVector">
         <div class="sixteen wide column">
           <label class="ui header">Word Vector Model</label>
         </div>
         <textarea name="outputWordVector" id="outputWordVector" class="ui raised segment output-textarea"
-          data-storage="false" v-model="outputTextWordVectorString"></textarea>
+          data-storage="false" v-model="config.state.outputTextWordVectorString"></textarea>
         <div class="ui fluid buttons">
           <button type="button" class="ui button" v-on:click="copyOutputWordVector"
             v-bind:class="{'disabled': outputButtonDisabled }">

@@ -1,0 +1,17 @@
+<div class="PanelMenu">
+  <div class="ui inverted two item top fixed menu">
+    <a class="item"
+       v-bind:class="{'active': (config.session.displayPanel === 'text')}"
+       v-on:click="config.session.displayPanel = 'text'">
+      <i class="file alternate icon"></i>
+      Text
+    </a>
+    <a class="item"
+       v-bind:class="{'active': (config.session.displayPanel === 'configuration')}"
+       v-on:click="config.session.displayPanel = 'configuration'">
+      <i class="cogs icon"></i>
+      Configuration
+    </a>
+  </div>
+  <div class="menu-padding"></div>
+</div>

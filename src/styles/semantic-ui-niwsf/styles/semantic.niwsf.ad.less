@@ -1,0 +1,144 @@
+
+.non-invasive-web-style-framework .ui.ad {
+display: block;
+overflow: hidden;
+margin: 1em 0em;
+}
+.non-invasive-web-style-framework .ui.ad:first-child {
+margin: 0em;
+}
+.non-invasive-web-style-framework .ui.ad:last-child {
+margin: 0em;
+}
+.non-invasive-web-style-framework .ui.ad iframe {
+margin: 0em;
+padding: 0em;
+border: none;
+overflow: hidden;
+}
+.non-invasive-web-style-framework .ui.leaderboard.ad {
+width: 728px;
+height: 90px;
+}
+.non-invasive-web-style-framework .ui[class*="medium rectangle"].ad {
+width: 300px;
+height: 250px;
+}
+.non-invasive-web-style-framework .ui[class*="large rectangle"].ad {
+width: 336px;
+height: 280px;
+}
+.non-invasive-web-style-framework .ui[class*="half page"].ad {
+width: 300px;
+height: 600px;
+}
+.non-invasive-web-style-framework .ui.square.ad {
+width: 250px;
+height: 250px;
+}
+.non-invasive-web-style-framework .ui[class*="small square"].ad {
+width: 200px;
+height: 200px;
+}
+.non-invasive-web-style-framework .ui[class*="small rectangle"].ad {
+width: 180px;
+height: 150px;
+}
+.non-invasive-web-style-framework .ui[class*="vertical rectangle"].ad {
+width: 240px;
+height: 400px;
+}
+.non-invasive-web-style-framework .ui.button.ad {
+width: 120px;
+height: 90px;
+}
+.non-invasive-web-style-framework .ui[class*="square button"].ad {
+width: 125px;
+height: 125px;
+}
+.non-invasive-web-style-framework .ui[class*="small button"].ad {
+width: 120px;
+height: 60px;
+}
+.non-invasive-web-style-framework .ui.skyscraper.ad {
+width: 120px;
+height: 600px;
+}
+.non-invasive-web-style-framework .ui[class*="wide skyscraper"].ad {
+width: 160px;
+}
+.non-invasive-web-style-framework .ui.banner.ad {
+width: 468px;
+height: 60px;
+}
+.non-invasive-web-style-framework .ui[class*="vertical banner"].ad {
+width: 120px;
+height: 240px;
+}
+.non-invasive-web-style-framework .ui[class*="top banner"].ad {
+width: 930px;
+height: 180px;
+}
+.non-invasive-web-style-framework .ui[class*="half banner"].ad {
+width: 234px;
+height: 60px;
+}
+.non-invasive-web-style-framework .ui[class*="large leaderboard"].ad {
+width: 970px;
+height: 90px;
+}
+.non-invasive-web-style-framework .ui.billboard.ad {
+width: 970px;
+height: 250px;
+}
+.non-invasive-web-style-framework .ui.panorama.ad {
+width: 980px;
+height: 120px;
+}
+.non-invasive-web-style-framework .ui.netboard.ad {
+width: 580px;
+height: 400px;
+}
+.non-invasive-web-style-framework .ui[class*="large mobile banner"].ad {
+width: 320px;
+height: 100px;
+}
+.non-invasive-web-style-framework .ui[class*="mobile leaderboard"].ad {
+width: 320px;
+height: 50px;
+}
+.non-invasive-web-style-framework .ui.mobile.ad {
+display: none;
+}
+@media only screen and (max-width: 767px) {
+.non-invasive-web-style-framework .ui.mobile.ad {
+display: block;
+}
+}
+.non-invasive-web-style-framework .ui.centered.ad {
+margin-left: auto;
+margin-right: auto;
+}
+.non-invasive-web-style-framework .ui.test.ad {
+position: relative;
+background: #545454;
+}
+.non-invasive-web-style-framework .ui.test.ad:after {
+position: absolute;
+top: 50%;
+left: 50%;
+width: 100%;
+text-align: center;
+-webkit-transform: translateX(-50%) translateY(-50%);
+transform: translateX(-50%) translateY(-50%);
+content: 'Ad';
+color: #FFFFFF;
+font-size: 1em;
+font-weight: bold;
+}
+.non-invasive-web-style-framework .ui.mobile.test.ad:after {
+font-size: 0.85714286em;
+}
+.non-invasive-web-style-framework .ui.test.ad[data-text]:after {
+content: attr(data-text);
+}
