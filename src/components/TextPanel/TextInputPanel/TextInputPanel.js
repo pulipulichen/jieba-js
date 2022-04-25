@@ -85,9 +85,15 @@ export default {
       else {
         this.config.session.inputText = await this.processUploadTypeSheet(data)
       }
-      
+      if (filename.indexOf('.') > -1) {
+        filename = filename.slice(0, filename.lastIndexOf('.'))
+      }
+      this.config.session.inputFilename = filename
     },
-    initDropdown() {
+    initDropdown: async function () {
+      while (!this.$refs.Dropdown) {
+        await this.utils.Async.sleep()
+      }
       setTimeout(() => {
         $(this.$refs.Dropdown).dropdown()
       }, 0)

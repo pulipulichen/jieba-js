@@ -56,6 +56,10 @@ export default {
    * @returns {string}
    */
    stripHTMLTag(str) {
+    if (typeof(str) !== 'string') {
+      return ''
+    }
+
     str = str.replace(/<\/?[^>]+(>|$)/g, " ")
     
     while (str.indexOf('  ') > -1) {

@@ -18,6 +18,11 @@ let TextOutputWordVectorPanel = {
   watch: {
     'config.session.wordVectorModel' () {
       this.config.state.outputTextWordVector = []
+    },
+    'config.state.outputTextRows' () {
+      if (this.config.state.outputTextRows.length === 0) {
+        this.config.state.outputTextWordVector = []
+      }
     }
   },
   computed: {

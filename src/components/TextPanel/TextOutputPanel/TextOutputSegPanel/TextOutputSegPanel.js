@@ -111,7 +111,7 @@ let TextOutputSegPanel = {
     },
     initOutputText () {
       if (this.config.state.outputTextRows.length === 0) { 
-        this.$parent.processOutput()
+        this.$parent.$parent.$refs.TextProcessComponent.processOutput()
       }
     },
   }
