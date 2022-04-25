@@ -27,7 +27,7 @@ message\tclass
 
   displayPanel: 'text',
 
-  doRemoveHeader: false,
+  doRemoveHeader: true,
 
   onlyFirstColumn: true,
   columnSeparator: ",",

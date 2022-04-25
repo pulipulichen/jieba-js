@@ -12,6 +12,7 @@ let config = {
     }
   },
   locale: 'zh-TW',
+  inited: false,
   development: {
     ...ConfigDevelopment
   },

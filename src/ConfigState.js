@@ -1,7 +1,9 @@
 export default {
+  outputTextRows: [],
+  outputTextRowsJoined: [],
   outputText: ``,
   outputTextTranslated: ``,
-  outputTextWordVector: ``,
+  outputTextWordVector: [],
   outputClasses: [],
   selectClasses: [],
 
@@ -14,4 +16,8 @@ export default {
   processOutputWait: false,
   
   configChanged: false,
+  columnNames: [],
+  textColumnName: 'message',
+  classColumnName: 'class',
+  delimiter: '\t'
 }

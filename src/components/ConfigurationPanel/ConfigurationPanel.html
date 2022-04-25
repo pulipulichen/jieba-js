@@ -19,6 +19,35 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="column">
+      <div class="inline fields input-options">
+        <div class="field">
+          <div class="ui checkbox">
+            <input id="DoSkipHeader" type="checkbox" v-model="config.session.doRemoveHeader">
+            <label for="DoSkipHeader">Skip first line (header)</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input id="OnlyFirstColumn" type="checkbox" v-model="config.session.onlyFirstColumn">
+            <label for="OnlyFirstColumn">Only first column</label>
+          </div>
+        </div>
+        <!--
+        <div class="field column-separator-field" v-if="config.session.onlyFirstColumn">
+          <label for="ColumnSeparator"
+            class="column-separator-label">Column Separator</label>
+          <div class="ui mini icon input">
+            <input id="ColumnSeparator" type="text" v-model="config.session.columnSeparator">
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+
+  </div>
+
   <!-- ================================= -->
 
   <div class="row">
@@ -65,9 +94,13 @@
                 <input type="radio" v-model="config.session.wordVectorModel" value="BagOfWords" />
                 <label>Bag of Words</label>
               </div>
-              <div class="field" v-on:click="config.session.wordVectorModel = 'dictionary'">
+              <div class="field" v-on:click="config.session.wordVectorModel = 'TermFrequency'">
                 <input type="radio" v-model="config.session.wordVectorModel" value="TermFrequency" />
                 <label>Term Frequency</label>
+              </div>
+              <div class="field" v-on:click="config.session.wordVectorModel = 'Embbeding'">
+                <input type="radio" v-model="config.session.wordVectorModel" value="Embbeding" />
+                <label>Embbeding</label>
               </div>
             </div>
           </div>

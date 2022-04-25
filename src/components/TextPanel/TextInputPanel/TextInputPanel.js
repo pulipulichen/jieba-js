@@ -1,11 +1,35 @@
+import * as XLSX from 'xlsx'
+import $ from 'jquery'
+
 export default {
   props: ['config', 'utils'],
-  // mounted: function () {
+  data: function () {
+    return {
+      examples: [
+        'master-thesis-abstract.csv',
+        'qa-pet-fruit10.ods',
+        'QA-Library.ods',
+        'QA-HumanBank.ods',
+        'QA-OnlineShopping.ods',
+        'qa-pet-fruit.csv',
+        'qa-pet-fruit-unsupervised_sort.csv',
+        'qa-pet-fruit-unknown.csv',
+        '2a-thesis- raw - data.csv',
+      ]
+    }
+  },
+  mounted: function () {
   //   setTimeout(() => {
   //     this.initInputOptions()
   //     this.processOutput()
   //   }, 0)
-  // },
+    this.initDropdown()
+  },
+  watch: {
+    'config.session.inputText' () {
+      this.config.state.outputTextRows = []
+    }
+  },
   computed: {
     
     inputTextTrim () {
@@ -35,7 +59,7 @@ export default {
     },
   }, // computed: {
   methods: {
-    loadExample() {
+    loadExample: async function () {
       /*
       $.get('./demo/master-thesis-abstract.csv', (result) => {
         this.inputFilename = 'master-thesis-abstract'
@@ -45,14 +69,55 @@ export default {
         this.initInputOptions()
       })
       */
-      window.open('./demo/master-thesis-abstract.csv', '_blank')
+      //window.open('./demo/master-thesis-abstract.csv', '_blank')
+      let filename = this.$refs.Dropdown.value
+      if (filename === '') {
+        return false
+      }
+
+      let url = './demo/' + filename
+
+      let data = await this.utils.Axios.get(url)
+      //console.log(data)
+      if (url.endsWith('.csv')) {
+        this.config.session.inputText = data.trim()
+      }
+      else {
+        this.config.session.inputText = await this.processUploadTypeSheet(data)
+      }
+      
+    },
+    initDropdown() {
+      setTimeout(() => {
+        $(this.$refs.Dropdown).dropdown()
+      }, 0)
+    },
+    downloadExample () {
+      //let filename = $(this.$refs.Dropdown).dropdown('get value')
+      let filename = this.$refs.Dropdown.value
+      if (filename === '') {
+        return false
+      }
+
+      //console.log(this.$refs.Dropdown.value)
+      
+      setTimeout(() => {
+        //this.$refs.Dropdown.value = ''
+        //$(this.$refs.Dropdown).dropdown('set value', '')
+        //this.$refs.Dropdown.value = ''
+        $(this.$refs.Dropdown).dropdown('set value', '')
+        $('#inputFilename').focus().blur()
+      }, 100)
+        
+
+      window.open('./demo/' + filename, '_blank')
     },
     loadInputFile(evt) {
       //console.log(1);loadInputFile
       if (!window.FileReader)
         return; // Browser is not compatible
   
-      this.processOutputWait = true
+      this.config.state.processOutputWait = true
       var reader = new FileReader();
       let filename = evt.target.files[0].name
       let type = evt.target.files[0].type
@@ -60,36 +125,38 @@ export default {
       if (filename.indexOf('.') > -1) {
         filename = filename.slice(0, filename.lastIndexOf('.'))
       }
-      this.inputFilename = filename
+      this.config.session.inputFilename = filename
   
       reader.onload = async (evt) => {
         if (evt.target.readyState !== 2) {
-          this.processOutputWait = false
+          this.config.state.processOutputWait = false
           return;
         }
         if (evt.target.error) {
           alert('Error while reading file');
-          this.processOutputWait = false
+          this.config.state.processOutputWait = false
           return;
         }
   
         let result = evt.target.result
         if (type === 'application/vnd.oasis.opendocument.spreadsheet'
                 || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-          this.inputText = await this.processUploadTypeSheet(result)
+          this.config.session.inputText = await this.processUploadTypeSheet(result)
         } else if (type === 'application/vnd.oasis.opendocument.text') {
-          this.inputText = await this.processUploadTypeODT(result)
+          this.config.session.inputText = await this.processUploadTypeODT(result)
         } else if (type === 'text/html') {
-          this.inputText = this.processUploadTypeHTML(result)
+          this.config.session.inputText = this.processUploadTypeHTML(result)
         } else if (type === 'text/csv') {
-          this.inputText = await this.processUploadTypeCSV(result)
+          this.config.session.inputText = await this.processUploadTypeCSV(result)
         } else {
-          this.inputText = result
+          this.config.session.inputText = result
         }
         this.$refs.inputFileUploadTrigger.value = ''
-        this.processOutputWait = false
+        this.config.state.processOutputWait = false
         
         this.initInputOptions()
+
+        //console.log(this.config.session.inputText)
       }
   
       if (type === 'application/vnd.oasis.opendocument.spreadsheet'
@@ -98,7 +165,7 @@ export default {
         console.log('size', size)
         if (size > 25000000) {
           window.alert('ODS/XLSX檔案大小請低於2.5MB。')
-          this.processOutputWait = false
+          this.config.state.processOutputWait = false
           return false
         }
   
@@ -118,7 +185,7 @@ export default {
                 .replace('</body>', '</div>')
       }
   
-      let $html = $(html)
+      let $html = jquery(html)
       $html.find('script').remove()
       html = $html.text()
   
@@ -129,7 +196,7 @@ export default {
       return html
     },
     processUploadTypeSheet: async function (input) {
-      var workbook = await XLSX.readAsync(input, {type: 'binary'});
+      var workbook = XLSX.read(input, {type: 'binary'});
   
       var result = [];
       for (let i in workbook.SheetNames) {
@@ -150,7 +217,10 @@ export default {
       return result
     },
     processUploadTypeCSV: async function (input) {
-      var workbook = await XLSX.readAsync(input, {type: 'string'});
+      return input
+      /*
+      var workbook = XLSX.read(input, {type: 'string'})
+      //console.log(workbook)
   
       var result = [];
       for (let i in workbook.SheetNames) {
@@ -167,8 +237,9 @@ export default {
   
       result = result.join('\n')
       result = result.split('\n').map(line => line.trim()).filter(line => (line !== '')).join('\n')
-  
+      
       return result
+      */
     },
     processUploadTypeODT: async function (odt) {
       try {
@@ -184,12 +255,12 @@ export default {
     initInputOptions () {
       
       let initColumnSeparatorResult = this.initColumnSeparator()
-      this.onlyFirstColumn = initColumnSeparatorResult
+      this.config.session.onlyFirstColumn = initColumnSeparatorResult
       
       //let trimText = this.inputText.trim()
       
       if (this.isOneLine === true) {
-        this.doRemoveHeader = false
+        this.config.session.doRemoveHeader = false
         return true
       }
       
@@ -197,10 +268,10 @@ export default {
       //firstLine = trimText.slice(0, trimText.indexOf('\n'))
       //console.log(firstLine.length, firstLine, trimText.indexOf('\n'))
       if (this.firstLine.length < 20) {
-        this.doRemoveHeader = true
+        this.config.session.doRemoveHeader = true
       }
       else {
-        this.doRemoveHeader = false
+        this.config.session.doRemoveHeader = false
       }
     },
     initColumnSeparator () {
@@ -228,7 +299,7 @@ export default {
         })
         
         if (falseCounter === candidates.length) {
-          this.columnSeparator = ''
+          this.config.session.columnSeparator = ''
           return false
         }
       }
@@ -236,11 +307,11 @@ export default {
       //console.log(result)
       for (let c in result) {
         if (result[c] === true) {
-          this.columnSeparator = c
+          this.config.session.columnSeparator = c
           return true
         }
       }
-      this.columnSeparator = ''
+      this.config.session.columnSeparator = ''
       return false
     },
   } // methods: {

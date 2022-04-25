@@ -1,13 +1,13 @@
 <form class="Index ui form">
   <div class="loading-modal" 
-           v-if="config.state.processOutputWait">
-        <img :src="loadingSVG" />
+       v-show="config.state.processOutputWait">
+    <img :src="loadingSVG" />
   </div>
 
   <PanelMenu :config="config" :utils="utils" ref="PanelMenu"></PanelMenu>
   <ConfigurationPanel :config="config" :utils="utils" ref="ConfigurationPanel"
-    v-if="config.session.displayPanel === 'configuration'"></ConfigurationPanel>
+    v-show="config.session.displayPanel === 'configuration'"></ConfigurationPanel>
   <TextPanel :config="config" :utils="utils" ref="TextPanel"
-    v-if="config.session.displayPanel === 'text'"></TextPanel>
+    v-show="config.session.displayPanel === 'text'"></TextPanel>
 </form>
   

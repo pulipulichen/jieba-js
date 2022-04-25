@@ -1,0 +1,19 @@
+<div class="TextOutputWordVectorPanel field">
+  <label for="outputWordVector">Word Vector Model</label>
+  <textarea name="outputWordVector" id="outputWordVector" class="ui raised segment output-textarea"
+    :class="computedOutputWordVectorClass" data-storage="false" @click="initOutputWordVector"
+    ref="outputWordVectorCopyTextarea"
+    v-model="outputTextWordVectorString"></textarea>
+  <div class="ui fluid buttons">
+    <button type="button" class="ui button" v-on:click="copyOutputWordVector"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="copy icon"></i>
+      Copy
+    </button>
+    <button type="button" class="ui button" v-on:click="saveAsWordVector"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="book icon"></i>
+      Save Model
+    </button>
+  </div>
+</div>

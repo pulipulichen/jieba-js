@@ -97,6 +97,7 @@ let VueController = {
   },
   mounted: function () {
     this.config.computed = this.$refs.ComputedManager
+    this.inited = true
   }
 }
 

@@ -42,7 +42,7 @@ export default {
       wb.Sheets["StopWords"] = this.utils.Sheet.aoa_to_sheet([['stopword']].concat(this.config.computed.configStopWordsArray.map(line => [line])))
   
       let wbout = XLSX.write(wb, {bookType: 'ods', type: 'binary'});
-      let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      let filename = 'jieba-js-config_' + this.utils.Date.mmddhhmm() + '.ods'
       
       FileSaver.saveAs(new Blob([this.utils.Sheet.s2ab(wbout)], {type: "application/octet-stream"}), filename);
     },
@@ -75,7 +75,7 @@ export default {
       this.config.session.configStopWords = this.config.state.fullStopWords
     },
     processUploadConfiguration: async function (input) {
-      var workbook = await XLSX.readAsync(input, {type: 'binary'});
+      var workbook = XLSX.read(input, {type: 'binary'});
   
       var result = [];
       for (let i in workbook.SheetNames) {

@@ -2,6 +2,21 @@ input.input-field[type='file'] {
   display: none;
 }
 
+textarea[disabled],
+textarea.neet-init {
+  background-color: #eee !important;
+
+  &.neet-init {
+    cursor: pointer;
+  }
+}
+
+textarea {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
 .fields.config textarea {
   height: 9em !important;
   min-height: inherit !important;
@@ -11,6 +26,9 @@ input.input-field[type='file'] {
   width: 4rem !important;
 }
 
+.TextOutputPanel {
+  margin-bottom: 0 !important;
+}
 
 .text-panel {
   .input-textarea,

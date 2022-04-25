@@ -33,3 +33,17 @@ call_jieba_cut(_text, function (_result) {
 - English stopwords https://github.com/stopwords-iso/stopwords-en
 
 - ICON: https://www.iconninja.com/break-icon-689544
+
+# Go Live SSL self-signed certificate
+
+https://linuxize.com/post/creating-a-self-signed-ssl-certificate/
+
+````
+openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 3650 \
+            -nodes \
+            -out example.crt \
+            -keyout example.key
+````

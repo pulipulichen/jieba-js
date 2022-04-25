@@ -1,5 +1,7 @@
-<div class="TextPanel ui grid">
+<div class="TextPanel">
   <TextInputPanel :config="config" :utils="utils" ref="TextInputPanel"></TextInputPanel>
   <TextProcessComponent :config="config" :utils="utils" ref="TextProcessComponent"></TextProcessComponent>
   <TextOutputPanel :config="config" :utils="utils" ref="TextOutputPanel"></TextOutputPanel>
+  <TextOutputExportPanel :config="config" :utils="utils" ref="TextOutputExportPanel"
+    v-if="config.state.outputTextRows.length > 0"></TextOutputExportPanel>
 </div>

@@ -7,5 +7,8 @@ export default {
 
   debug: {
     startSegmentationOnLoad: true,
+    skipJiebaJS: false,
+    skipTrans: false,
+    skipEmbbeding: false,
   }
 }

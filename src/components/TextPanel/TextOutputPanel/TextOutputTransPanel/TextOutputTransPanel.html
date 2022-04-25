@@ -1,0 +1,21 @@
+<div class="TextOutputTransPanel field">
+  <label for="outputTextTrans">Translation</label>
+  <textarea name="outputTextTrans" id="outputTextTrans" 
+    class="ui raised segment output-textarea"
+    :class="computedOutputClass" data-storage="false" 
+    @click="initOutputTrans"
+    ref="outputTransTextarea"
+    v-model="outputTextTransString"></textarea>
+  <div class="ui fluid buttons">
+    <button type="button" class="ui button" v-on:click="copy"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="copy icon"></i>
+      Copy
+    </button>
+    <button type="button" class="ui button" v-on:click="saveAsSheet"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="table icon"></i>
+      Save
+    </button>
+  </div>
+</div>

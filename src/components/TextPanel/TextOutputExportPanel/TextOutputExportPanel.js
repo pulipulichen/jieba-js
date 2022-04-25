@@ -5,10 +5,11 @@ export default {
   // },  // mounted: function () {
   computed: {
     outputButtonDisabled () {
-      return (this.config.state.outputText.trim() === '')
+      return (this.config.state.outputTextRows.length === 0)
     },
     outputTextForAPI () {
-      let output = this.config.session.outputText.trim()
+      /*
+      let output = this.config.state.outputText.trim()
       if (this.config.session.doRemoveHeader && output.indexOf('\n') > -1) {
         output = output.slice(output.indexOf('\n') + 1)
       }
@@ -32,15 +33,30 @@ export default {
         output = tempOutput.join('\n')
       }
       return output
+      */
+      let output = []
+
+      this.config.state.outputTextRowsJoined.forEach(row => {
+        let text = this.$parent.getLineText(row)
+        let className = this.$parent.getLineClass(row)
+        
+        if (!className || 
+          this.config.state.selectClasses.indexOf(className) > -1) {
+          output.push(text)
+        }
+      })
+
+      return output.join('\n')
     },
   }, // computed: {
   methods: {
+    
     drawWordCloud() {
       let url = 'https://pulipulichen.github.io/d3-cloud/index.html?api=1'
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
   
-      postMessageAPI.send(url, this.outputTextForAPI, {
+      this.utils.postMessageAPI.send(url, this.outputTextForAPI, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
@@ -51,7 +67,7 @@ export default {
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
   
-      postMessageAPI.send(url, this.outputTextForAPI, {
+      this.utils.postMessageAPI.send(url, this.outputTextForAPI, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
@@ -67,7 +83,7 @@ export default {
         configTopicNumber = this.config.state.selectClasses
       }
   
-      postMessageAPI.send(url, {
+      this.utils.postMessageAPI.send(url, {
         inputText: this.outputTextForAPI,
         configTopicNumber: configTopicNumber,
       }, {
@@ -81,16 +97,16 @@ export default {
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
       let url = 'https://pulipulichen.github.io/HTML-Simple-Classifier/index.html?api=1'
-      this.processOutputWait = true
-      let rawData = await this.getClassifyText()
+      this.config.state.processOutputWait = true
+      let rawData = await this.$parent.getClassifyText()
       //console.log(rawData)
       
-      postMessageAPI.send(url, {rawData}, {
+      this.utils.postMessageAPI.send(url, {rawData}, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
       })
-      this.processOutputWait = false
-    },
+      this.config.state.processOutputWait = false
+    }
   } // methods: {
 }

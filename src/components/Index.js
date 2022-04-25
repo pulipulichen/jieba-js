@@ -1,9 +1,7 @@
 /* global Node */
-import $ from 'jquery'
+import $, { data } from 'jquery'
 import loadingSVG from './images/loading.svg'
 import PanelMenu from './PanelMenu/PanelMenu.vue'
-
-import postMessageAPI from './vendors/puli-post-message-api/puli-post-message-api.js'
 
 let Index = {
   props: ['config', 'utils'],
@@ -38,7 +36,7 @@ let Index = {
     //console.log(stemmer("hopefully", true), stemmer("loves", true))
 
     this.loadPersistedData()
-    postMessageAPI.ready()
+    this.utils.postMessageAPI.ready()
 
   //  if (this.inputFormat === 'table') {
   //    this.initTabls()
@@ -64,7 +62,7 @@ let Index = {
   },
   methods: {
     setupAPI() {
-      postMessageAPI.addReceiveListener(async (data) => {
+      this.utils.postMessageAPI.addReceiveListener(async (data) => {
         console.log('收到資料了', data)
         if (typeof (data) === 'string') {
           this.inputText = data
@@ -80,30 +78,31 @@ let Index = {
       })
       //console.log('設定好了')
     },
-    persist() {
-      this.configChanged = true
-      let key = this.persistKey
-      let data = {
-        segmentationMethod: this.segmentationMethod,
-        nGramLength: this.nGramLength,
-        configUserDictionary: this.configUserDictionary,
-        configWordRemap: this.configWordRemap,
-        configStopWords: this.configStopWords,
-        usePorterStemmer: this.usePorterStemmer,
-        removeEnglish: this.removeEnglish,
-        removeNumber: this.removeNumber,
-        removeHTML: this.removeHTML,
-        useLowerCase: this.useLowerCase,
-        inputFormat: this.inputFormat,
+    persist(needReset) {
+      if (this.inited === false) {
+        return false
       }
+
+      if (needReset) {
+        this.configChanged = true
+      }
+      
+      //console.log('ok')
+
+      let key = this.config.development.persistKey
+      let data = this.config.session
+
+      //console.log(data)
       localStorage.setItem(key, JSON.stringify(data))
     },
     loadPersistedData() {
-      let dataString = localStorage.getItem(this.persistKey)
+      let dataString = localStorage.getItem(this.config.development.persistKey)
+      //console.log(dataString)
       if (dataString) {
         let data = JSON.parse(dataString)
         for (let key in data) {
-          this[key] = data[key]
+          //console.log(key, data[key])
+          this.config.session[key] = data[key]
         }
       }
     },

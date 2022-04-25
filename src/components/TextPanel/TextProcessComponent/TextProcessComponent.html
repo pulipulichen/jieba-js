@@ -1,7 +1,8 @@
-<div class="TextProcessComponent">
+<div class="TextProcessComponent ui grid">
   <div class="row">
     <div class="sixteen wide column">
-      <button type="button" class="ui fluid button" v-on:click="processOutput" v-bind:class="{'green': config.state.configChanged }">
+      <button type="button" class="ui fluid button" 
+        v-on:click="processOutput" v-bind:class="{'green': config.state.configChanged }">
         Start Text Preprocessing
       </button>
     </div>

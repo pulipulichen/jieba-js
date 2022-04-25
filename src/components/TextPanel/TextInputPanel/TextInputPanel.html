@@ -1,55 +1,69 @@
-<div class="TextInputPanel">
+<div class="TextInputPanel ui grid">
   <div class="row filename">
-    <div class="ten wide column">
+    <div class="six wide column">
       <div class="field">
-        <label>
+        <label for="inputFilename">
           Filename
         </label>
-        <input type="text" v-model="config.session.inputFilename" class="input-filename" />
+        <input type="text" v-model="config.session.inputFilename" class="input-filename"
+          id="inputFilename" />
       </div>
     </div>
-    <div class="six wide column" style="text-align:right; margin-bottom: 5px;">
+    <div class="ten wide column" style="text-align:right; margin-bottom: 5px;">
+      <!--
       <button type="button" class="ui mini icon basic button" v-on:click="loadExample">
         <i class="folder open outline icon"></i>
         Example
       </button>
-      <button type="button" class="ui mini icon basic button" v-on:click="$refs.inputFileUploadTrigger.click()">
-        <i class="folder open outline icon"></i>
-        Open
-      </button>
-      <input type="file" class="input-field" ref="inputFileUploadTrigger" id="input_file"
-        accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm" v-on:change="loadInputFile" />
-      <button class="ui mini icon basic button" type="button" copy-from="#input">
-        <i class="copy icon"></i>
-        Copy
-      </button>
+      -->
+      <div class="field">
+        <select 
+          class="ui mini search dropdown" 
+          ref="Dropdown">
+          <option value="">Example</option>
+          <option v-for="e in examples" :value="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <button type="button" class="ui mini icon basic button" 
+           v-on:click="loadExample">
+          <i class="folder open icon"></i>
+          Load
+        </button>
+        <button type="button" class="ui mini icon basic button" 
+           v-on:click="downloadExample">
+          <i class="download icon"></i>
+          Download
+        </button>
+
+        <button type="button" class="ui mini icon basic button" v-on:click="$refs.inputFileUploadTrigger.click()">
+          <i class="folder open outline icon"></i>
+          Open
+        </button>
+        <input type="file" class="input-field" ref="inputFileUploadTrigger" id="input_file"
+          accept=".txt,.csv,.ods,.xlsx,xls,.html,.htm" v-on:change="loadInputFile" />
+
+      </div>
+
+        
+        <!--
+        <button class="ui mini icon basic button" type="button" copy-from="#input">
+          <i class="copy icon"></i>
+          Copy
+        </button>
+        -->
     </div>
   </div>
   <div class="row input-header">
     <div class="four wide column">
-      <label class="ui header">Input</label>
+      <div class="inline field">
+        <label class="input-label"
+        for="input">Input</label>
+      </div>
+        
     </div>
     <div class="twelve wide column">
-      <div class="inline fields input-options">
-        <div class="field">
-          <div class="ui checkbox">
-            <input id="DoSkipHeader" type="checkbox" v-model="config.session.doRemoveHeader">
-            <label for="DoSkipHeader">Skip first line (header)</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input id="OnlyFirstColumn" type="checkbox" v-model="config.session.onlyFirstColumn">
-            <label for="OnlyFirstColumn">Only first column</label>
-          </div>
-        </div>
-        <div class="field" v-if="config.session.onlyFirstColumn">
-          <label for="ColumnSeparator">Column Separator</label>
-          <div class="ui mini icon input">
-            <input id="ColumnSeparator" type="text" v-model="config.session.columnSeparator">
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
   <div class="row input-row">
