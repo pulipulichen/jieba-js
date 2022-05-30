@@ -450,10 +450,10 @@ export default  {
       }
       
       if (this.config.session.removeEnglish) {
-        line = this.utils.string.filterEnglish(line)
+        line = this.utils.String.filterEnglish(line)
       }
-      if (this.removeNumber) {
-        line = this.utils.string.filterNumber(line)
+      if (this.config.session.removeNumber) {
+        line = this.utils.String.filterNumber(line)
       }
 
       return line

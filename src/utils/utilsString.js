@@ -3,7 +3,7 @@ export default {
     return text.replace(/[A-Za-z]/g, ' ')
   },
   filterNumber(text) {
-    return text.replace(/\d/g, ' ')
+    return text.replace(/[0-9]/g, ' ')
   },
   isEnglishNumberWord(text) {
     var english = /^[A-Za-z0-9]*$/;
