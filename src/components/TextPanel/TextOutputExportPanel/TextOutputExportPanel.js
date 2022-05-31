@@ -57,6 +57,10 @@ export default {
   watch: {
     'config.state.outputTextRowsJoined' () {
       this.cacheOutputForAPI = null
+    },
+    'config.state.selectClasses' () {
+      // console.log('ok?')
+      this.cacheOutputForAPI = null
     }
   },
   methods: {

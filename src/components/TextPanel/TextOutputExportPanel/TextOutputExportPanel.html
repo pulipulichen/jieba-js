@@ -18,7 +18,9 @@
         </div>
         <div class="field" v-for="c in config.state.outputClasses">
           <div class="ui checkbox">
-            <input type="checkbox" v-model="config.state.selectClasses" v-bind:value="c" v-bind:id="'class-'+c">
+            <input type="checkbox" v-model="config.state.selectClasses" 
+                   v-bind:value="c" 
+                   v-bind:id="'class-'+c">
             <label v-bind:for="'class-'+c">{{ c }}</label>
           </div>
         </div>
