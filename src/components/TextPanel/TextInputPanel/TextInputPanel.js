@@ -15,6 +15,7 @@ export default {
         'qa-pet-fruit-unsupervised_sort.csv',
         'qa-pet-fruit-unknown.csv',
         '2a-thesis- raw - data.csv',
+        'novel-comment.csv'
       ]
     }
   },
@@ -91,8 +92,9 @@ export default {
       this.config.session.inputFilename = filename
     },
     initDropdown: async function () {
-      while (!this.$refs.Dropdown) {
+      while (!this.$refs.Dropdown || typeof($.fn.dropdown) !== 'function') {
         await this.utils.Async.sleep()
+        // console.log('ok?')
       }
       setTimeout(() => {
         $(this.$refs.Dropdown).dropdown()

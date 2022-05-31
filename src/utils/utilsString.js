@@ -1,3 +1,5 @@
+var element
+
 export default {
   filterEnglish(text) {
     return text.replace(/[A-Za-z]/g, ' ')
@@ -8,6 +10,27 @@ export default {
   isEnglishNumberWord(text) {
     var english = /^[A-Za-z0-9]*$/;
     return english.test(text)
+  },
+  // https://stackoverflow.com/a/23571059/6645399
+  removeHttp: function (url) {
+    return url.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+  },
+  // https://stackoverflow.com/a/9609450/6645399
+  decodeHTMLEntities: function (str) {
+    if(str && typeof str === 'string') {
+      if (!element) {
+        element = document.createElement('div');
+      }
+
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = '';
+    }
+
+    return str;
   },
   parseSingleCharacter(text) {
     let output = []
@@ -61,7 +84,9 @@ export default {
     }
 
     str = str.replace(/<\/?[^>]+(>|$)/g, " ")
-    
+    str = this.removeHttp(str)
+    str = this.decodeHTMLEntities(str)
+
     while (str.indexOf('  ') > -1) {
       str = str.replace(/  /g, " ")
     }

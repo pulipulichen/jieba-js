@@ -1,6 +1,9 @@
 <div class="TextOutputWordVectorPanel field">
   <label for="outputWordVector">Word Vector Model</label>
-  <textarea name="outputWordVector" id="outputWordVector" class="ui raised segment output-textarea"
+  <textarea spellcheck="false" 
+    name="outputWordVector" 
+    id="outputWordVector" 
+      class="ui raised segment output-textarea"
     :class="computedOutputWordVectorClass" data-storage="false" @click="initOutputWordVector"
     ref="outputWordVectorCopyTextarea"
     v-model="outputTextWordVectorString"></textarea>

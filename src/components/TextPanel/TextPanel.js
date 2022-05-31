@@ -31,13 +31,14 @@ export default {
       setTimeout(async () => {
         this.$refs.TextInputPanel.initInputOptions()
         await this.$refs.TextProcessComponent.processOutput()
-        if (this.config.session.wordVectorModel === 'Embbeding') {
-          await this.$refs.TextOutputPanel.$refs.TextOutputTransPanel.startTrans()
-          await this.$refs.TextOutputPanel.$refs.TextOutputEmbbedingPanel.startProcess()
-        }
-        else {
-          await this.$refs.TextOutputPanel.getClassifyText()
-        }
+
+        // if (this.config.session.wordVectorModel === 'Embbeding') {
+        //   await this.$refs.TextOutputPanel.$refs.TextOutputTransPanel.startTrans()
+        //   await this.$refs.TextOutputPanel.$refs.TextOutputEmbbedingPanel.startProcess()
+        // }
+        // else {
+        //   await this.$refs.TextOutputPanel.getClassifyText()
+        // }
         
       }, 0)
     },

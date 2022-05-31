@@ -3,7 +3,7 @@
 
   <div class="output-textarea-container">
     <template v-if="config.session.inputFormat === 'text'">
-      <textarea name="output" id="output" 
+      <textarea spellcheck="false" name="output" id="output" 
       class="ui raised segment output-textarea"
       data-storage="false"
         :class="computedOutputTextClass"

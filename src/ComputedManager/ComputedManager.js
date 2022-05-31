@@ -6,6 +6,9 @@ export default {
   computed: {
     configUserDictionaryArray () {
       var _config = this.config.session.configUserDictionary.trim().split("\n")
+
+      _config = _config.concat(this.configWordRemapArray.map(c => c.replaceWord))
+
       var _output = [];
       for (var _l in _config) {
         //if (_config[_l].indexOf(',') === -1) {
@@ -24,11 +27,11 @@ export default {
           _output.push([
             _line.trim(),
             999999,
-            'x'
+            'n'
           ]);
         }
       }
-      //console.log(_output)
+      // console.log(_output)
       return _output;
     },
     configWordRemapArray () {

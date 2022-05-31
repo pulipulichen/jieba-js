@@ -27,8 +27,9 @@ call_jieba_cut = function (_text, _dict, _callback) {
       //console.log(_dict)
       JIEBA_CUSTOM_DICTIONARY = _dict;
     }
+
     if (JIEBA_CUSTOM_DICTIONARY === undefined) {
-      console.log('沒有資料')
+      console.log('NO JIEBA_CUSTOM_DICTIONARY')
     }
     
     if (typeof(jieba_cut) !== 'function') {
@@ -42,7 +43,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
     else {
         if (typeof(_callback) === 'function') {
           var _result
-          if (LAST_DICT !== null && JSON.stringify(JIEBA_CUSTOM_DICTIONARY) !== LAST_DICT) {
+          if (LAST_DICT === null || JSON.stringify(JIEBA_CUSTOM_DICTIONARY) !== LAST_DICT) {
             //console.log(JIEBA_CUSTOM_DICTIONARY)
             var _dict = []
             for (var _i = 0; _i < PREDIFINED_DICTIONARY.length; _i++) {
@@ -51,7 +52,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
             for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
                 _dict.push(JIEBA_CUSTOM_DICTIONARY[_i]);
             }
-            //console.log(_dict)
+            // console.log(_dict)
             _result = jieba_cut(_text, _dict);
             //jieba_parsing(JIEBA_CUSTOM_DICTIONARY, function () {
               //_result = jieba_cut(_text);
@@ -63,6 +64,7 @@ call_jieba_cut = function (_text, _dict, _callback) {
             return
           }
           else {
+            // console.log('WITHOUT DICT')
             _result = jieba_cut(_text);
             if (LAST_DICT === null) {
               LAST_DICT = JSON.stringify(JIEBA_CUSTOM_DICTIONARY)
@@ -165,7 +167,7 @@ get_host = function () {
         _host = "//pulipulichen.github.io/jieba-js/";
     }
     else {
-        _host = _host.substr(0, _host.lastIndexOf("require-jieba-js.js"));
+        _host = _host.slice(0, _host.lastIndexOf("require-jieba-js.js"));
     }
     //console.log("host: " + _host);
     return _host;

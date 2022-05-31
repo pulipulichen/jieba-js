@@ -1,4 +1,9 @@
 export default {
+  data: function () {
+    return {
+      cacheOutputForAPI: null
+    }
+  },
   props: ['config', 'utils'],
   // mounted: function () {
 
@@ -49,31 +54,71 @@ export default {
       return output.join('\n')
     },
   }, // computed: {
+  watch: {
+    'config.state.outputTextRowsJoined' () {
+      this.cacheOutputForAPI = null
+    }
+  },
   methods: {
-    
-    drawWordCloud() {
+    getOutputTextForAPI: async function () {
+      if (this.cacheOutputForAPI) {
+        return this.cacheOutputForAPI
+      }
+      let output = []
+
+      let rows = this.config.state.outputTextRowsJoined
+      for (let i = 0; i < rows.length; i++) {
+        let row = rows[i]
+
+        let text = this.$parent.getLineText(row)
+        let className = this.$parent.getLineClass(row)
+        
+        if (!className || 
+          this.config.state.selectClasses.indexOf(className) > -1) {
+          output.push(text)
+        }
+
+        if (i % 100 === 99) {
+          await this.utils.Async.sleep(10)
+        }
+      }
+
+      this.cacheOutputForAPI = output.join('\n')
+      // console.log(this.cacheOutputForAPI)
+      return this.cacheOutputForAPI
+    },
+    drawWordCloud: async function () {
+      this.config.state.processOutputWait = true
       let url = 'https://pulipulichen.github.io/d3-cloud/index.html?api=1'
       //let url = 'http://localhost:8383/d3-cloud/index.html'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
   
-      this.utils.postMessageAPI.send(url, this.outputTextForAPI, {
+      let text = await this.getOutputTextForAPI()
+      // console.log(text)
+      this.utils.postMessageAPI.send(url, text, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
       })
+      this.config.state.processOutputWait = false
     },
-    analyzeText() {
+    analyzeText: async function () {
+      this.config.state.processOutputWait = true
       let url = 'https://pulipulichen.github.io/HTML5-Text-Analyzer/index.html?api=1'
       //let url = 'http://localhost:8383/HTML5-Text-Analyzer/index.html'
       //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
   
-      this.utils.postMessageAPI.send(url, this.outputTextForAPI, {
+      let text = await this.getOutputTextForAPI()
+      this.utils.postMessageAPI.send(url, text, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
       })
+      this.config.state.processOutputWait = false
     },
-    extractThemes() {
+    extractThemes: async function () {
+      this.config.state.processOutputWait = true
+
       let url = 'https://pulipulichen.github.io/lda.js/index.html?api=1'
       //let url = 'http://localhost:8383/lda/index.html?api=1'
       //let url = 'http://pc.pulipuli.info:8383/d3-cloud/index.html'
@@ -83,14 +128,17 @@ export default {
         configTopicNumber = this.config.state.selectClasses
       }
   
+      let text = await this.getOutputTextForAPI()
       this.utils.postMessageAPI.send(url, {
-        inputText: this.outputTextForAPI,
+        inputText: text,
         configTopicNumber: configTopicNumber,
       }, {
         mode: 'popup',
         newWindow: true,
         features: 0.8
       })
+
+      this.config.state.processOutputWait = false
     },
     classifyText: async function() {
       //let url = 'http://localhost:8383/HTML-Simple-Classifier/index.html?api=1'

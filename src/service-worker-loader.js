@@ -1,4 +1,5 @@
 let enableServiceWorker = ('serviceWorker' in navigator)
+enableServiceWorker = false
 
 if (location.href.startsWith('http://localhost') || 
     location.href.startsWith('http://127.0.0.1') ) {

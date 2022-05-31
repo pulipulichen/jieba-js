@@ -1,0 +1,1 @@
+docker run -it -p 8082:80 --mount type=bind,source="$(pwd)",target=/var/www/html pudding/dlll-paas-base-image:php-8-apache-20220525-1748

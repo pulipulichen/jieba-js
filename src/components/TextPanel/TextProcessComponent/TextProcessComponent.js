@@ -38,7 +38,7 @@ export default  {
       //console.log('jieba-js已經初始化，完成斷詞')
       let result = this.config.state.outputText
       //console.log(result)
-      await this.$parent.processWordVectorModel()
+      // await this.$parent.processWordVectorModel()
 
 
       return result
@@ -53,6 +53,10 @@ export default  {
         this.config.state.jiebaInited = true
         return true
       }
+
+      // if ($('script[src="require-jieba-js.js"]').length > 0) {
+      //   return true
+      // }
 
       return new Promise((resolve) => {
         //console.log('要讀取了嗎？')
@@ -98,8 +102,10 @@ export default  {
         let line = rows[i]
 
         let lineText = this.getLineText(line)
-        lineText = this.processTextRemove(lineText)
         lineText = this.filterWordRemap(lineText)
+        // console.log(lineText)
+        lineText = this.processTextRemove(lineText)
+        
 
         let lineTextArray
         if (rule === 'dictionary') {
@@ -304,9 +310,17 @@ export default  {
       })
     },
     filterWordRemap(text) {
-      this.config.computed.configWordRemapArray.forEach((targetWord, replaceWord) => {
+      //console.log(this.config.computed.configWordRemapArray)
+      let configWordRemapArray = this.config.computed.configWordRemapArray
+      for (let i = 0; i < configWordRemapArray.length; i++) {
+        let {targetWord, replaceWord} = configWordRemapArray[i]
         text = text.split(targetWord).join(replaceWord)
-      })
+      }
+      // .forEach((targetWord, replaceWord) => {
+      //   console.log(targetWord, replaceWord)
+        
+      // })
+      //console.log(text)
       return text
     },
     filterStopWords(result) {

@@ -145,6 +145,12 @@ let TextOutputWordVectorPanel = {
         return this.config.state.outputTextWordVector
       }
       
+      if (window.confirm(`Process model requires a long time. Will you continue?`) === false) {
+        return false
+      }
+
+      this.config.state.processOutputWait = true
+
       let lines = this.config.state.outputTextRows
       //console.log(lines)
       //let lines = outputText.split('\n')
@@ -292,14 +298,18 @@ let TextOutputWordVectorPanel = {
       // ----------------------
       
       //console.log(rawData)
+      //console.log(rawData)
       this.config.state.outputTextWordVector = rawData
       
+      this.config.state.processOutputWait = false
+
       return rawData
     },
     
     
     
     initOutputWordVector () {
+      // console.log(this.config.state.outputTextWordVector.length)
       if (this.config.state.outputTextWordVector.length === 0) { 
         this.getClassifyText() 
       }

@@ -155,12 +155,32 @@ let TextOutputEmbbedingPanel = {
         rows[i] = lineText
       }
     },
+    loadScript: async function (link) {
+      if (Array.isArray(link)) {
+        for (let i = 0; i < link.length; i++) {
+          await this.loadScript(link[i])
+        }
+        return true
+      }
+
+      return new Promise(function (resolve, reject) {
+        $.getScript(link, resolve)
+      })
+    },
     getModel: async function () {
       if (this.model) {
         return this.model
       }
       
+      await this.loadScript([
+        'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs',
+        'https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder'
+      ])
+
       return new Promise((resolve) => {
+        // <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+        // <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder"></script>
+        
         use.load().then(model => {
           this.model = model
           resolve(model)

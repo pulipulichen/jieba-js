@@ -53,9 +53,9 @@ let TextOutputSegPanel = {
       return output
     },
   },
-  mounted() {
+  // mounted() {
     
-  },
+  // },
   methods: {
     copyOutput() {
     

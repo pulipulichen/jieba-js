@@ -1,5 +1,6 @@
 import jQuery from 'jquery'
-import XLSX from 'xlsx'
+// import XLSX from 'xlsx'
+import * as XLSX from 'xlsx'
 import FileSaver from 'file-saver'
 
 export default {
@@ -87,11 +88,11 @@ export default {
             this[key] = value
           })
         } else if (sheetName === 'UserDictionary') {
-          this.configUserDictionary = json.map(({word, weight, pos}) => [word, weight, pos].join(',')).join('\n')
+          this.config.session.configUserDictionary = json.map(({word, weight, pos}) => [word, weight, pos].join(',')).join('\n')
         } else if (sheetName === 'WordRemap') {
-          this.configWordRemap = json.map(({from, to}) => [from, to].join(',')).join('\n')
+          this.config.session.configWordRemap = json.map(({from, to}) => [from, to].join(',')).join('\n')
         } else if (sheetName === 'StopWords') {
-          this.configStopWords = json.map(({stopword}) => stopword).join('\n')
+          this.config.session.configStopWords = json.map(({stopword}) => stopword).join('\n')
         }
         //result.push(csv.trim())
       }
@@ -139,7 +140,9 @@ export default {
           this.config.state.processOutputWait = true
           jQuery.get('stop_words.txt', (stop_words) => {
             this.config.state.fullStopWords = stop_words
-            this.config.session.configStopWords = this.fullStopWords
+            if (this.config.session.configStopWords === '' || !this.config.session.configStopWords) {
+              this.config.session.configStopWords = this.config.state.fullStopWords  
+            }
             this.config.state.processOutputWait = false
             resolve()
           })
