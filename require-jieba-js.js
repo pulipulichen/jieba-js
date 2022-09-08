@@ -46,12 +46,17 @@ call_jieba_cut = function (_text, _dict, _callback) {
           if (LAST_DICT === null || JSON.stringify(JIEBA_CUSTOM_DICTIONARY) !== LAST_DICT) {
             //console.log(JIEBA_CUSTOM_DICTIONARY)
             var _dict = []
-            for (var _i = 0; _i < PREDIFINED_DICTIONARY.length; _i++) {
-                _dict.push(PREDIFINED_DICTIONARY[_i]);
+            if (Array.isArray(PREDIFINED_DICTIONARY)) {
+              for (var _i = 0; _i < PREDIFINED_DICTIONARY.length; _i++) {
+                  _dict.push(PREDIFINED_DICTIONARY[_i]);
+              }
             }
-            for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
+            if (Array.isArray(JIEBA_CUSTOM_DICTIONARY)) {
+              for (var _i = 0; _i < JIEBA_CUSTOM_DICTIONARY.length; _i++) {
                 _dict.push(JIEBA_CUSTOM_DICTIONARY[_i]);
+              }
             }
+              
             // console.log(_dict)
             _result = jieba_cut(_text, _dict);
             //jieba_parsing(JIEBA_CUSTOM_DICTIONARY, function () {
