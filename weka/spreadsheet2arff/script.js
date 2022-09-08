@@ -275,7 +275,7 @@ var _process_file = function (_input, _callback) {
                 var _text = _data[_row_index][_col_index];
                 
                 var _attr = _attr_list[_col_index];
-                //console.log([_attr, _string_fields]);
+                // console.log([_attr, _string_fields, $.inArray(_attr, _string_fields)]);
                 if ($.inArray(_attr, _string_fields) === -1) {
                     if (isNaN(_text) === true && _text !== '?') {
                         _text = _text.substring(1, _text.length - 1);
@@ -289,17 +289,25 @@ var _process_file = function (_input, _callback) {
                 }
                 else {
                     _text = _text.substring(1, _text.length - 1);
+                    //console.log(_toker)
                     if (_toker === "radio_seg_auto") {
-                      var _slice = _text.slice(0,20)
-                      console.log(_slice)
-                      if (_slice.split(" ").length > 3) {
+                      //var _slice = _text.slice(0,20)
+                      var _slice = _text
+                      while (_slice.indexOf('  ') > -1) {
+                        _slice = _slice.replace(/  /, ' ')
+                      }
+
+                      let spaceSount = _slice.split(" ").length
+                      //console.log(_slice, spaceSount, (_slice.length / 5))
+                      if (spaceSount > (_slice.length / 5)) {
                         _toker = "radio_space"
                       }
                       else {
                         _toker = "radio_jieba"
                       }
-                      console.log(_toker)
+                      //console.log(_toker)
                     }
+                    //console.log(_toker)
                     
                     if (_toker === "radio_jieba") {
                         call_jieba_cut_join(_text, ' ', function (_result) {
