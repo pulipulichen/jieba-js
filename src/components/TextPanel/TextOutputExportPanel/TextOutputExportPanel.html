@@ -41,6 +41,11 @@
           <i class="crosshairs icon"></i>
           Analyze text
         </button>
+        <button type="button" class="ui button" v-on:click="networkClustering"
+          v-bind:class="{'disabled': outputButtonDisabled }">
+          <i class="sitemap icon"></i>
+          Network Clustering
+        </button>
         <button type="button" class="ui button" v-on:click="extractThemes"
           v-bind:class="{'disabled': outputButtonDisabled }">
           <i class="lightbulb outline icon"></i>
@@ -48,7 +53,7 @@
         </button>
         <button v-if="config.session.onlyFirstColumn" type="button" class="ui button" v-on:click="classifyText"
           v-bind:class="{'disabled': outputButtonDisabled }">
-          <i class="sitemap icon"></i>
+          <i class="table icon"></i>
           Classify Text
         </button>
       </div>

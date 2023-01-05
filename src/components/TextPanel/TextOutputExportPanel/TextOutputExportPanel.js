@@ -120,6 +120,27 @@ export default {
       })
       this.config.state.processOutputWait = false
     },
+    networkClustering: async function () {
+      this.config.state.processOutputWait = true
+      let url = 'https://pulipulichen.github.io/PWA-iClass-Discuss-Analysis/?api=1&id=jieba-js'
+      // let url = 'http://localhost:5501/index.html#/?api=1&id=jieba-js'
+      //let url = 'http://pc.pulipuli.info:8383/HTML5-Text-Analyzer/index.html'
+  
+      let text = await this.getOutputTextForAPI()
+
+      if (text.length > 150000) {
+        window.alert(`Current text length (${text.length}) is over the maximum allowed (150000).`)
+        this.config.state.processOutputWait = false
+        return false
+      }
+
+      this.utils.postMessageAPI.send(url, text, {
+        mode: 'popup',
+        newWindow: true,
+        features: 0.8
+      })
+      this.config.state.processOutputWait = false
+    },
     extractThemes: async function () {
       this.config.state.processOutputWait = true
 
