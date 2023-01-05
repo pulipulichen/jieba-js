@@ -8,7 +8,8 @@ if (location.href.startsWith('http://localhost:8383/')) {
   url = 'http://localhost:8383/HTML-API-Transtration/index.html'
 }
 if (location.href.startsWith('http://127.0.0.1:5500/')) {
-  url = 'http://localhost:8000/index.html'
+  // url = 'http://localhost:8000/index.html'
+  url = 'http://127.0.0.1:5502/index.html'
 }
 
 export default {

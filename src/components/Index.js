@@ -10,6 +10,7 @@ let Index = {
     //console.log(this.config.saveToCloud)
     return {
       loadingSVG,
+      basicStopWords: null
     }
   },
   components: {
@@ -63,17 +64,52 @@ let Index = {
   methods: {
     setupAPI() {
       this.utils.postMessageAPI.addReceiveListener(async (data) => {
-        console.log('收到資料了', data)
+        // console.log('收到資料了', data)
         if (typeof (data) === 'string') {
-          this.inputText = data
+          this.config.session.inputText = data
         } else {
           for (let key in data) {
-            this[key] = data[key]
+
+            if (key === 'configStopWords') {
+              if (data[key] === '[BASIC]') {
+                if (!this.basicStopWords) {
+                  this.basicStopWords = await this.utils.Axios.get('./data/StopWords/basic.txt')
+                  // console.log('ok loaded')
+                }
+                this.config.session.configStopWords = this.basicStopWords
+              }
+              else {
+                this.config.session.configStopWords = data[key]
+              }
+            }
+            else if (this.config.session[key]) {
+              this.config.session[key] = data[key]
+            }
           }
         }
-        console.log('開始準備處理')
-        let result = await this.processOutput()
-        console.log(result)
+        while (!this.$refs.TextPanel) {
+          await this.utils.Async.sleep()
+        }
+
+        // console.log('開始準備處理')
+        await this.$refs.TextPanel.processOutput()
+        let result = []
+        // console.log(this.config.state.outputTextRows)
+        // return ''
+
+        this.config.state.outputTextRows.forEach(row => {
+          row = row.message
+          // console.log({row}, Array.isArray(row) )
+          if (Array.isArray(row) === false) {
+            result.push(row)
+            return false
+          }
+          // console.log({row})
+          
+          result.push(row.join(' '))
+        })
+        result = result.join('\n')
+        // console.log(result)
         return result
       })
       //console.log('設定好了')

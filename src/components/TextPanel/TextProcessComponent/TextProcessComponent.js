@@ -34,9 +34,10 @@ export default  {
       } 
 
       //console.log('jieba-js已經初始化，開始斷詞')
-      await this.processOutputInited()
+      let result = await this.processOutputInited()
       //console.log('jieba-js已經初始化，完成斷詞')
-      let result = this.config.state.outputText
+      // let result = this.config.state.outputText
+      // console.log({result})
       //console.log(result)
       // await this.$parent.processWordVectorModel()
 
@@ -139,9 +140,9 @@ export default  {
       
       this.selectAllClasses()
       //console.log(this.outputClasses)
-
+      // console.log({rowsJoined})
       //console.log('斷詞完成了')
-      return this.config.state.outputText
+      return rowsJoined
 
       // return new Promise((resolve, reject) => {
       //   //console.log('start promise')
