@@ -28,11 +28,22 @@ let TextOutputSegPanel = {
     },
     
     outputText () {
-      //console.log(this.config.state.outputTextRowsJoined)
-      return Papa.unparse(this.config.state.outputTextRowsJoined, {
+      // console.log(this.config.state.outputTextRowsJoined)
+
+      let output = Papa.unparse(this.config.state.outputTextRowsJoined, {
         delimiter: this.config.state.delimiter,
         skipEmptyLines: true,
       })
+
+      // console.log(output)
+      // console.log(this.config.session.doRemoveHeader, output.startsWith('0\r\n'), output.slice(0, 3), (this.config.session.doRemoveHeader === false && output.startsWith('0\r\n')))
+
+      if (this.config.session.doRemoveHeader === false && output.startsWith('0\r\n') ) {
+          output = output.slice(3)
+      }
+
+      // console.log(output)
+      return output
     },
     computedOutputTextClass () {
       if (this.config.state.outputTextRows.length > 0) {

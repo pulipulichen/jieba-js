@@ -75,7 +75,10 @@
         
     </div>
     <div class="twelve wide column">
-      
+      <div class="ui checkbox">
+        <input id="DoSkipHeader" type="checkbox" v-model="config.session.doRemoveHeader">
+        <label for="DoSkipHeader">Skip first line (header)</label>
+      </div>
     </div>
   </div>
   <div class="row input-row">

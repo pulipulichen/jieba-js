@@ -38,7 +38,7 @@ export default  {
       //console.log('jieba-js已經初始化，完成斷詞')
       // let result = this.config.state.outputText
       // console.log({result})
-      //console.log(result)
+      // console.log(result)
       // await this.$parent.processWordVectorModel()
 
 
@@ -87,6 +87,7 @@ export default  {
       //var _text = this.config.session.inputText.trim()
       
       let rows = await this.parseJSONArray()
+      
       this.parseColumnNames(rows)
 
       let rowsJoined = []
@@ -94,7 +95,7 @@ export default  {
   
       let rule = this.config.session.segmentationMethod
       //console.log(this.parseSingleCharacter(_text))
-  
+      // console.log(rows)
       //var _text_array = _text.split('\n')
       //var _result_array = []
       for (let i = 0; i < rows.length; i++) {
@@ -130,6 +131,8 @@ export default  {
 
         this.parseLineClass(line)
       }
+
+      // console.log(rowsJoined)
 
       //this.config.state.outputText = await this.rowToCSV(rows)
       this.config.state.outputTextRows = rows

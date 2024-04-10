@@ -4,6 +4,7 @@
   "description": "DEMO: https://pulipulichen.github.io/jieba-js/",
   "main": "index.js",
   "scripts": {
+    "start": "bash ./docker-compose/d3.webpack-watch-build-production.sh",
     "w1.webpack-build-development": "webpack --mode development --config ./config/webpack.config.js ",
     "w2.webpack-watch-development": "webpack --watch --mode development --display errors-only --config ./config/webpack.config.js ",
     "w3.webpack-watch-build-production": "webpack --watch --mode production --display errors-only --config ./config/webpack.config.js ",
