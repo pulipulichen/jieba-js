@@ -56,7 +56,8 @@ let TextOutputSegPanel = {
         this.config.state.columnNames
       ]
 
-      this.config.state.outputTextRowsJoined.forEach(row => {
+      this.config.state.outputTextRowsJoined.forEach((row, i) => {
+        console.log(i, row)
         let line = Object.keys(row).map(key => row[key])
         output.push(line)
       })
@@ -103,6 +104,30 @@ let TextOutputSegPanel = {
       
       let appendFilename =  this.utils.Date.mmddhhmm()
       var filename = this.config.session.inputFilename + appendFilename + ".ods"
+
+      var wb = XLSX.utils.book_new();
+  
+      wb.SheetNames.push("data")
+  
+      console.log(this.outputODSArray)
+
+      let ws = this.utils.Sheet.aoa_to_sheet(this.outputODSArray)
+      //console.log(ws)
+      wb.Sheets["data"] = ws
+  
+      //var wbout = XLSX.write(wb, {bookType: 'ods', bookSST: true, type: 'base64'});
+      //let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      //saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+  
+      XLSX.writeFile(wb, filename);
+  
+      this.config.state.processOutputWait = false
+    },
+    saveOutputCSV () {
+      this.config.state.processOutputWait = true
+      
+      let appendFilename =  this.utils.Date.mmddhhmm()
+      var filename = this.config.session.inputFilename + appendFilename + ".csv"
 
       var wb = XLSX.utils.book_new();
   

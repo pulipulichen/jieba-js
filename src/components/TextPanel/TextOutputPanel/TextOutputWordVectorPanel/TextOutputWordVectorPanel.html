@@ -16,7 +16,12 @@
     <button type="button" class="ui button" v-on:click="saveAsWordVector"
       v-bind:class="{'disabled': outputButtonDisabled }">
       <i class="book icon"></i>
-      Save Model
+      Save Model ODS
+    </button>
+    <button type="button" class="ui button" v-on:click="saveAsWordVectorCSV"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="book icon"></i>
+      Save Model CSV
     </button>
   </div>
 </div>

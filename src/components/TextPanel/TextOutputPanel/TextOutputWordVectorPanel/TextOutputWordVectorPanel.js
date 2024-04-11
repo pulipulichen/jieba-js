@@ -139,6 +139,26 @@ let TextOutputWordVectorPanel = {
       saveAs(blob, _file_name)
       */
     },
+
+    saveAsWordVectorCSV: async function () {
+      this.config.state.processOutputWait = true
+      //console.log('saveAsBagOfWords', 1)
+      await this.utils.Async.sleep(0)
+      let data = await this.getClassifyText()
+      let appendFilename = '_seg' + this.utils.Date.mmddhhmm()
+      var filename = this.config.session.inputFilename + appendFilename + ".csv"
+      var wb = XLSX.utils.book_new();
+  
+      wb.SheetNames.push("data")
+  
+      let ws = this.utils.Sheet.aoa_to_sheet(data)
+      //console.log(ws)
+      wb.Sheets["data"] = ws
+
+      XLSX.writeFile(wb, filename);
+  
+      this.config.state.processOutputWait = false
+    },
     getClassifyText: async function () {
       //console.log(this.outputTextWordVector, typeof(this.outputTextWordVector))
       if (this.config.state.outputTextWordVector.length > 0) {
