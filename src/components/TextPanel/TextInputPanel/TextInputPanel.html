@@ -1,38 +1,12 @@
 <div class="TextInputPanel ui grid">
-  <div class="row filename">
-    <div class="six wide column">
-      <div class="field">
-        <label for="inputFilename">
-          Filename
-        </label>
-        <input type="text" v-model="config.session.inputFilename" class="input-filename"
-          id="inputFilename" />
-      </div>
-    </div>
-    <div class="ten wide column" style="text-align:right; margin-bottom: 5px;">
+  <div class="row filename raised segment">
+    <div class="sixteen wide column" style="text-align:right; margin-bottom: 5px;">
       <!--
       <button type="button" class="ui mini icon basic button" v-on:click="loadExample">
         <i class="folder open outline icon"></i>
         Example
       </button>
       -->
-      <div class="fields">
-        <div class="thirteen wide field">
-          <select 
-            class="ui mini fluid search dropdown" 
-            ref="Dropdown">
-            <option value="">Example</option>
-            <option v-for="e in examples" :value="e">{{ e }}</option>
-          </select>
-        </div>
-        <div class="three wide field">
-          <button type="button" class="ui fluid mini icon basic button" 
-           v-on:click="loadExample">
-            <i class="folder open icon"></i>
-            Load
-          </button>
-        </div>
-      </div>
         
       <div class="fields">
         <div class="eight wide field">
@@ -56,6 +30,23 @@
         </div>
       </div>
         
+      <div class="fields">
+        <div class="sixteen wide field">
+          <select 
+            class="ui mini fluid search dropdown" 
+            ref="Dropdown">
+            <option value="">Example</option>
+            <option v-for="e in examples" :value="e">{{ e }}</option>
+          </select>
+        </div>
+        <div class="three wide field">
+          <button type="button" class="ui fluid mini icon basic button" 
+           v-on:click="loadExample">
+            <i class="folder open icon"></i>
+            Load
+          </button>
+        </div>
+      </div>
 
         
         <!--
@@ -65,7 +56,22 @@
         </button>
         -->
     </div>
+
+
+    <div class="sixteen wide column">
+      <div class="inline field fluid">
+        <label for="inputFilename">
+          Filename
+        </label>
+        <input type="text" v-model="config.session.inputFilename" class="input-filename"
+          id="inputFilename" />
+      </div>
+    </div>
+
   </div>
+
+  <div class="ui divider"></div>
+
   <div class="row input-header">
     <div class="four wide column">
       <div class="inline field">
@@ -93,4 +99,6 @@
       </template>
     </div>
   </div>
+
+  
 </div>
