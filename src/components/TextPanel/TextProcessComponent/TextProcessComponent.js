@@ -466,6 +466,11 @@ export default  {
         line = this.utils.String.stripHTMLTag(line)
         //console.log(line)
       }
+
+      if (this.config.session.removeEmoji === true) {
+        line = this.utils.String.removeEmojis(line, ' ')
+        //console.log(line)
+      }
       
       if (this.config.session.removeEnglish) {
         line = this.utils.String.filterEnglish(line)

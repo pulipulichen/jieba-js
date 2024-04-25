@@ -23,6 +23,8 @@ message\tclass
   removeEnglish: false,
   removeNumber: false,
   removeHTML: false,
+  removeEmoji: true,
+  
   usePorterStemmer: true,
   useLowerCase: true,
 
@@ -34,4 +36,6 @@ message\tclass
   columnSeparator: ",",
 
   wordVectorModel: 'TermFrequency', // BagOfWords
+  minTermFrequency: 1,
+  topN: 1000,
 }

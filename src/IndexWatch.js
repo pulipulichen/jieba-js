@@ -20,6 +20,7 @@ let watchResetOutputText = [
   'removeEnglish',
   'removeNumber',
   'removeHTML',
+  'removeEmoji',
   'useLowerCase',
   'inputFormat',
   'doRemoveHeader',

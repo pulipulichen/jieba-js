@@ -103,6 +103,19 @@
                 <label>Embbeding</label>
               </div>
             </div>
+
+            <div class="two fields">
+              <div class="inline field">
+                <label>Min Term Frequency</label>
+                <input type="number" min="1" v-model="config.session.minTermFrequency" />
+              </div>
+
+              <div class="inline field">
+                <label>Top N</label>
+                <input type="number" min="1" v-model="config.session.topN" />
+              </div>
+            </div>
+              
           </div>
         </div>
 
@@ -115,20 +128,26 @@
             <div class="inline fields">
               <div class="field">
                 <div class="ui checkbox">
-                  <input id="RemoveEnglish" type="checkbox" v-model="config.session.removeEnglish">
-                  <label for="RemoveEnglish">Remove English</label>
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui checkbox">
                   <input id="RemoveNumber" type="checkbox" v-model="config.session.removeNumber">
                   <label for="RemoveNumber">Remove Number</label>
                 </div>
               </div>
               <div class="field">
                 <div class="ui checkbox">
+                  <input id="RemoveEnglish" type="checkbox" v-model="config.session.removeEnglish">
+                  <label for="RemoveEnglish">Remove English</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
                   <input type="checkbox" id="RemoveHTML" v-model="config.session.removeHTML">
                   <label for="RemoveHTML">Remove HTML</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" id="RemoveEmoji" v-model="config.session.removeEmoji">
+                  <label for="RemoveEmoji">Remove Emoji</label>
                 </div>
               </div>
             </div>
