@@ -26,6 +26,8 @@ let watchResetOutputText = [
   'doRemoveHeader',
   'onlyFirstColumn',
   'columnSeparator',
+  'minTermFrequency',
+  'topN',
 ]
 
 import ConfigSession from './ConfigSession.js'

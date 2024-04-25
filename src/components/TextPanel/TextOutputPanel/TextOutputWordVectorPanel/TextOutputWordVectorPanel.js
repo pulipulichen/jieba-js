@@ -171,8 +171,13 @@ let TextOutputWordVectorPanel = {
 
       this.config.state.processOutputWait = true
 
+      if (this.config.state.outputTextRows.length === 0) { 
+        await this.$parent.$parent.$refs.TextProcessComponent.processOutput()
+      }
+
       let lines = this.config.state.outputTextRows
-      //console.log(lines)
+      // console.log(lines)
+      
       //let lines = outputText.split('\n')
       
       //let classColumnName = this.config.state.classColumnName
@@ -192,6 +197,7 @@ let TextOutputWordVectorPanel = {
       let bags = []
       let classList = []
       let words = {}
+      let wordsFreq = {}
       
       //console.log('getClassifyText', 'bags')
       //console.log(lines)
@@ -240,6 +246,9 @@ let TextOutputWordVectorPanel = {
           if (!bag[word]) {
             bag[word] = 0
           }
+          if (!wordsFreq[word]) {
+            wordsFreq[word] = 0
+          }
   
           if (this.config.session.wordVectorModel === 'TermFrequency') {
             bag[word]++
@@ -247,6 +256,7 @@ let TextOutputWordVectorPanel = {
           else if (this.config.session.wordVectorModel === 'BagOfWords') {
             bag[word] = 1
           }
+          wordsFreq[word]++
           
           
           if (j % 10 === 5) {
@@ -261,9 +271,56 @@ let TextOutputWordVectorPanel = {
           await this.utils.Async.sleep(0)
         }
       } // for (let len = lines.length, i = len; i > 0; i--) {
+
+      console.log(wordsFreq)
+      console.log(bags)
+      console.log(words)
       
-  //    console.log(bags)
-  //    console.log(words)
+      // =============================
+      // Top N
+      // =============================
+
+      let freqWordsMap = {}
+      let maxFreq = 1
+      Object.keys(wordsFreq).forEach((word) => {
+        let freq = wordsFreq[word]
+        if (freq > maxFreq) {
+          maxFreq = freq
+        }
+        freq = String(freq)
+        if (!freqWordsMap[freq]) {
+          freqWordsMap[freq] = []
+        }
+        freqWordsMap[freq].push(word)
+      })
+
+      let topNWords = []
+      for (let i = maxFreq; i >= 1; i--) {
+        if (i < this.config.session.minTermFrequency) {
+          continue
+        }
+
+        let freqWords = freqWordsMap[String(i)]
+        if (!freqWords) {
+          continue
+        }
+
+        if (topNWords.length + freqWords.length < this.config.session.topN) {
+          topNWords = topNWords.concat(freqWords)
+        }
+        else {
+          let len = (this.config.session.topN - topNWords.length)
+          console.log(this.config.session.topN, topNWords.length)
+          topNWords = topNWords.concat(freqWords.slice(0, len))
+        }
+      }
+
+      console.log({topNWords})
+
+      // =============================
+      // Min Term Frequency
+      // =============================
+
       
       // ---------------------------
       
@@ -271,16 +328,38 @@ let TextOutputWordVectorPanel = {
       
       let rawData = []
       
-      let headers = Object.keys(words)
+      // let headers = Object.keys(words)
+      let headers = topNWords
       let headersLength = headers.length
       let sortedHeaders = Array(headersLength)
+      // for (let len = headersLength, i = len; i > 0; i--) {
       for (let len = headersLength, i = len; i > 0; i--) {
         let word = headers[(len - i)]
+        // if (topNWords.indexOf(word) === -1) {
+        //   continue
+        // }
         let headerPos = words[word]
         sortedHeaders[headerPos] = word
       }
+
+      // 壓縮空間
+      let sortedHeadersTemp = []
+      let sortedHeadersMap = {}
+      for (let i = 0; i < sortedHeaders.length; i++) {
+        let word = sortedHeaders[i]
+        if (!word) {
+          continue
+        }
+        sortedHeadersMap[word] = sortedHeadersTemp.length
+        sortedHeadersTemp.push(word)
+      }
+      sortedHeaders = sortedHeadersTemp
+      console.log({sortedHeaders})
       
-      sortedHeaders.push(this.config.state.classColumnName)
+      console.log({cc: this.config.state.classColumnName})
+      if (this.config.state.classColumnName) {
+        sortedHeaders.push(classList[rowIndex])
+      }
       rawData.push(sortedHeaders)
       
       // ----------------------------
@@ -293,20 +372,27 @@ let TextOutputWordVectorPanel = {
         
         let row = Array(headersLength).fill(0)
         Object.keys(bag).forEach(word => {
-          let index = words[word]
+          if (topNWords.indexOf(word) === -1) {
+            return false
+          }
+          let index = sortedHeadersMap[word]
           row[index] = bag[word]
         })
         
-        row.push(classList[rowIndex])
+        if (classList[rowIndex]) {
+          row.push(classList[rowIndex])
+        }
+          
         rawData.push(row)
         
         if (i % 10 === 5) {
           //console.log('getClassifyText', 'rawData', ((len - i) / len))
-          await this.utils.Async.sleep(0)
+          await this.utils.Async.sleep(1)
         }
       }
-      
-      
+
+      console.log(rawData)
+        
       // ----------------------
       // 清理一個乾淨的資料
   //    let temp = []

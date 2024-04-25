@@ -57,7 +57,7 @@ let TextOutputSegPanel = {
       ]
 
       this.config.state.outputTextRowsJoined.forEach((row, i) => {
-        console.log(i, row)
+        // console.log(i, row)
         let line = Object.keys(row).map(key => row[key])
         output.push(line)
       })
