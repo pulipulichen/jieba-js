@@ -104,7 +104,8 @@
               </div>
             </div>
 
-            <div class="two fields">
+            <div class="two fields"
+              v-if="config.session.wordVectorModel === 'BagOfWords' || config.session.wordVectorModel === 'TermFrequency'">
               <div class="inline field">
                 <label>Min Term Frequency</label>
                 <input type="number" min="1" v-model="config.session.minTermFrequency" />
