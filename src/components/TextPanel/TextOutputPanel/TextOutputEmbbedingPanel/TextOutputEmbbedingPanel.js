@@ -96,7 +96,28 @@ let TextOutputEmbbedingPanel = {
   
       this.config.state.processOutputWait = false
     },
-    
+    saveAsSheetCSV: async function () {
+      this.config.state.processOutputWait = true
+      
+      let appendFilename = '_embed_' + this.utils.Date.mmddhhmm()
+      var filename = this.config.session.inputFilename + appendFilename + ".csv"
+
+      var wb = XLSX.utils.book_new();
+  
+      wb.SheetNames.push("data")
+  
+      let ws = this.utils.Sheet.aoa_to_sheet(this.cacheOutputArray)
+      //console.log(ws)
+      wb.Sheets["data"] = ws
+  
+      //var wbout = XLSX.write(wb, {bookType: 'ods', bookSST: true, type: 'base64'});
+      //let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      //saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+  
+      XLSX.writeFile(wb, filename);
+  
+      this.config.state.processOutputWait = false
+    },
     
     initOutput: async function () {
       if (this.cacheOutput.length === 0) { 
@@ -105,6 +126,22 @@ let TextOutputEmbbedingPanel = {
     },
 
     startProcess: async function () {
+      if (window.confirm(`Process model requires a long time. Will you continue?`) === false) {
+        return false
+      }
+
+      let cache = this.$parent.$refs.TextOutputTransPanel.cacheTrans
+
+      if (cache.length === 0) {
+        // console.log('go')
+        await this.$parent.$refs.TextOutputTransPanel.startTrans(false)
+        cache = this.$parent.$refs.TextOutputTransPanel.cacheTrans
+        // console.log('go2', cache, cache.length)
+        if (cache.length === 0) {
+          return false
+        }
+      }
+
       this.config.state.processOutputWait = true
 
       //let e = await this.parseSentenceEmbedding('This is a pen.')
@@ -114,7 +151,7 @@ let TextOutputEmbbedingPanel = {
         return this.cacheOutput
       }
 
-      let cache = this.$parent.$refs.TextOutputTransPanel.cacheTrans
+      
 
       for (let i = 0; i < cache.length; i++) {
         let row = cache[i]

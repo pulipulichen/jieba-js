@@ -15,7 +15,12 @@
     <button type="button" class="ui button" v-on:click="saveAsSheet"
       v-bind:class="{'disabled': outputButtonDisabled }">
       <i class="table icon"></i>
-      Save
+      Save ODS
+    </button>
+    <button type="button" class="ui button" v-on:click="saveAsSheetCSV"
+      v-bind:class="{'disabled': outputButtonDisabled }">
+      <i class="table icon"></i>
+      Save CSV
     </button>
   </div>
 </div>

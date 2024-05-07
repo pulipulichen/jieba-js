@@ -392,8 +392,7 @@ function PuliPostMessageAPI(options) {
   
   let _messageHandler = function (event) {
     //console.log(event, location.href.slice(location.href.lastIndexOf('/') + 1))
-    if (typeof(event.data) !== 'object'
-            || !event.data.eventName) {
+    if (typeof(event.data) !== 'object' || !event.data.eventName) {
       return false
     }
     let eventName = event.data.eventName

@@ -56,9 +56,9 @@ let TextOutputTransPanel = {
       return output
     }
   },
-  mounted() {
+  // mounted() {
     
-  },
+  // }, 
   methods: {
     copy() {
       this.$refs.outputTransTextarea.select()
@@ -86,7 +86,28 @@ let TextOutputTransPanel = {
   
       this.config.state.processOutputWait = false
     },
-    
+    saveAsSheetCSV: async function () {
+      this.config.state.processOutputWait = true // ok
+       
+      let appendFilename = '_trans_' + this.utils.Date.mmddhhmm()
+      var filename = this.config.session.inputFilename + appendFilename + ".csv"
+
+      var wb = XLSX.utils.book_new();
+  
+      wb.SheetNames.push("data")
+  
+      let ws = this.utils.Sheet.aoa_to_sheet(this.cacheOutputArray)
+      //console.log(ws)
+      wb.Sheets["data"] = ws
+  
+      //var wbout = XLSX.write(wb, {bookType: 'ods', bookSST: true, type: 'base64'});
+      //let filename = 'jieba-js-config_' + (new Date()).mmddhhmm() + '.ods'
+      //saveAs(new Blob([this.s2ab(wbout)], {type: "application/octet-stream"}), filename);
+  
+      XLSX.writeFile(wb, filename);
+  
+      this.config.state.processOutputWait = false
+    },
     
     initOutputTrans: async function () {
       if (this.cacheTrans.length === 0) { 
@@ -94,7 +115,15 @@ let TextOutputTransPanel = {
       }
     },
 
-    startTrans: async function () {
+    startTrans: async function (showWarning = true) {
+      if (showWarning && window.confirm(`Process model requires a long time. Will you continue?`) === false) {
+        return false
+      }
+
+      if (this.config.state.outputTextRows.length === 0) { 
+        await this.$parent.$parent.$refs.TextProcessComponent.processOutput()
+      }
+
       this.config.state.processOutputWait = true
 
       if (this.cacheTrans.length > 0) {
@@ -109,7 +138,7 @@ let TextOutputTransPanel = {
         let text = this.getLineText(row)
         let textTrans
         if (this.config.development.debug.skipTrans === false) {
-          textTrans = await this.utils.Trans.trans(text, 'en')
+          textTrans = await this.utils.Trans.trans(text, 'en') 
         }
         else {
           textTrans = 'This is a pen.'
