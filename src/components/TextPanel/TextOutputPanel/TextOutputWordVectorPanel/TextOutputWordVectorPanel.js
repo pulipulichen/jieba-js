@@ -272,9 +272,9 @@ let TextOutputWordVectorPanel = {
         }
       } // for (let len = lines.length, i = len; i > 0; i--) {
 
-      console.log(wordsFreq)
-      console.log(bags)
-      console.log(words)
+      // console.log(wordsFreq)
+      // console.log(bags)
+      // console.log(words)
       
       // =============================
       // Top N
@@ -315,7 +315,7 @@ let TextOutputWordVectorPanel = {
         }
       }
 
-      console.log({topNWords})
+      // console.log({topNWords})
 
       // =============================
       // Min Term Frequency
@@ -354,11 +354,11 @@ let TextOutputWordVectorPanel = {
         sortedHeadersTemp.push(word)
       }
       sortedHeaders = sortedHeadersTemp
-      console.log({sortedHeaders})
+      // console.log({sortedHeaders})
       
-      console.log({cc: this.config.state.classColumnName})
+      // console.log({cc: this.config.state.classColumnName})
       if (this.config.state.classColumnName) {
-        sortedHeaders.push(classList[rowIndex])
+        sortedHeaders.push(classList[0])
       }
       rawData.push(sortedHeaders)
       
