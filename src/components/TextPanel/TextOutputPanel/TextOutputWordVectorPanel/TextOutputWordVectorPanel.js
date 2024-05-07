@@ -358,7 +358,7 @@ let TextOutputWordVectorPanel = {
       
       // console.log({cc: this.config.state.classColumnName})
       if (this.config.state.classColumnName) {
-        sortedHeaders.push(classList[0])
+        sortedHeaders.push(this.config.state.classColumnName)
       }
       rawData.push(sortedHeaders)
       
