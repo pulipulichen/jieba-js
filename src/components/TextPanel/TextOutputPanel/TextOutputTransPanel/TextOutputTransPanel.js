@@ -125,12 +125,17 @@ let TextOutputTransPanel = {
       }
 
       this.config.state.processOutputWait = true
-
+      console.log(this.cacheTrans)
       if (this.cacheTrans.length > 0) {
         return this.cacheTrans
       }
 
-      let cache = [].concat(this.config.state.outputTextRowsJoined)
+      // console.log(this.config.state.outputTextRowsJoined)
+      let input = await this.$parent.$parent.$refs.TextProcessComponent.parseJSONArray()
+      // let input = this.config.state.outputTextRowsJoined
+      let cache = [].concat(input)
+      // console.log(input)
+      // console.log(this.config.state.outputTextRowsJoined)
 
       for (let i = 0; i < cache.length; i++) {
         let row = cache[i]
@@ -138,6 +143,7 @@ let TextOutputTransPanel = {
         let text = this.getLineText(row)
         let textTrans
         if (this.config.development.debug.skipTrans === false) {
+          // console.log(text)
           textTrans = await this.utils.Trans.trans(text, 'en') 
         }
         else {

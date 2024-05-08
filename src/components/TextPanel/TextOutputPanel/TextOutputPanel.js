@@ -69,9 +69,9 @@ export default {
       }
       else if (this.config.session.wordVectorModel === 'Embbeding') {
         
-        await this.$refs.TextOutputTransPanel.startTrans()
+        await this.$refs.TextOutputTransPanel.startTrans(false)
         
-        await this.$refs.TextOutputEmbbedingPanel.startProcess()
+        await this.$refs.TextOutputEmbbedingPanel.startProcess(false)
         //console.log('aasas')
         let result = this.$refs.TextOutputEmbbedingPanel.getClassifyText()
         //return false

@@ -125,8 +125,8 @@ let TextOutputEmbbedingPanel = {
       }
     },
 
-    startProcess: async function () {
-      if (window.confirm(`Process model requires a long time. Will you continue?`) === false) {
+    startProcess: async function (showWarning = true) {
+      if (showWarning && window.confirm(`Process model requires a long time. Will you continue?`) === false) {
         return false
       }
 

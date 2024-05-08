@@ -87,6 +87,7 @@ export default  {
       //var _text = this.config.session.inputText.trim()
       
       let rows = await this.parseJSONArray()
+      // console.log(rows)
       
       this.parseColumnNames(rows)
 

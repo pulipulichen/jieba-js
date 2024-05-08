@@ -2,7 +2,8 @@
 
   <div class="row output-header">
 
-    <div :class="computedLeftOutputColumnClassName">
+    <div :class="computedLeftOutputColumnClassName"
+      v-if="config.session.wordVectorModel !== 'Embbeding'">
       <TextOutputSegPanel :config="config" :utils="utils" ref="TextOutputSegPanel"></TextOutputSegPanel>
     </div>
 
@@ -12,10 +13,10 @@
       </div>
     </template>
     <template v-if="config.session.wordVectorModel === 'Embbeding'">
-      <div class="five wide column">
+      <div class="eight wide column">
         <TextOutputTransPanel :config="config" :utils="utils" ref="TextOutputTransPanel"></TextOutputTransPanel>
       </div>
-      <div class="five wide column">
+      <div class="eight wide column">
         <TextOutputEmbbedingPanel :config="config" :utils="utils" ref="TextOutputEmbbedingPanel"></TextOutputEmbbedingPanel>
       </div>
     </template>

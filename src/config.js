@@ -5,7 +5,7 @@ import ConfigState from './ConfigState.js'
 
 
 let config = {
-  version: '20220530-2251',
+  version: '20240508-2352',
   debug: {
     ErrorHandler: {
       verbose: true
