@@ -14,3 +14,7 @@ git push origin $new_version
 git add .
 git commit -m "${new_version}"
 git push --force-with-lease
+
+# =================================================================
+
+echo "Integrate GitHub with Zenodo: https://rb.gy/ql60qi"

@@ -42,6 +42,7 @@
     "url": "https://github.com/pulipulichen/jieba-js/issues"
   },
   "homepage": "https://github.com/pulipulichen/jieba-js#readme",
+  "doi": "10.5281/zenodo.11213326",
   "devDependencies": {
     "@babel/core": "7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "7.5.5",

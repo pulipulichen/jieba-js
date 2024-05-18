@@ -9,3 +9,6 @@ title: "jieba-js"
 license: "MIT"
 repository-code: "https://github.com/pulipulichen/jieba-js"
 abstract: "An experimental webpage for observing Chinese natural language processing. It demonstrates the processes of decomposition, transformation, deletion, and model building. Written in JavaScript, it can be executed in any browser. The webpage can be integrated with other tools to create word clouds, perform text statistical analysis, conduct LDA topic modeling, and utilize machine learning classifiers."
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.11213326
