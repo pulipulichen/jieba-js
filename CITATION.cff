@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+authors:
+  - family-names: Chen
+    given-names: Chen
+    orcid: https://orcid.org/0000-0003-3751-610X
+    email: https://blog.pulipuli.info
+title: "jieba-js"
+license: "MIT"
+repository-code: "https://github.com/pulipulichen/jieba-js"
+abstract: "An experimental webpage for observing Chinese natural language processing. It demonstrates the processes of decomposition, transformation, deletion, and model building. Written in JavaScript, it can be executed in any browser. The webpage can be integrated with other tools to create word clouds, perform text statistical analysis, conduct LDA topic modeling, and utilize machine learning classifiers."

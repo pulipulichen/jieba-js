@@ -1,6 +1,6 @@
 #!/bin/bash
 
-node docker-build/update-citation.js
+node build/update-citation.js
 
 # =================================================================
 
