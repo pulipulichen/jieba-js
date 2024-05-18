@@ -25,9 +25,15 @@ GITHUB_USER=`echo $GITHUB_HOMEPAGE | awk -F'/' '{print $4}'`
 GITHUB_REPO=`jq -r '.name' package.json`
 #echo $GITHUB_REPO
 
+DOI=`jq -r '.doi' package.json
+
 echo "================================================"
 echo "Integrate GitHub with Zenodo: https://rb.gy/ql60qi"
 echo "GitHub Homepage:  ${GITHUB_HOMEPAGE}"
+echo "GitHub New Release:  https://github.com/${GITHUB_USER}/${GITHUB_REPO}/releases/new"
 echo "Zenono GitHub Setting:  https://zenodo.org/account/settings/github/"
-echo "Zenono Repo:  https://zenodo.org/account/settings/github/repository/${GITHUB_USER}/${GITHUB_REPO}"
+echo "Zenono Repository Management:  https://zenodo.org/account/settings/github/repository/${GITHUB_USER}/${GITHUB_REPO}"
+if [ -n "$DOI" ]; then
+  echo "Zenono Public:  ${DOI}"
+fi
 echo "================================================"
