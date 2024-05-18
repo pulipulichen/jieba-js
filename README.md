@@ -9,10 +9,10 @@ An experimental webpage for observing Chinese natural language processing. It de
 
 # Technologies
 
-- JavaScript
-- Vue: MVVM框架
-- Jieba-JS: 斷詞演算法
-- Semantic UI: CSS框架
+- **JavaScript**
+- **Vue**: MVVM框架
+- **Jieba-JS**: 斷詞演算法
+- **Semantic UI**: CSS框架
 
 # Online demo
 

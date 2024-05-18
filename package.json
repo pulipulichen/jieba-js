@@ -1,7 +1,7 @@
 {
   "name": "jieba-js",
   "version": "1.0.0",
-  "description": "DEMO: https://pulipulichen.github.io/jieba-js/",
+  "description": "An experimental webpage for observing Chinese natural language processing. It demonstrates the processes of decomposition, transformation, deletion, and model building. Written in JavaScript, it can be executed in any browser. The webpage can be integrated with other tools to create word clouds, perform text statistical analysis, conduct LDA topic modeling, and utilize machine learning classifiers.",
   "main": "index.js",
   "scripts": {
     "start": "bash ./docker-compose/d3.webpack-watch-build-production.sh",
@@ -14,16 +14,29 @@
     "d2.webpack-watch-development": "bash ./docker-compose/d2.webpack-watch-development.sh",
     "d3.webpack-watch-build-production": "bash ./docker-compose/d3.webpack-watch-build-production.sh",
     "d4.webpack-build-production": "bash ./docker-compose/d4.webpack-build-production.sh",
-    "l.start-server": "bash ./start-local-server.sh"
+    "l.start-server": "bash ./start-local-server.sh",
+    "tag": "./build/tag.sh"
   },
   "repository": {
     "type": "git",
     "url": "git+https://pulipuli.chen@gmail.com@github.com/pulipulichen/jieba-js.git"
   },
   "keywords": [
-    "PWA"
+    "PWA",
+    "puli-portfolio",
+    "Jieba",
+    "NLP",
+    "natural language processing",
+    "Chinese",
+    "JavaScript",
+    "Universal Sentence Encoder"
   ],
-  "author": "Pulipuli Chen",
+  "author": {
+    "name": "Yung-Ting Chen",
+    "email": "blog@pulipuli.info",
+    "orcid": "https://orcid.org/0000-0003-3751-610X",
+    "url": "https://blog.pulipuli.info"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/pulipulichen/jieba-js/issues"
