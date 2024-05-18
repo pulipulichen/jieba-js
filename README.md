@@ -27,7 +27,7 @@ https://pulipulichen.github.io/jieba-js/
 
 # Citation
 
-Pulipuli Chen, & Herman Schaaf. (2024). *pulipulichen/jieba-js: 20240518.161411* (20240518.161411) [Computer software]. Zenodo. [https://doi.org/10.5281/ZENODO.11213326](https://doi.org/10.5281/ZENODO.11213326)
+Yung-Ting Chen, & Herman Schaaf. (2024). *pulipulichen/jieba-js: 20240518.161411* (20240518.161411) [Computer software]. Zenodo. [https://doi.org/10.5281/ZENODO.11213326](https://doi.org/10.5281/ZENODO.11213326)
 
 ----
 

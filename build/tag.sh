@@ -34,6 +34,6 @@ echo "GitHub New Release:  https://github.com/${GITHUB_USER}/${GITHUB_REPO}/rele
 echo "Zenono GitHub Setting:  https://zenodo.org/account/settings/github/"
 echo "Zenono Repository Management:  https://zenodo.org/account/settings/github/repository/${GITHUB_USER}/${GITHUB_REPO}"
 if [ -n "$DOI" ]; then
-  echo "Zenono Public:  ${DOI}"
+  echo "Zenono Public:  https://doi.org/${DOI}"
 fi
 echo "================================================"
