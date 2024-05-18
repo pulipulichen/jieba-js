@@ -25,6 +25,10 @@ https://pulipulichen.github.io/jieba-js/
 - [線上中文斷詞工具：Jieba-JS / Online Chinese Analyzer: Jieba-JS](https://blog.pulipuli.info/2017/03/jieba-js-online-chinese-analyzer-jieba.html)
 - [發掘文件中的主題：Weka分群應用於文本探勘 / Discover the Topic of Text Collection: Text Mining based on Weks's Clustering](https://blog.pulipuli.info/2019/07/weka-discover-topic-of-text-collection.html)
 
+# Citation
+
+Pulipuli Chen, & Herman Schaaf. (2024). *pulipulichen/jieba-js: 20240518.161411* (20240518.161411) [Computer software]. Zenodo. [https://doi.org/10.5281/ZENODO.11213326](https://doi.org/10.5281/ZENODO.11213326)
+
 ----
 
 # 其他檔案
