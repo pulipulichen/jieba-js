@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
 authors:
   - family-names: Chen
-    given-names: Chen
+    given-names: Yung-Ting
     orcid: https://orcid.org/0000-0003-3751-610X
     email: https://blog.pulipuli.info
 title: "jieba-js"

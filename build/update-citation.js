@@ -16,7 +16,7 @@ let citation_cff_yaml = `cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
 authors:
   - family-names: ${family_name}
-    given-names: ${family_name}
+    given-names: ${given_name}
     orcid: ${package_info.author.orcid}
     email: ${package_info.author.url}
 title: "${package_info.name}"
