@@ -29,11 +29,15 @@ DOI=`jq -r '.doi' package.json`
 
 echo "================================================"
 echo "Integrate GitHub with Zenodo: https://rb.gy/ql60qi"
-echo "GitHub Homepage:  ${GITHUB_HOMEPAGE}"
-echo "GitHub New Release:  https://github.com/${GITHUB_USER}/${GITHUB_REPO}/releases/new"
-echo "Zenono GitHub Setting:  https://zenodo.org/account/settings/github/"
-echo "Zenono Repository Management:  https://zenodo.org/account/settings/github/repository/${GITHUB_USER}/${GITHUB_REPO}"
+echo ""
+echo "Steps:"
+echo "1. Zenono GitHub Setting:  https://zenodo.org/account/settings/github/"
+echo "2. GitHub New Release:  https://github.com/${GITHUB_USER}/${GITHUB_REPO}/releases/new"
+echo "3. Zenono Repository Management:  https://zenodo.org/account/settings/github/repository/${GITHUB_USER}/${GITHUB_REPO}"
+echo "4. Create new tag and push to GitHub."
 if [ -n "$DOI" ]; then
-  echo "Zenono Public:  https://doi.org/${DOI}"
+  echo "5. GitHub New Release Again:  https://github.com/${GITHUB_USER}/${GITHUB_REPO}/releases/new"
+  echo "6. GitHub Homepage:  ${GITHUB_HOMEPAGE}"
+  echo "7. Zenono Public:  https://doi.org/${DOI}"
 fi
 echo "================================================"
