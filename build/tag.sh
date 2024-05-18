@@ -25,7 +25,7 @@ GITHUB_USER=`echo $GITHUB_HOMEPAGE | awk -F'/' '{print $4}'`
 GITHUB_REPO=`jq -r '.name' package.json`
 #echo $GITHUB_REPO
 
-DOI=`jq -r '.doi' package.json
+DOI=`jq -r '.doi' package.json`
 
 echo "================================================"
 echo "Integrate GitHub with Zenodo: https://rb.gy/ql60qi"
