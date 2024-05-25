@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/81649576.svg)](https://zenodo.org/doi/10.5281/zenodo.11213326)
 
-jieba-js
+jieba-js: 學習中文自然語言處理過程的實驗工具
 ========
 
 An experimental webpage for observing Chinese natural language processing. It demonstrates the processes of decomposition, transformation, deletion, and model building. Written in JavaScript, it can be executed in any browser. The webpage can be integrated with other tools to create word clouds, perform text statistical analysis, conduct LDA topic modeling, and utilize machine learning classifiers.
@@ -9,7 +9,7 @@ An experimental webpage for observing Chinese natural language processing. It de
 
 ![](https://blogger.googleusercontent.com/img/a/AVvXsEjr1wwZ1ctdd5ZyIq8lC8xf5uW651XmleCJx5tVkHXgib-gcjYvhmLoqWYIVPxGInOPqfiz8DQ4TslZe6-yXvxYanlxhd83ZfiLkIgPb-FV6MqL-UOSsua00I7ocj-XRxk1qsuAR32os1hXDvy7uOCL-HyRBKVQ34ycfNKtEJiW88Jbn5kXOT7noQ)
 
-# Technologies
+# Techniques
 
 - **JavaScript**
 - **Vue**: MVVM框架
